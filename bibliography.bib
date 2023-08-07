@@ -1,7 +1,267 @@
-@article{simkin2002read,
-  title={Read before you cite!},
-  author={Simkin, Mikhail V and Roychowdhury, Vwani P},
-  journal={arXiv preprint cond-mat/0212043},
-  year={2002},
-  url={https://arxiv.org/pdf/cond-mat/0212043}
+@inproceedings{wobbrock:2011,
+author = {Wobbrock, Jacob O. and Findlater, Leah and Gergle, Darren and Higgins, James J.},
+title = {The Aligned Rank Transform for Nonparametric Factorial Analyses Using Only Anova Procedures},
+year = {2011},
+isbn = {9781450302289},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1978942.1978963},
+doi = {10.1145/1978942.1978963},
+abstract = {Nonparametric data from multi-factor experiments arise often in human-computer interaction (HCI). Examples may include error counts, Likert responses, and preference tallies. But because multiple factors are involved, common nonparametric tests (e.g., Friedman) are inadequate, as they are unable to examine interaction effects. While some statistical techniques exist to handle such data, these techniques are not widely available and are complex. To address these concerns, we present the Aligned Rank Transform (ART) for nonparametric factorial data analysis in HCI. The ART relies on a preprocessing step that "aligns" data before applying averaged ranks, after which point common ANOVA procedures can be used, making the ART accessible to anyone familiar with the F-test. Unlike most articles on the ART, which only address two factors, we generalize the ART to N factors. We also provide ARTool and ARTweb, desktop and Web-based programs for aligning and ranking data. Our re-examination of some published HCI results exhibits advantages of the ART.},
+booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+pages = {143–146},
+numpages = {4},
+keywords = {statistics, anova, factorial analysis, nonparametric data, analysis of variance, f-test},
+location = {Vancouver, BC, Canada},
+series = {CHI '11}
 }
+
+@inproceedings{elkin:2021,
+author = {Elkin, Lisa A. and Kay, Matthew and Higgins, James J. and Wobbrock, Jacob O.},
+title = {An Aligned Rank Transform Procedure for Multifactor Contrast Tests},
+year = {2021},
+isbn = {9781450386357},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3472749.3474784},
+doi = {10.1145/3472749.3474784},
+abstract = {Data from multifactor HCI experiments often violates the assumptions of parametric tests (i.e., nonconforming data). The Aligned Rank Transform (ART) has become a popular nonparametric analysis in HCI that can find main and interaction effects in nonconforming data, but leads to incorrect results when used to conduct post hoc contrast tests. We created a new algorithm called ART-C for conducting contrast tests within the ART paradigm and validated it on 72,000 synthetic data sets. Our results indicate that ART-C does not inflate Type I error rates, unlike contrasts based on ART, and that ART-C has more statistical power than a t-test, Mann-Whitney U test, Wilcoxon signed-rank test, and ART. We also extended an open-source tool called ARTool with our ART-C algorithm for both Windows and R. Our validation had some limitations (e.g., only six distribution types, no mixed factorial designs, no random slopes), and data drawn from Cauchy distributions should not be analyzed with ART-C.},
+booktitle = {The 34th Annual ACM Symposium on User Interface Software and Technology},
+pages = {754–768},
+numpages = {15},
+keywords = {aligned rank transform., quantitative methods, Statistical methods, experiments, nonparametric statistics, data analysis},
+location = {Virtual Event, USA},
+series = {UIST '21}
+}
+
+@article{feys:2016,
+  author = {Feys, Jos},
+  title = {The R Journal: Nonparametric Tests for the Interaction in Two-way Factorial Designs Using R},
+  journal = {The R Journal},
+  year = {2016},
+  note = {https://doi.org/10.32614/RJ-2016-027},
+  doi = {10.32614/RJ-2016-027},
+  volume = {8},
+  issue = {1},
+  issn = {2073-4859},
+  pages = {367-378}
+}
+
+@article{feys:2016NewNR,
+  title={New Nonparametric Rank Tests for Interactions in Factorial Designs with Repeated Measures},
+  author={Jos Feys},
+  journal={Journal of Modern Applied Statistical Methods},
+  year={2016},
+  volume={15},
+  pages={78-99}
+}
+
+@article{luepsen:2017,
+author = {Haiko Luepsen},
+title = {The aligned rank transform and discrete variables: A warning},
+journal = {Communications in Statistics - Simulation and Computation},
+volume = {46},
+number = {9},
+pages = {6923-6936},
+year  = {2017},
+publisher = {Taylor & Francis},
+doi = {10.1080/03610918.2016.1217014},
+}
+
+@article{luepsen:2018,
+  author = {Haiko Luepsen},
+  title = {Comparison of nonparametric analysis of variance methods: A vote for van der Waerden},
+  journal = {Communications in Statistics - Simulation and Computation},
+  volume = {47},
+  pages = {2547-2576},
+  year = {2018}
+}
+
+
+@article{barr:2013,
+	abstract = {Linear mixed-effects models (LMEMs) have become increasingly prominent in psycholinguistics and related areas. However, many researchers do not seem to appreciate how random effects structures affect the generalizability of an analysis. Here, we argue that researchers using LMEMs for confirmatory hypothesis testing should minimally adhere to the standards that have been in place for many decades. Through theoretical arguments and Monte Carlo simulation, we show that LMEMs generalize best when they include the maximal random effects structure justified by the design. The generalization performance of LMEMs including data-driven random effects structures strongly depends upon modeling criteria and sample size, yielding reasonable results on moderately-sized samples when conservative criteria are used, but with little or no power advantage over maximal models. Finally, random-intercepts-only LMEMs used on within-subjects and/or within-items data from populations where subjects and/or items vary in their sensitivity to experimental manipulations always generalize worse than separate F(1) and F(2) tests, and in many cases, even worse than F(1) alone. Maximal LMEMs should be the 'gold standard' for confirmatory hypothesis testing in psycholinguistics and beyond.},
+	address = {Institute of Neuroscience and Psychology, University of Glasgow, 58 Hillhead St., Glasgow G12 8QB, United Kingdom.; Department of Linguistics, University of California at San Diego, La Jolla, CA 92093-0108, USA.; Institute of Neuroscience and Psychology, University of Glasgow, 58 Hillhead St., Glasgow G12 8QB, United Kingdom.; Department of Brain and Cognitive Sciences, Massachussetts Institute of Technology, Cambridge, MA 02139, USA.},
+	author = {Barr, Dale J and Levy, Roger and Scheepers, Christoph and Tily, Harry J},
+	crdt = {2014/01/10 06:00},
+	date = {2013 Apr},
+	date-added = {2023-07-15 18:36:23 +0200},
+	date-modified = {2023-07-15 18:36:23 +0200},
+	doi = {10.1016/j.jml.2012.11.001},
+	issn = {0749-596X (Print); 1096-0821 (Electronic); 0749-596X (Linking)},
+	jid = {8606159},
+	journal = {J Mem Lang},
+	jt = {Journal of memory and language},
+	keywords = {Monte Carlo simulation; generalization; linear mixed-effects models; statistics},
+	language = {eng},
+	lid = {10.1016/j.jml.2012.11.001 {$[$}doi{$]$}},
+	lr = {20220408},
+	mhda = {2014/01/10 06:01},
+	mid = {NIHMS533954},
+	month = {Apr},
+	number = {3},
+	phst = {2014/01/10 06:00 {$[$}entrez{$]$}; 2014/01/10 06:00 {$[$}pubmed{$]$}; 2014/01/10 06:01 {$[$}medline{$]$}},
+	pl = {United States},
+	pmc = {PMC3881361},
+	pmid = {24403724},
+	pst = {ppublish},
+	pt = {Journal Article},
+	status = {PubMed-not-MEDLINE},
+	title = {Random effects structure for confirmatory hypothesis testing: Keep it maximal.},
+	volume = {68},
+	year = {2013}
+}
+
+@article{conover:1981,
+  author = { W. J. Conover  and  Ronald L. Iman },
+  title = {Rank Transformations as a Bridge between Parametric and Nonparametric Statistics},
+  journal = {The American Statistician},
+  volume = {35},
+  number = {3},
+  pages = {124-129},
+  year  = {1981},
+  publisher = {Taylor & Francis},
+  doi = {10.1080/00031305.1981.10479327}
+}
+
+@inproceedings{higgins:1990,
+  author = {Higgins, James J. and Blair, R. Clifford and Tashtoush, Suleiman},
+  title = {The Aligned Rank Transform Procedure},
+  booktitle = {Conference on Applied Statistics in Agriculture},
+  year  = {1990},
+  doi = {10.4148/2475-7772.1443}
+}
+
+@article {McCaw635706,
+	author = {Zachary R. McCaw and Jacqueline M. Lane and Richa Saxena and Susan Redline and Xihong Lin},
+	title = {Operating Characteristics of the Rank-Based Inverse Normal Transformation for Quantitative Trait Analysis in Genome-Wide Association Studies},
+	elocation-id = {635706},
+	year = {2019},
+	doi = {10.1101/635706},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {Quantitative traits analyzed in Genome-Wide Association Studies (GWAS) are often non-normally distributed. For such traits, association tests based on standard linear regression are subject to reduced power and inflated type I error in finite samples. Applying the rank-based Inverse Normal Transformation (INT) to non-normally distributed traits has become common practice in GWAS. However, the different variations on INT-based association testing have not been formally defined, and guidance is lacking on when to use which approach. In this paper, we formally define and systematically compare the direct (D-INT) and indirect (I-INT) INT-based association tests. We discuss their assumptions, underlying generative models, and connections. We demonstrate that the relative powers of D-INT and I-INT depend on the underlying data generating process. Since neither approach is uniformly most powerful, we combine them into an adaptive omnibus test (O-INT). O-INT is robust to model misspecification, protects the type I error, and is well powered against a wide range of non-normally distributed traits. Extensive simulations were conducted to examine the finite sample operating characteristics of these tests. Our results demonstrate that, for non-normally distributed traits, INT-based tests outperform the standard untransformed association test (UAT), both in terms of power and type I error rate control. We apply the proposed methods to GWAS of spirometry traits in the UK Biobank. O-INT has been implemented in the R package RNOmni, which is available on CRAN.},
+	URL = {https://www.biorxiv.org/content/early/2019/10/24/635706},
+	eprint = {https://www.biorxiv.org/content/early/2019/10/24/635706.full.pdf},
+	journal = {bioRxiv}
+}
+
+
+@article{Liddell:2018,
+	title = {Analyzing ordinal data with metric models: What could possibly go wrong?},
+	journal = {Journal of Experimental Social Psychology},
+	volume = {79},
+	pages = {328-348},
+	year = {2018},
+	issn = {0022-1031},
+	doi = {https://doi.org/10.1016/j.jesp.2018.08.009},
+	url = {https://www.sciencedirect.com/science/article/pii/S0022103117307746},
+	author = {Torrin M. Liddell and John K. Kruschke},
+	keywords = {Ordinal data, Likert, Ordered-probit, Bayesian analysis},
+}
+
+@article{Burkner:2019,
+	author = {Paul-Christian Bürkner and Matti Vuorre},
+	title ={Ordinal Regression Models in Psychology: A Tutorial},
+	journal = {Advances in Methods and Practices in Psychological Science},
+	volume = {2},
+	number = {1},
+	pages = {77-101},
+	year = {2019},
+	doi = {10.1177/2515245918823199},
+
+	URL = { 
+			https://doi.org/10.1177/2515245918823199
+	},
+	eprint = { 
+			https://doi.org/10.1177/2515245918823199
+	}
+}
+
+
+@article{Barr:2013,
+	address = {Institute of Neuroscience and Psychology, University of Glasgow, 58 Hillhead St., Glasgow G12 8QB, United Kingdom.; Department of Linguistics, University of California at San Diego, La Jolla, CA 92093-0108, USA.; Institute of Neuroscience and Psychology, University of Glasgow, 58 Hillhead St., Glasgow G12 8QB, United Kingdom.; Department of Brain and Cognitive Sciences, Massachussetts Institute of Technology, Cambridge, MA 02139, USA.},
+	author = {Barr, Dale J and Levy, Roger and Scheepers, Christoph and Tily, Harry J},
+	crdt = {2014/01/10 06:00},
+	date = {2013 Apr},
+	date-added = {2023-07-21 13:19:32 +0200},
+	date-modified = {2023-07-21 13:19:32 +0200},
+	doi = {10.1016/j.jml.2012.11.001},
+	edat = {2014/01/10 06:00},
+	gr = {R01 HD065829/HD/NICHD NIH HHS/United States},
+	issn = {0749-596X (Print); 1096-0821 (Electronic); 0749-596X (Linking)},
+	jid = {8606159},
+	journal = {J Mem Lang},
+	jt = {Journal of memory and language},
+	keywords = {Monte Carlo simulation; generalization; linear mixed-effects models; statistics},
+	language = {eng},
+	lid = {10.1016/j.jml.2012.11.001 {$[$}doi{$]$}},
+	lr = {20220408},
+	mhda = {2014/01/10 06:01},
+	mid = {NIHMS533954},
+	month = {Apr},
+	number = {3},
+	oto = {NOTNLM},
+	own = {NLM},
+	phst = {2014/01/10 06:00 {$[$}entrez{$]$}; 2014/01/10 06:00 {$[$}pubmed{$]$}; 2014/01/10 06:01 {$[$}medline{$]$}},
+	pl = {United States},
+	pmc = {PMC3881361},
+	pmid = {24403724},
+	pst = {ppublish},
+	pt = {Journal Article},
+	status = {PubMed-not-MEDLINE},
+	title = {Random effects structure for confirmatory hypothesis testing: Keep it maximal.},
+	volume = {68},
+	year = {2013},
+	Bdsk-Url-1 = {https://doi.org/10.1016/j.jml.2012.11.001}}
+
+
+@inproceedings{Rasch:2023,
+author = {Rasch, Julian and Rusakov, Vladislav Dmitrievic and Schmitz, Martin and M\"{u}ller, Florian},
+title = {Going, Going, Gone: Exploring Intention Communication for Multi-User Locomotion in Virtual Reality},
+year = {2023},
+isbn = {9781450394215},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3544548.3581259},
+doi = {10.1145/3544548.3581259},
+abstract = {Exploring virtual worlds together with others adds a social component to the Virtual Reality (VR) experience that increases connectedness. In the physical world, joint locomotion comes naturally through implicit intention communication and subsequent adjustments of the movement patterns. In VR, however, discrete locomotion techniques such as point\&teleport come without prior intention communication, hampering the collective experience. Related work proposes fixed groups, with a single person controlling the group movement, resulting in the loss of individual movement capabilities. To close the gap and mediate between these two extremes, we introduce three intention communication methods and explore them with two baseline methods. We contribute the results of a controlled experiment (n=20) investigating these methods from the perspective of a leader and a follower in a dyadic locomotion task. Our results suggest shared visualizations support the understanding of movement intentions, increasing the group feeling while maintaining individual freedom of movement.},
+booktitle = {Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems},
+articleno = {785},
+numpages = {13},
+keywords = {Virtual Reality, SocialVR, Connectedness, Teleportation, Multi-User, Locomotion},
+location = {Hamburg, Germany},
+series = {CHI '23}
+}
+
+
+@misc{casiez:2022,
+  title = {ART finding significant effects that do not seem to exist},
+  author = {Géry Casiez},
+  year = {2022},
+  howpublished = {\url{https://github.com/mjskay/ARTool/issues/36}},
+  note = {Accessed: 2023-07-21}
+}
+
+@misc{Kay:2016,
+  title = {Explain model spec for Error in examples using Higgins1990Table5},
+  author = {Matthew Kay},
+  year = {2016},
+  howpublished = {\url{https://github.com/mjskay/ARTool/issues/11}},
+  note = {Accessed: 2023-07-21}
+}
+
+@misc{Koehn:2022,
+  title = {art.con: error when building model with within-subject style Error term},
+  author = {Thomas Koehn},
+  year = {2022},
+  howpublished = {\url{https://github.com/mjskay/ARTool/issues/37}},
+  note = {Accessed: 2023-07-21}
+}
+
+
+@misc{mixed:2018,
+  title = {wrong formula for mixed designs?},
+  year = {2018},
+  howpublished = {\url{https://github.com/mjskay/ARTool/issues/19}},
+  note = {Accessed: 2023-07-21}
+}
+

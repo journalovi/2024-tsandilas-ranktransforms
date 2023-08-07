@@ -1,0 +1,203 @@
+---
+title: "JoVI article template for the experimental track"
+author: 
+  - name: Matthew Kay
+    orcid: 0000-0001-9446-0419
+    email: mjskay@northwestern.edu
+    affiliations:
+      - name: Northwestern University
+        city: Evanston
+        state: IL
+        country: USA
+bibliography: bibliography.bib
+---
+
+This template is intended for the [experimental track](https://www.journalovi.org/submit.html#experimental) at JoVI.
+
+This template describes how to set up the [Quarto](https://quarto.org/)
+environment for writing a JoVI article, provides instructions and templates for
+content that should be included in every JoVI article (such as the structured
+abstract and authorship metadata), and gives brief examples of some useful
+functionality for writing papers (such as how to include figures and citations).
+
+If you have not setup [Quarto](https://quarto.org/) or the JoVI template yet,
+skip to the [Setup](#setup) section below.
+
+::: {.callout-note appearance="simple" icon=false collapse=false}
+## Abstract {.unnumbered}
+
+We highly recommend all JoVI articles use a structured abstract. Structured abstracts provide a succinct overview of an article using a common set of sections. Which sections are used depends on the type of research and its goals. For example, articles with empirical methods should have a data collection section, while articles that do not analyze data to support a conclusion do not need such a section.
+
+Your paper may fall into multiple types of work. We provide some example sections you may want to include in your structured abstract below, depending on the type of work. You can use the example sections to fill in the subsections that apply to your paper, then delete these first two paragraphs and the subsections that do not apply to your paper. Please add, merge, rename, or re-order sections if you feel that would improve clarity. We have some (partial) examples of structured abstracts [here](https://www.journalovi.org/structured-abstract-examples.html).
+
+###### Introduction
+The research question and a succinct motivation for answering it. 
+
+###### Theory/model
+
+*For theories or models*:
+A description of the theory or model, its key organizing principle, or
+new insights that might be gained from it
+
+###### Data Collection or Source
+
+*For empirical research, reanalysis, or meta-analysis*:
+An overview of experiment and/or data collection procedures. Mention if the collection was prespecified (via preregistration) or exploratory. For reanalyses or meta-analyses, citations of the original sources are sufficient. This section does not apply to articles that only use datasets for demonstrations. 
+
+###### Data Analysis
+
+*For empirical research, reanalysis, or meta-analysis*:
+An overview of analysis approaches used as evidence for conclusions. This section does not apply to articles that only use datasets for demonstrations. 
+
+###### Analysis Results
+
+*For empirical research, reanalysis, or meta-analysis*:
+A summary of the analysis findings
+
+###### Implementation
+
+*For systems or techniques*:
+How was the application or system implemented? 
+
+###### Demonstration
+
+*For systems or techniques*:
+A description of any demonstrations or functionality that exemplify the utility
+of the system
+
+###### Conclusion
+An interpretation of results, lessons learned, etc. in the context of the research question and its implications. _Avoid overgeneralizing_, and _avoid broad behavioral claims without strong evidence._ 
+
+###### Materials
+Link to repositories containing raw data, open source code or (pre-)registration number/links.
+
+:::
+
+
+::: {.callout-note appearance="simple" icon=false collapse=true}
+## Materials, Authorship, License, Conflicts
+
+Fill in the following sections in this infobox per the [JoVI Author Guide](https://www.journalovi.org/author-guide.html#sections), then delete this line.
+
+###### Research materials
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#research-material-statements).
+
+###### Authorship
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#authorship).
+
+###### License
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#license).
+
+###### Conflicts of interest
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#conflicts-of-interest).
+
+:::
+
+
+## Setting up and writing a JoVI article {#setup}
+
+Articles on the JoVI experimental track are written in Quarto, which is a simple markdown-based text format. This template outlines some of the features that are most useful for writing academic articles in Quarto; for more visit <https://quarto.org>.
+
+You can find the source for this article in the [journalovi/jovi-template-quarto](https://github.com/journalovi/jovi-template-quarto) repository on Github. To create a new JoVI article, we recommend following these steps:
+
+1.  Install Quarto by following [these instructions](https://quarto.org/docs/getting-started/installation.html).
+
+2.  Create a new git repository to hold your article by [forking our template repository](https://github.com/journalovi/jovi-template-quarto).
+
+You can then edit `index.qmd` in your new repository to write your paper. There are several options for editing and rendering the paper:
+
+1.  You can execute `quarto serve` from the commandline to render the paper to `index.html` and preview it in the browser.
+
+2.  You can edit the paper in RStudio and render it by clicking on the *Render* button: 
+
+    ![](images/rstudio-render-button.png){style="width: 382.5px" fig.alt="Click Render in the Rstudio toolbar to render a Quarto document."}
+
+**If you plan to use RStudio,** read more about RStudio and Quarto [here](https://quarto.org/docs/computations/using-rstudio.html). In particular, you should install RStudio \> version 1.5. If you do, you can also enable the visual editor:
+
+![](images/rstudio-visual-editor.png){style="width: 554.5px" fig.alt="Click the Settings button and then Use Visual Editor in the Rstudio toolbar to enable the visual editor."}
+
+## Citations and footnotes
+
+[@wobbrock:2011]
+[@elkin:2021]
+[@feys:2016]
+
+Citations can be inserted using  which is rendered as: [@simkin2002read]. You can also format the citation just as the year with `[-@simkin2002read]`, though then we recommending including author names in the sentence; e.g. `Simkin and Roychowdhury [-@simkin2002read] said blah blah blah`: Simkin and Roychowdhury [-@simkin2002read] said blah blah blah. Citations for this paper are kept in `bibliography.bib` in BibTeX format.
+
+You can also insert footnotes.[^1] Note that some traditional uses of footnotes (e.g. to include URLs) are unnecessary in JoVI, as you can (and should) instead simply link directly to the URL you want to refer to with an [inline link](https://www.markdownguide.org/basic-syntax/#links).
+
+[^1]: Like this one!
+
+For more on footnotes and citations see [this Quarto documentation page](https://quarto.org/docs/authoring/footnotes-and-citations.html).
+
+
+## Figures and images
+
+Images can be included and for accessibility purposes **should always** have alt text. Alt text of visualizations should provide meaningful descriptions of the visualization.
+
+``` markdown
+![](images/teaser.svg){fig.alt="Mean expected payoff / optimal
+payoff for 10 conditions, showing an increase over time in most
+conditions, with dot50 having the highest value of
+approximately 97% of optimal."}
+```
+
+![](images/teaser.svg){fig.alt="Mean expected payoff / optimal payoff for 10 conditions, showing an increase over time in most conditions, with dot50 having the highest value of approximately 97% of optimal."}
+
+You can also add captions and figure references using a `:::` block combined with an id prefixed with `#fig-`:
+
+``` markdown
+::: {#fig-teaser}
+![](images/teaser.svg){fig.alt="Mean expected payoff / optimal
+payoff for 10 conditions, showing an increase over time in most
+conditions, with dot50 having the highest value of
+approximately 97% of optimal."}
+
+Mean expected payoff / optimal payoff for 10 conditions.
+:::
+```
+
+::: {#fig-teaser}
+![](images/teaser.svg){fig.alt="Mean expected payoff / optimal payoff for 10 conditions, showing an increase over time in most conditions, with dot50 having the highest value of approximately 97% of optimal."}
+
+Mean expected payoff / optimal payoff for 10 conditions.
+:::
+
+Then you can refer to the above figure in text using `@fig-teaser`; for example:
+
+Refer to @fig-teaser. For more on cross-references, see the [Quarto page on cross-references](https://quarto.org/docs/authoring/cross-references.html).
+
+For the highest-quality output, we recommend using SVG figures if possible.
+
+Quarto also contains classes for more complex figure layouts and subfigures, which we recommend using in most cases if you need more complex layouts; see [the Quarto page on figures](https://quarto.org/docs/authoring/figures-and-layout.html). That said, we encourage exploration of what is possible with online article formats, and you should feel free to experiment so long as the result is archivable, accessible, and readable.
+
+## Body text
+
+The basic body text, header formatting, and basic tags such as links, emphasis, etc should be left as-is except in rare cases (for which you should be able to demonstrate the value of your modifications). That said, we do encourage experimentation with what is possible in this format; some possibilities that just scrath the surface include: using color or other formatting to link text content semantically with figures; using inline figures; experimenting with interactive widgets in text and figures. So long as content retains archivability, accessibility, and readability, we welcome experimentation with the format.
+
+## Code
+
+Quarto supports R and python code; for example:
+
+```{r}
+1 + 2 + 123
+```
+
+## Equations
+
+Equations can be included using LaTeX syntax:
+
+$$
+x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+$$
+
+For more on equations, see [the corresponding section in the Quarto documentation]().
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

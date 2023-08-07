@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.313">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Matthew Kay">
+<meta name="author" content="Theophanis Tsandilas">
 
-<title>JoVI article template for the experimental track</title>
+<title>The illusory promise of the Aligned Rank Transform: An obsolete technique</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -88,8 +54,6 @@ div.csl-indent {
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -101,12 +65,26 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup"><span class="header-section-number">1</span> Setting up and writing a JoVI article</a></li>
-  <li><a href="#citations-and-footnotes" id="toc-citations-and-footnotes" class="nav-link" data-scroll-target="#citations-and-footnotes"><span class="header-section-number">2</span> Citations and footnotes</a></li>
-  <li><a href="#figures-and-images" id="toc-figures-and-images" class="nav-link" data-scroll-target="#figures-and-images"><span class="header-section-number">3</span> Figures and images</a></li>
-  <li><a href="#body-text" id="toc-body-text" class="nav-link" data-scroll-target="#body-text"><span class="header-section-number">4</span> Body text</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">5</span> Code</a></li>
-  <li><a href="#equations" id="toc-equations" class="nav-link" data-scroll-target="#equations"><span class="header-section-number">6</span> Equations</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">2</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#non-parametric-statistics" id="toc-non-parametric-statistics" class="nav-link" data-scroll-target="#non-parametric-statistics">Non-parametric statistics</a></li>
+  <li><a href="#rank-transformations" id="toc-rank-transformations" class="nav-link" data-scroll-target="#rank-transformations">Rank transformations</a></li>
+  <li><a href="#previous-warnings" id="toc-previous-warnings" class="nav-link" data-scroll-target="#previous-warnings">Previous warnings</a></li>
+  </ul></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology"><span class="header-section-number">3</span> Methodology</a></li>
+  <li><a href="#experimental-results" id="toc-experimental-results" class="nav-link" data-scroll-target="#experimental-results"><span class="header-section-number">4</span> Experimental results</a>
+  <ul class="collapse">
+  <li><a href="#scale-data" id="toc-scale-data" class="nav-link" data-scroll-target="#scale-data">Scale data</a></li>
+  <li><a href="#ordinal-data" id="toc-ordinal-data" class="nav-link" data-scroll-target="#ordinal-data">Ordinal data</a></li>
+  <li><a href="#contrasts" id="toc-contrasts" class="nav-link" data-scroll-target="#contrasts">Contrasts</a></li>
+  <li><a href="#unequal-variance" id="toc-unequal-variance" class="nav-link" data-scroll-target="#unequal-variance">Unequal variance</a></li>
+  <li><a href="#unbalanced-designs" id="toc-unbalanced-designs" class="nav-link" data-scroll-target="#unbalanced-designs">Unbalanced designs</a></li>
+  <li><a href="#effect-sizes" id="toc-effect-sizes" class="nav-link" data-scroll-target="#effect-sizes">Effect sizes</a></li>
+  </ul></li>
+  <li><a href="#understanding-arts-poor-performance" id="toc-understanding-arts-poor-performance" class="nav-link" data-scroll-target="#understanding-arts-poor-performance"><span class="header-section-number">5</span> Understanding ART’s poor performance</a></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations"><span class="header-section-number">6</span> Recommendations</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">7</span> Conclusion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -115,7 +93,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">JoVI article template for the experimental track</h1>
+<h1 class="title">The illusory promise of the Aligned Rank Transform: An obsolete technique</h1>
 </div>
 
 
@@ -124,11 +102,11 @@ div.csl-indent {
   <div class="quarto-title-meta-heading">Affiliation</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author">Matthew Kay <a href="https://orcid.org/0000-0001-9446-0419" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+    <p class="author">Theophanis Tsandilas <a href="https://orcid.org/0000-0002-0158-228X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
   </div>
     <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            Northwestern University
+            Université Paris-Saclay, CNRS, Inria, LISN
           </p>
       </div>
     </div>
@@ -143,183 +121,95 @@ div.csl-indent {
 
 </header>
 
-<p>This template is intended for the <a href="https://www.journalovi.org/submit.html#experimental">experimental track</a> at JoVI.</p>
-<p>This template describes how to set up the <a href="https://quarto.org/">Quarto</a> environment for writing a JoVI article, provides instructions and templates for content that should be included in every JoVI article (such as the structured abstract and authorship metadata), and gives brief examples of some useful functionality for writing papers (such as how to include figures and citations).</p>
-<p>If you have not setup <a href="https://quarto.org/">Quarto</a> or the JoVI template yet, skip to the <a href="#setup">Setup</a> section below.</p>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Abstract
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>We highly recommend all JoVI articles use a structured abstract. Structured abstracts provide a succinct overview of an article using a common set of sections. Which sections are used depends on the type of research and its goals. For example, articles with empirical methods should have a data collection section, while articles that do not analyze data to support a conclusion do not need such a section.</p>
-<p>Your paper may fall into multiple types of work. We provide some example sections you may want to include in your structured abstract below, depending on the type of work. You can use the example sections to fill in the subsections that apply to your paper, then delete these first two paragraphs and the subsections that do not apply to your paper. Please add, merge, rename, or re-order sections if you feel that would improve clarity. We have some (partial) examples of structured abstracts <a href="https://www.journalovi.org/structured-abstract-examples.html">here</a>.</p>
-<section id="introduction" class="level6">
-<h6 class="anchored" data-anchor-id="introduction">Introduction</h6>
-<p>The research question and a succinct motivation for answering it.</p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>In this notebook, I will demonstrate several issues of the implementation of the aligned rank transform procedure <span class="citation" data-cites="wobbrock:2011">(<a href="#ref-wobbrock:2011" role="doc-biblioref">Wobbrock et al. 2011</a>)</span>. Some of these issues have been raised by other researchers in the past <span class="citation" data-cites="barr:2013 luepsen:2017 luepsen:2018">(<a href="#ref-barr:2013" role="doc-biblioref">Barr et al. 2013</a>; <a href="#ref-luepsen:2017" role="doc-biblioref">Luepsen 2017</a>, <a href="#ref-luepsen:2018" role="doc-biblioref">2018</a>)</span> and have not been addressed by the more recent implementation of the procedure <span class="citation" data-cites="elkin:2021">(<a href="#ref-elkin:2021" role="doc-biblioref">Elkin et al. 2021</a>)</span>. I will explain that there are simpler and more general transformation methods that avoid these issues.</p>
 </section>
-<section id="theorymodel" class="level6">
-<h6 class="anchored" data-anchor-id="theorymodel">Theory/model</h6>
-<p><em>For theories or models</em>: A description of the theory or model, its key organizing principle, or new insights that might be gained from it</p>
+<section id="background" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Background</h1>
+<section id="non-parametric-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="non-parametric-statistics">Non-parametric statistics</h3>
+<p>Parametric statistical procedures such as ANOVA, are known to be failry robust to deviations from normality assumptions, and this is especially then case when samples sizes are large. However, in many situations […] (Continue with an overview of assumption violations and non-parametric statistical methods and common tests.)</p>
 </section>
-<section id="data-collection-or-source" class="level6">
-<h6 class="anchored" data-anchor-id="data-collection-or-source">Data Collection or Source</h6>
-<p><em>For empirical research, reanalysis, or meta-analysis</em>: An overview of experiment and/or data collection procedures. Mention if the collection was prespecified (via preregistration) or exploratory. For reanalyses or meta-analyses, citations of the original sources are sufficient. This section does not apply to articles that only use datasets for demonstrations.</p>
+<section id="rank-transformations" class="level3">
+<h3 class="anchored" data-anchor-id="rank-transformations">Rank transformations</h3>
+<p>Unfortunately, each non-parametric statistical test addresses a specific experimental design. There is no handy test for more complex models such as ones that contain multiple independent variables. Rank transformations <span class="citation" data-cites="conover:1981">(<a href="#ref-conover:1981" role="doc-biblioref">Conover and Iman 1981</a>)</span></p>
+<p><span class="citation" data-cites="higgins:1990">(<a href="#ref-higgins:1990" role="doc-biblioref">Higgins, Blair, and Tashtoush 1990</a>)</span></p>
+<p>So previous litterature has investigatedd data transformations that could</p>
+<p>An alternative approach is to use the</p>
+<p>Data transformations provide a convinient solution</p>
+<p>While rank transformations are widespread, they are not</p>
 </section>
-<section id="data-analysis" class="level6">
-<h6 class="anchored" data-anchor-id="data-analysis">Data Analysis</h6>
-<p><em>For empirical research, reanalysis, or meta-analysis</em>: An overview of analysis approaches used as evidence for conclusions. This section does not apply to articles that only use datasets for demonstrations.</p>
+<section id="previous-warnings" class="level3">
+<h3 class="anchored" data-anchor-id="previous-warnings">Previous warnings</h3>
+<p>Include here all the background related to the</p>
+<p><span class="citation" data-cites="casiez:2022">(<a href="#ref-casiez:2022" role="doc-biblioref">Casiez 2022</a>)</span></p>
 </section>
-<section id="analysis-results" class="level6">
-<h6 class="anchored" data-anchor-id="analysis-results">Analysis Results</h6>
-<p><em>For empirical research, reanalysis, or meta-analysis</em>: A summary of the analysis findings</p>
 </section>
-<section id="implementation" class="level6">
-<h6 class="anchored" data-anchor-id="implementation">Implementation</h6>
-<p><em>For systems or techniques</em>: How was the application or system implemented?</p>
+<section id="methodology" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Methodology</h1>
 </section>
-<section id="demonstration" class="level6">
-<h6 class="anchored" data-anchor-id="demonstration">Demonstration</h6>
-<p><em>For systems or techniques</em>: A description of any demonstrations or functionality that exemplify the utility of the system</p>
+<section id="experimental-results" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Experimental results</h1>
+<section id="scale-data" class="level3">
+<h3 class="anchored" data-anchor-id="scale-data">Scale data</h3>
 </section>
-<section id="conclusion" class="level6">
-<h6 class="anchored" data-anchor-id="conclusion">Conclusion</h6>
-<p>An interpretation of results, lessons learned, etc. in the context of the research question and its implications. <em>Avoid overgeneralizing</em>, and <em>avoid broad behavioral claims without strong evidence.</em></p>
+<section id="ordinal-data" class="level3">
+<h3 class="anchored" data-anchor-id="ordinal-data">Ordinal data</h3>
 </section>
-<section id="materials" class="level6">
-<h6 class="anchored" data-anchor-id="materials">Materials</h6>
-<p>Link to repositories containing raw data, open source code or (pre-)registration number/links.</p>
+<section id="contrasts" class="level3">
+<h3 class="anchored" data-anchor-id="contrasts">Contrasts</h3>
 </section>
-</div>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Materials, Authorship, License, Conflicts
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Fill in the following sections in this infobox per the <a href="https://www.journalovi.org/author-guide.html#sections">JoVI Author Guide</a>, then delete this line.</p>
-<section id="research-materials" class="level6">
-<h6 class="anchored" data-anchor-id="research-materials">Research materials</h6>
-<p>See <a href="https://www.journalovi.org/author-guide.html#research-material-statements">the corresponding section in the author guide</a>.</p>
+<section id="unequal-variance" class="level3">
+<h3 class="anchored" data-anchor-id="unequal-variance">Unequal variance</h3>
 </section>
-<section id="authorship" class="level6">
-<h6 class="anchored" data-anchor-id="authorship">Authorship</h6>
-<p>See <a href="https://www.journalovi.org/author-guide.html#authorship">the corresponding section in the author guide</a>.</p>
+<section id="unbalanced-designs" class="level3">
+<h3 class="anchored" data-anchor-id="unbalanced-designs">Unbalanced designs</h3>
 </section>
-<section id="license" class="level6">
-<h6 class="anchored" data-anchor-id="license">License</h6>
-<p>See <a href="https://www.journalovi.org/author-guide.html#license">the corresponding section in the author guide</a>.</p>
+<section id="effect-sizes" class="level3">
+<h3 class="anchored" data-anchor-id="effect-sizes">Effect sizes</h3>
 </section>
-<section id="conflicts-of-interest" class="level6">
-<h6 class="anchored" data-anchor-id="conflicts-of-interest">Conflicts of interest</h6>
-<p>See <a href="https://www.journalovi.org/author-guide.html#conflicts-of-interest">the corresponding section in the author guide</a>.</p>
 </section>
-</div>
-</div>
-</div>
-<section id="setup" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="setup"><span class="header-section-number">1</span> Setting up and writing a JoVI article</h2>
-<p>Articles on the JoVI experimental track are written in Quarto, which is a simple markdown-based text format. This template outlines some of the features that are most useful for writing academic articles in Quarto; for more visit <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
-<p>You can find the source for this article in the <a href="https://github.com/journalovi/jovi-template-quarto">journalovi/jovi-template-quarto</a> repository on Github. To create a new JoVI article, we recommend following these steps:</p>
-<ol type="1">
-<li><p>Install Quarto by following <a href="https://quarto.org/docs/getting-started/installation.html">these instructions</a>.</p></li>
-<li><p>Create a new git repository to hold your article by <a href="https://github.com/journalovi/jovi-template-quarto">forking our template repository</a>.</p></li>
-</ol>
-<p>You can then edit <code>index.qmd</code> in your new repository to write your paper. There are several options for editing and rendering the paper:</p>
-<ol type="1">
-<li><p>You can execute <code>quarto serve</code> from the commandline to render the paper to <code>index.html</code> and preview it in the browser.</p></li>
-<li><p>You can edit the paper in RStudio and render it by clicking on the <em>Render</em> button:</p>
-<p><img src="images/rstudio-render-button.png" class="img-fluid" style="width: 382.5px" data-fig.alt="Click Render in the Rstudio toolbar to render a Quarto document."></p></li>
-</ol>
-<p><strong>If you plan to use RStudio,</strong> read more about RStudio and Quarto <a href="https://quarto.org/docs/computations/using-rstudio.html">here</a>. In particular, you should install RStudio &gt; version 1.5. If you do, you can also enable the visual editor:</p>
-<p><img src="images/rstudio-visual-editor.png" class="img-fluid" style="width: 554.5px" data-fig.alt="Click the Settings button and then Use Visual Editor in the Rstudio toolbar to enable the visual editor."></p>
+<section id="understanding-arts-poor-performance" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Understanding ART’s poor performance</h1>
 </section>
-<section id="citations-and-footnotes" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="citations-and-footnotes"><span class="header-section-number">2</span> Citations and footnotes</h2>
-<p>Citations can be inserted using <code>[@simkin2002read]</code>, which is rendered as: <span class="citation" data-cites="simkin2002read">(<a href="#ref-simkin2002read" role="doc-biblioref">Simkin and Roychowdhury 2002</a>)</span>. You can also format the citation just as the year with <code>[-@simkin2002read]</code>, though then we recommending including author names in the sentence; e.g.&nbsp;<code>Simkin and Roychowdhury [-@simkin2002read] said blah blah blah</code>: Simkin and Roychowdhury <span class="citation" data-cites="simkin2002read">(<a href="#ref-simkin2002read" role="doc-biblioref">2002</a>)</span> said blah blah blah. Citations for this paper are kept in <code>bibliography.bib</code> in BibTeX format.</p>
-<p>You can also insert footnotes.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Note that some traditional uses of footnotes (e.g.&nbsp;to include URLs) are unnecessary in JoVI, as you can (and should) instead simply link directly to the URL you want to refer to with an <a href="https://www.markdownguide.org/basic-syntax/#links">inline link</a>.</p>
-<p>For more on footnotes and citations see <a href="https://quarto.org/docs/authoring/footnotes-and-citations.html">this Quarto documentation page</a>.</p>
+<section id="recommendations" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Recommendations</h1>
 </section>
-<section id="figures-and-images" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="figures-and-images"><span class="header-section-number">3</span> Figures and images</h2>
-<p>Images can be included and for accessibility purposes <strong>should always</strong> have alt text. Alt text of visualizations should provide meaningful descriptions of the visualization.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/teaser.svg)</span>{fig.alt="Mean expected payoff / optimal</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>payoff for 10 conditions, showing an increase over time in most</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>conditions, with dot50 having the highest value of</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>approximately 97% of optimal."}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img src="images/teaser.svg" class="img-fluid" data-fig.alt="Mean expected payoff / optimal payoff for 10 conditions, showing an increase over time in most conditions, with dot50 having the highest value of approximately 97% of optimal."></p>
-<p>You can also add captions and figure references using a <code>:::</code> block combined with an id prefixed with <code>#fig-</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>::: {#fig-teaser}</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/teaser.svg)</span>{fig.alt="Mean expected payoff / optimal</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>payoff for 10 conditions, showing an increase over time in most</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>conditions, with dot50 having the highest value of</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>approximately 97% of optimal."}</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>Mean expected payoff / optimal payoff for 10 conditions.</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fig-teaser" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="images/teaser.svg" class="img-fluid figure-img" data-fig.alt="Mean expected payoff / optimal payoff for 10 conditions, showing an increase over time in most conditions, with dot50 having the highest value of approximately 97% of optimal."></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;1: Mean expected payoff / optimal payoff for 10 conditions.</figcaption><p></p>
-</figure>
-</div>
-<p>Then you can refer to the above figure in text using <code>@fig-teaser</code>; for example:</p>
-<p>Refer to <a href="#fig-teaser">Figure&nbsp;1</a>. For more on cross-references, see the <a href="https://quarto.org/docs/authoring/cross-references.html">Quarto page on cross-references</a>.</p>
-<p>For the highest-quality output, we recommend using SVG figures if possible.</p>
-<p>Quarto also contains classes for more complex figure layouts and subfigures, which we recommend using in most cases if you need more complex layouts; see <a href="https://quarto.org/docs/authoring/figures-and-layout.html">the Quarto page on figures</a>. That said, we encourage exploration of what is possible with online article formats, and you should feel free to experiment so long as the result is archivable, accessible, and readable.</p>
+<section id="conclusion" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Conclusion</h1>
 </section>
-<section id="body-text" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="body-text"><span class="header-section-number">4</span> Body text</h2>
-<p>The basic body text, header formatting, and basic tags such as links, emphasis, etc should be left as-is except in rare cases (for which you should be able to demonstrate the value of your modifications). That said, we do encourage experimentation with what is possible in this format; some possibilities that just scrath the surface include: using color or other formatting to link text content semantically with figures; using inline figures; experimenting with interactive widgets in text and figures. So long as content retains archivability, accessibility, and readability, we welcome experimentation with the format.</p>
-</section>
-<section id="code" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="code"><span class="header-section-number">5</span> Code</h2>
-<p>Quarto supports R and python code; for example:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3</code></pre>
-</div>
-</div>
-</section>
-<section id="equations" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="equations"><span class="header-section-number">6</span> Equations</h2>
-<p>Equations can be included using LaTeX syntax:</p>
-<p><span class="math display">\[
-x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
-\]</span></p>
-<p>For more on equations, see <a href="">the corresponding section in the Quarto documentation</a>.</p>
-</section>
-<section id="references" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<section id="references" class="level1 unnumbered">
+<h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-simkin2002read" class="csl-entry" role="listitem">
-Simkin, Mikhail V, and Vwani P Roychowdhury. 2002. <span>“Read Before You Cite!”</span> <em>arXiv Preprint Cond-Mat/0212043</em>. <a href="https://arxiv.org/pdf/cond-mat/0212043">https://arxiv.org/pdf/cond-mat/0212043</a>.
+<div id="ref-barr:2013" class="csl-entry" role="listitem">
+Barr, Dale J, Roger Levy, Christoph Scheepers, and Harry J Tily. 2013. <span>“Random Effects Structure for Confirmatory Hypothesis Testing: Keep It Maximal.”</span> <em>J Mem Lang</em> 68 (3). <a href="https://doi.org/10.1016/j.jml.2012.11.001">https://doi.org/10.1016/j.jml.2012.11.001</a>.
+</div>
+<div id="ref-casiez:2022" class="csl-entry" role="listitem">
+Casiez, Géry. 2022. <span>“ART Finding Significant Effects That Do Not Seem to Exist.”</span> <a href="https://github.com/mjskay/ARTool/issues/36" class="uri">https://github.com/mjskay/ARTool/issues/36</a>.
+</div>
+<div id="ref-conover:1981" class="csl-entry" role="listitem">
+Conover, W. J., and Ronald L. Iman. 1981. <span>“Rank Transformations as a Bridge Between Parametric and Nonparametric Statistics.”</span> <em>The American Statistician</em> 35 (3): 124–29. <a href="https://doi.org/10.1080/00031305.1981.10479327">https://doi.org/10.1080/00031305.1981.10479327</a>.
+</div>
+<div id="ref-elkin:2021" class="csl-entry" role="listitem">
+Elkin, Lisa A., Matthew Kay, James J. Higgins, and Jacob O. Wobbrock. 2021. <span>“An Aligned Rank Transform Procedure for Multifactor Contrast Tests.”</span> In <em>The 34th Annual ACM Symposium on User Interface Software and Technology</em>, 754–68. UIST ’21. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/3472749.3474784">https://doi.org/10.1145/3472749.3474784</a>.
+</div>
+<div id="ref-higgins:1990" class="csl-entry" role="listitem">
+Higgins, James J., R. Clifford Blair, and Suleiman Tashtoush. 1990. <span>“The Aligned Rank Transform Procedure.”</span> In <em>Conference on Applied Statistics in Agriculture</em>. <a href="https://doi.org/10.4148/2475-7772.1443">https://doi.org/10.4148/2475-7772.1443</a>.
+</div>
+<div id="ref-luepsen:2017" class="csl-entry" role="listitem">
+Luepsen, Haiko. 2017. <span>“The Aligned Rank Transform and Discrete Variables: A Warning.”</span> <em>Communications in Statistics - Simulation and Computation</em> 46 (9): 6923–36. <a href="https://doi.org/10.1080/03610918.2016.1217014">https://doi.org/10.1080/03610918.2016.1217014</a>.
+</div>
+<div id="ref-luepsen:2018" class="csl-entry" role="listitem">
+———. 2018. <span>“Comparison of Nonparametric Analysis of Variance Methods: A Vote for van Der Waerden.”</span> <em>Communications in Statistics - Simulation and Computation</em> 47: 2547–76.
+</div>
+<div id="ref-wobbrock:2011" class="csl-entry" role="listitem">
+Wobbrock, Jacob O., Leah Findlater, Darren Gergle, and James J. Higgins. 2011. <span>“The Aligned Rank Transform for Nonparametric Factorial Analyses Using Only Anova Procedures.”</span> In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>, 143–46. CHI ’11. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/1978942.1978963">https://doi.org/10.1145/1978942.1978963</a>.
 </div>
 </div>
 </section>
 
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p>Like this one!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section></div></main>
+</main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
