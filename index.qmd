@@ -124,7 +124,11 @@ We also examine effect size measures, which are commonly reported in scientific 
 | Difficulty $\times$ Technique | $.08\ [.00, 1.00]$  | $.16\ [.04, 1.00]$| $.06\ [.00, 1.00]$| $.06\ [.00, 1.00]$ |
 : partial $\eta^2$ and its 95\% confidence interval {.sm}
 
-Clearly, ART exagerates the effect of *Technique* and its interaction with *Difficulty*. In addition to evaluating false positive (Type I) and false negative (Type II) errors, we will also evaluate how well the different methods estimate effect sizes. 
+Clearly, ART exagerates the effect of *Technique* and its interaction with *Difficulty*. 
+
+<!--
+In addition to evaluating false positive (Type I) and false negative (Type II) errors, we will also evaluate how well the different methods estimate effect sizes. 
+-->
 
 <!--
  We observe similar discripancies if we conduct contrast tests with the ART procedure [@elkin:2021]. The following table presents *p*-values for pairwise comparisons between techniques: 
@@ -288,9 +292,15 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the mag
 :::
 
 ### Summary
-Our first results on a balanced repeated-measures 4 $\times$ 3 factorial design demonstrate that unless distributions are normal, ART does not provide any grarantee for the Type I errors of main and interaction effects. If we only focus on interaction effects, we observe that all four techniques fail to control for errors when both main effects grow, but ART's error rates explode quicker. 
+Our first results on a balanced repeated-measures 4 $\times$ 3 factorial design demonstrate that unless distributions are normal, ART does not provide any grarantee for the Type I errors of main and interaction effects. Its failure under the Cauchy distribution is not a surprise, since it was also observed by @Salter:1993, and later by @elkin:2021. However, the authors had argued that ART is robust under other distributions, such as the exponential and the log-normal distributions. Our results demonstrate that this is not the case and corroborate the warnings of @luepsen:2018.
 
-For non-normal distributions, INT tends to exhibit the lowest error rates, which corroborates previous results [@luepsen:2018]. Although the method also fails when , we should mention that the effect sizes that we tested are especially large. Effects with $a_1$ and $a_2$ greater than $0.8$ result in $100\%$ statistical power for sample sizes as low as $n=10$. Such power levels are uncommon in real experimental designs. Thus, given its simplicity, the inverse normal transformation might still be a viable alternative for testing interactions. 
+<!--
+If we only focus on interaction effects, we observe that all four techniques fail to control for errors when both main effects grow, but ART's error rates explode significantly quicker. 
+
+For non-normal distributions, INT tends to exhibit the lowest error rates, which corroborates previous results [@luepsen:2018]. Although the method also fails when effects sizes become large, we should mention that the effect sizes that we tested are especially large. Effects with $a_1$ and $a_2$ greater than $0.8$ result in $100\%$ statistical power for sample sizes as low as $n=10$. Such power levels are uncommon in real experimental designs. Thus, given its simplicity, the inverse normal transformation might still be a viable alternative. We will evaluate its performance with additional tests 
+-->
+
+# Ordinal data
 
 # Additional experiments
 ### Different experimental designs
@@ -299,9 +309,7 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 
 ### Unbalanced designs
 
-### Ordinal data
-
-### Statistical power and effect sizes
+# Statistical power and effect sizes
 
 # Understanding ART's poor performance
 
