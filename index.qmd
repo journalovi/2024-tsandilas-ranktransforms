@@ -178,11 +178,8 @@ Include here all the background related to the
 
 [@casiez:2022] [@luepsen:2017; @luepsen:2018]
 
-# ART's breakdown across distributions
-To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 $\times$ 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section. 
-
-### Methodology
-**Model structure**. We assume that observations for the response variable $Y$ come from a two-way balanced mixed effects model with the following form: 
+# Methodology
+**Model structure**. We assume that observations for the response variable $Y$ come from a two-way balanced mixed-effects model with the following form: 
 
 $$ 
 y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
@@ -190,9 +187,9 @@ $${#eq-linear-model}
 
  - $\mu$ is the grand mean
 
- - $x_{1i}$ is a numerical coding of the *i*-th level of factor $X_1$, where $i = 1..m_1$
+ - $x_{1i}$ is a numerical encoding of the *i*-th level of factor $X_1$, where $i = 1..m_1$
 
- - $x_{2j}$ is a numerical coding of the *j*-th level of factor $X_2$, where $j = 1..m_2$
+ - $x_{2j}$ is a numerical encoding of the *j*-th level of factor $X_2$, where $j = 1..m_2$
 
  - $a_1$, $a_2$, and $a_{12}$ express the magnitude of main and interaction effects 
 
@@ -200,7 +197,15 @@ $${#eq-linear-model}
 
  - $\epsilon_{ijk}$ is the experimental error effect
 
- We set the levels $x_{1i} \in X_1$ and $x_{2j} \in X_2$ to be equidistant, requiring them to sum up to zero [@baguley2012]. For a 4 $\times$ 3 design ($m_1 = 4$ and $m_2 = 3$), we code $X_1$ and $X_2$ as follows: $X_1 = \{-1.5, -0.5, 0.5, 1.5 \}$ and $X_2 = \{-1, 0, 1 \}$. 
+To encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we proceed as follows: 
+
+1. We normalize the distance between their first and their second levels such that $x_{12} - x_{11} = 1$ and $x_{22} - x_{21} = 1$. This approach enables us to conveniently control for the main and interaction effects by simply varying the parameters $a_1$, $a_2$, and $a_{12}$.
+
+2. For the remaining levels, we randomly sample from a uniform distribution between the two extremes. Thus, we generate and evaluate a large number of different configurations of relative effects between levels.  
+
+3. We require all levels to sum up to 0, or $\sum\limits_{i=1}^{m_1}  x_{1i} = 0$ and $\sum\limits_{j=1}^{m_2}  x_{2j} = 0$, which ensures that the grand mean is $\mu$.
+
+For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or as $\{-.5, .5, .3, -.3\}$. 
 
 While random slope effects can have an impact on real experimental data [@barr:2013], we do not incorporate them into our simulations for three reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; (2) because random slope effects make the control for equal variances and sphericity assumptions more challenging; and (3) because mixed-effects procedures that account for random slope effects are more computationally demanding, adding strain to our simulation resources. However, there is no good reason to believe that adding random slope effects would affect our key findigns and conclusions.
 
@@ -241,12 +246,15 @@ We compare the three rank-based methods against the naive parametric method (PAR
 **Measures**.
 We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materials. 
 
-### Results
-@fig-results1 presents Type I error rates ($\alpha = .05$) for the interaction effect when increasing the magnitude of effect of both factors $X_1$ and $X_2$. 
+
+# Ratio variables
+To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 $\times$ 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section. 
+
+**Interaction effects**. @fig-results1 presents Type I error rates ($\alpha = .05$) for the interaction effect when increasing the magnitude of effect of both factors $X_1$ and $X_2$. 
 
 ::: {#fig-results1}
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-prefix <- "1_test_4x3_Type_I"
+prefix <- "1_test_4x3_Ratio"
 alpha=.05
 
 df <- rbind(
@@ -288,7 +296,7 @@ Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magni
 
 RNK and INT keep Type I error rates close to $5\%$ across all distributions. The regular parametric ANOVA does not inflate errors, but error rates for some configurations are significantly lower than $5\%$, which may suggest loss of statistical power. ART's behavior is again problematic for all non-normal distributions, inflating Type I error rates beyond acceptable levels. 
 
-But ART does not only inflate error rates on interaction effects. @fig-results3 presents the Type I error rates for the main effect of $X_2$ when the magnitude of the main effect of $X_1$ increases. We observe similar patterns as for interaction effects, although error rates are even larger now.   
+**Main effects**. But ART does not only inflate error rates on interaction effects. @fig-results3 presents the Type I error rates for the main effect of $X_2$ when the magnitude of the main effect of $X_1$ increases. We observe similar patterns as for interaction effects, although error rates are even larger now.   
 
 ::: {#fig-results3}
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
@@ -296,6 +304,25 @@ plotErrorGrid(df2, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
 :::
+
+**Contrasts**.
+
+::: {#fig-results3}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+prefix <- "5_test_4x3_Contrasts"
+alpha=.05
+
+df <- rbind(
+  readData(prefix, 10, alpha, 1), 
+  readData(prefix, 20, alpha, 1),
+  readData(prefix, 30, alpha, 1)
+)
+
+plotErrorGrid(df, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
+:::
+
 
 ### Summary
 Our first results on a balanced repeated-measures 4 $\times$ 3 factorial design demonstrate that unless distributions are normal, ART does not provide any grarantee for the Type I errors of main and interaction effects. Its failure under the Cauchy distribution is not a surprise, since it was also observed by @Salter:1993, and later by @elkin:2021. However, the authors had argued that ART is robust under other distributions, such as the exponential and the log-normal distributions. Our results demonstrate that this is not the case and corroborate the warnings of @luepsen:2018.
@@ -306,16 +333,91 @@ If we only focus on interaction effects, we observe that all four techniques fai
 For non-normal distributions, INT tends to exhibit the lowest error rates, which corroborates previous results [@luepsen:2018]. Although the method also fails when effects sizes become large, we should mention that the effect sizes that we tested are especially large. Effects with $a_1$ and $a_2$ greater than $0.8$ result in $100\%$ statistical power for sample sizes as low as $n=10$. Such power levels are uncommon in real experimental designs. Thus, given its simplicity, the inverse normal transformation might still be a viable alternative. We will evaluate its performance with additional tests 
 -->
 
-# Ordinal data
+# Ordinal variables
+
+### Results
+
+**Interaction effects**.
+
+::: {#fig-results-ordinal-1}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+prefix <- "2_test_4x3_Ordinal"
+alpha=.05
+
+distr = c("likert5", "likert7", "likert20", "likert5B", "likert7B", "likert20B")
+
+df <- rbind(
+  readData(prefix, 10, alpha, 0, distributions = distr), 
+  readData(prefix, 20, alpha, 0, distributions = distr),
+  readData(prefix, 30, alpha, 0, distributions = distr)
+)
+
+plotErrorGrid(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effects of $X_1$ and $X_2$ increases
+:::
+
+
+::: {#fig-results-ordinal-2}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+df2 <- rbind(
+  readData(prefix, 10, alpha, 1, distributions = distr), 
+  readData(prefix, 20, alpha, 1, distributions = distr),
+  readData(prefix, 30, alpha, 1, distributions = distr)
+)
+
+plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effect of $X_1$ increases
+:::
+
+**Main effects**.
+
+::: {#fig-results-ordinal-3}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+plotErrorGrid(df2, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
+:::
+
 
 # Additional experiments
-### Different experimental designs
+### Type I errors across designs
 
 ### Unequal variances
+**Interaction effects**.
 
-### Unbalanced designs
+::: {#fig-results-hetero-1}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+prefix <- "4_test_2x4_Hetero"
+alpha=.05
 
-# Statistical power and effect sizes
+distr = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+
+df <- rbind(
+  readData(prefix, 10, alpha, 0, distributions = distr), 
+  readData(prefix, 20, alpha, 0, distributions = distr),
+  readData(prefix, 30, alpha, 0, distributions = distr)
+)
+
+plotErrorGrid(df, max = 40, "rateX1X2", xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]))
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect**, as the variance difference on $X_1$ increases
+:::
+
+
+**Main effects**.
+
+::: {#fig-results-hetero-2}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+plotErrorGrid(df, max = 40, "rateX2",  xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]))
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the variance difference on $X_1$ increases
+:::
+
+### Power
+
+### Effect sizes
 
 # Understanding ART's poor performance
 

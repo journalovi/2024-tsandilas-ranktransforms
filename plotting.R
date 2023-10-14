@@ -5,7 +5,7 @@ library(gridExtra)
 library(grid)
 library(egg)
 
-plotError <- function(df, n, max = 100, var = "rateX1X2", xlab, legend = TRUE) {
+plotError <- function(df, n, max = 100, var = "rateX1X2", xvar = "effectX1", xlab, legend = TRUE) {
 	legendPos = ifelse(legend, "top", "none") 
 
 	cbPalette <- c("#888888", "#E69F00", "#009E73", "#FF5E00")
@@ -17,7 +17,7 @@ plotError <- function(df, n, max = 100, var = "rateX1X2", xlab, legend = TRUE) {
   		label = c(paste("n=", n, sep=""), rep(NA, length(distr_levels) - 1)) 
 	)
 
-	plot <- ggplot(df, aes(x=factor(effectX1), y=100*eval(as.symbol(var))))+ 
+	plot <- ggplot(df, aes(x=factor(eval(as.symbol(effectX1))), y=100*eval(as.symbol(var))))+ 
 		facet_wrap(~factor(distr), nrow=1) +
 	    geom_line(aes(group = method, color=method)) + 
 	    geom_point(aes(color=method, shape=method))+
@@ -35,7 +35,7 @@ plotError <- function(df, n, max = 100, var = "rateX1X2", xlab, legend = TRUE) {
 	plot
 }
 
-plotErrorGrid <- function(df, max = 100, var = "rateX1X2", xlab, legend = TRUE) {
+plotErrorGrid <- function(df, max = 100, var = "rateX1X2", xvar = "effectX1", xlab, legend = TRUE) {
 	legendPos = ifelse(legend, "top", "none") 
 
 	cbPalette <- c("#888888", "#E69F00", "#009E73", "#FF5E00")
@@ -50,7 +50,7 @@ plotErrorGrid <- function(df, max = 100, var = "rateX1X2", xlab, legend = TRUE) 
   		label = unlist(lapply(1:length(n_levels), function(index){ c(paste("n=", n_levels[index], sep=""), rep(NA, length(distr_levels) - 1)) }))
 	)
 
-	plot <- ggplot(df, aes(x=factor(effectX1), y=100*eval(as.symbol(var))))+ 
+	plot <- ggplot(df, aes(x=factor(eval(as.symbol(xvar))), y=100*eval(as.symbol(var))))+ 
 		facet_grid(n ~ factor(distr)) +
 	    geom_line(aes(group=method, color=method)) + 
 	    geom_point(aes(color=method, shape=method))+

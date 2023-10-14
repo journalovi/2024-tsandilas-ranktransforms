@@ -116,20 +116,22 @@ div.csl-indent {
   <li><a href="#rank-transformations" id="toc-rank-transformations" class="nav-link" data-scroll-target="#rank-transformations">Rank transformations</a></li>
   <li><a href="#previous-warnings" id="toc-previous-warnings" class="nav-link" data-scroll-target="#previous-warnings">Previous warnings</a></li>
   </ul></li>
-  <li><a href="#arts-breakdown-across-distributions" id="toc-arts-breakdown-across-distributions" class="nav-link" data-scroll-target="#arts-breakdown-across-distributions"><span class="header-section-number">3</span> ART’s breakdown across distributions</a>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology"><span class="header-section-number">3</span> Methodology</a></li>
+  <li><a href="#ratio-variables" id="toc-ratio-variables" class="nav-link" data-scroll-target="#ratio-variables"><span class="header-section-number">4</span> Ratio variables</a>
   <ul class="collapse">
-  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
-  <li><a href="#ordinal-data" id="toc-ordinal-data" class="nav-link" data-scroll-target="#ordinal-data"><span class="header-section-number">4</span> Ordinal data</a></li>
-  <li><a href="#additional-experiments" id="toc-additional-experiments" class="nav-link" data-scroll-target="#additional-experiments"><span class="header-section-number">5</span> Additional experiments</a>
+  <li><a href="#ordinal-variables" id="toc-ordinal-variables" class="nav-link" data-scroll-target="#ordinal-variables"><span class="header-section-number">5</span> Ordinal variables</a>
   <ul class="collapse">
-  <li><a href="#different-experimental-designs" id="toc-different-experimental-designs" class="nav-link" data-scroll-target="#different-experimental-designs">Different experimental designs</a></li>
-  <li><a href="#unequal-variances" id="toc-unequal-variances" class="nav-link" data-scroll-target="#unequal-variances">Unequal variances</a></li>
-  <li><a href="#unbalanced-designs" id="toc-unbalanced-designs" class="nav-link" data-scroll-target="#unbalanced-designs">Unbalanced designs</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   </ul></li>
-  <li><a href="#statistical-power-and-effect-sizes" id="toc-statistical-power-and-effect-sizes" class="nav-link" data-scroll-target="#statistical-power-and-effect-sizes"><span class="header-section-number">6</span> Statistical power and effect sizes</a></li>
+  <li><a href="#additional-experiments" id="toc-additional-experiments" class="nav-link" data-scroll-target="#additional-experiments"><span class="header-section-number">6</span> Additional experiments</a>
+  <ul class="collapse">
+  <li><a href="#type-i-errors-across-designs" id="toc-type-i-errors-across-designs" class="nav-link" data-scroll-target="#type-i-errors-across-designs">Type I errors across designs</a></li>
+  <li><a href="#unequal-variances" id="toc-unequal-variances" class="nav-link" data-scroll-target="#unequal-variances">Unequal variances</a></li>
+  <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power">Power</a></li>
+  <li><a href="#effect-sizes" id="toc-effect-sizes" class="nav-link" data-scroll-target="#effect-sizes">Effect sizes</a></li>
+  </ul></li>
   <li><a href="#understanding-arts-poor-performance" id="toc-understanding-arts-poor-performance" class="nav-link" data-scroll-target="#understanding-arts-poor-performance"><span class="header-section-number">7</span> Understanding ART’s poor performance</a></li>
   <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations"><span class="header-section-number">8</span> Recommendations</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">9</span> Conclusion</a></li>
@@ -1239,24 +1241,27 @@ While rank transformations are widespread, they are not
 <p><span class="citation" data-cites="casiez:2022">(<a href="#ref-casiez:2022" role="doc-biblioref">Casiez 2022</a>)</span> <span class="citation" data-cites="luepsen:2017 luepsen:2018">(<a href="#ref-luepsen:2017" role="doc-biblioref">Luepsen 2017</a>, <a href="#ref-luepsen:2018" role="doc-biblioref">2018</a>)</span></p>
 </section>
 </section>
-<section id="arts-breakdown-across-distributions" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> ART’s breakdown across distributions</h1>
-<p>To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 <span class="math inline">\(\times\)</span> 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section.</p>
-<section id="methodology" class="level3">
-<h3 class="anchored" data-anchor-id="methodology">Methodology</h3>
-<p><strong>Model structure</strong>. We assume that observations for the response variable <span class="math inline">\(Y\)</span> come from a two-way balanced mixed effects model with the following form:</p>
+<section id="methodology" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Methodology</h1>
+<p><strong>Model structure</strong>. We assume that observations for the response variable <span class="math inline">\(Y\)</span> come from a two-way balanced mixed-effects model with the following form:</p>
 <p><span id="eq-linear-model"><span class="math display">\[
 y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
 \tag{1}\]</span></span></p>
 <ul>
 <li><p><span class="math inline">\(\mu\)</span> is the grand mean</p></li>
-<li><p><span class="math inline">\(x_{1i}\)</span> is a numerical coding of the <em>i</em>-th level of factor <span class="math inline">\(X_1\)</span>, where <span class="math inline">\(i = 1..m_1\)</span></p></li>
-<li><p><span class="math inline">\(x_{2j}\)</span> is a numerical coding of the <em>j</em>-th level of factor <span class="math inline">\(X_2\)</span>, where <span class="math inline">\(j = 1..m_2\)</span></p></li>
+<li><p><span class="math inline">\(x_{1i}\)</span> is a numerical encoding of the <em>i</em>-th level of factor <span class="math inline">\(X_1\)</span>, where <span class="math inline">\(i = 1..m_1\)</span></p></li>
+<li><p><span class="math inline">\(x_{2j}\)</span> is a numerical encoding of the <em>j</em>-th level of factor <span class="math inline">\(X_2\)</span>, where <span class="math inline">\(j = 1..m_2\)</span></p></li>
 <li><p><span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_2\)</span>, and <span class="math inline">\(a_{12}\)</span> express the magnitude of main and interaction effects</p></li>
 <li><p><span class="math inline">\(s_k\)</span> is the random intercept effect of the <em>k</em>-th subject, where <span class="math inline">\(k = 1..n\)</span></p></li>
 <li><p><span class="math inline">\(\epsilon_{ijk}\)</span> is the experimental error effect</p></li>
 </ul>
-<p>We set the levels <span class="math inline">\(x_{1i} \in X_1\)</span> and <span class="math inline">\(x_{2j} \in X_2\)</span> to be equidistant, requiring them to sum up to zero <span class="citation" data-cites="baguley2012">(<a href="#ref-baguley2012" role="doc-biblioref">Baguley 2012</a>)</span>. For a 4 <span class="math inline">\(\times\)</span> 3 design (<span class="math inline">\(m_1 = 4\)</span> and <span class="math inline">\(m_2 = 3\)</span>), we code <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> as follows: <span class="math inline">\(X_1 = \{-1.5, -0.5, 0.5, 1.5 \}\)</span> and <span class="math inline">\(X_2 = \{-1, 0, 1 \}\)</span>.</p>
+<p>To encode the levels of the two factors <span class="math inline">\(x_{1i} \in X_1\)</span> and <span class="math inline">\(x_{2j} \in X_2\)</span> we proceed as follows:</p>
+<ol type="1">
+<li><p>We normalize the distance between their first and their second levels such that <span class="math inline">\(x_{12} - x_{11} = 1\)</span> and <span class="math inline">\(x_{22} - x_{21} = 1\)</span>. This approach enables us to conveniently control for the main and interaction effects by simply varying the parameters <span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_2\)</span>, and <span class="math inline">\(a_{12}\)</span>.</p></li>
+<li><p>For the remaining levels, we randomly sample from a uniform distribution between the two extremes. Thus, we generate and evaluate a large number of different configurations of relative effects between levels.</p></li>
+<li><p>We require all levels to sum up to 0, or <span class="math inline">\(\sum\limits_{i=1}^{m_1} x_{1i} = 0\)</span> and <span class="math inline">\(\sum\limits_{j=1}^{m_2} x_{2j} = 0\)</span>, which ensures that the grand mean is <span class="math inline">\(\mu\)</span>.</p></li>
+</ol>
+<p>For example, we can encode a factor with four levels as <span class="math inline">\(\{-.6, .4, .1, .1\}\)</span> or as <span class="math inline">\(\{-.5, .5, .3, -.3\}\)</span>.</p>
 <p>While random slope effects can have an impact on real experimental data <span class="citation" data-cites="barr:2013">(<a href="#ref-barr:2013" role="doc-biblioref">Barr et al. 2013</a>)</span>, we do not incorporate them into our simulations for three reasons: (1) to be consistent with previous evaluations of the ART procedure <span class="citation" data-cites="elkin:2021">(<a href="#ref-elkin:2021" role="doc-biblioref">Elkin et al. 2021</a>)</span>; (2) because random slope effects make the control for equal variances and sphericity assumptions more challenging; and (3) because mixed-effects procedures that account for random slope effects are more computationally demanding, adding strain to our simulation resources. However, there is no good reason to believe that adding random slope effects would affect our key findigns and conclusions.</p>
 <p><strong>Population control, sampling, and distribution conversions</strong>. To simplify our simulations, we fix the following population parameters: <span class="math inline">\(\mu = 0\)</span>, <span class="math inline">\(\sigma = 1\)</span>, and <span class="math inline">\(\sigma_s = 1\)</span>. We then control the magnitude of effects by varying <span class="math inline">\(a_1\)</span>, <span class="math inline">\(a_2\)</span>, and <span class="math inline">\(a_{12}\)</span>.</p>
 <p>We follow the approach of <span class="citation" data-cites="DeBruine:2021">DeBruine and Barr (<a href="#ref-DeBruine:2021" role="doc-biblioref">2021</a>)</span> and use the R package <em>faux</em> <span class="citation" data-cites="faux">(<a href="#ref-faux" role="doc-biblioref">DeBruine 2023</a>)</span> to simulate data for our mixed-effects models. As a starting point, we assume that the distributions of random intercepts and errors are normal, or <span class="math inline">\(s_k \sim N(0,\sigma_s)\)</span> and <span class="math inline">\(\epsilon_{ijk} \sim N(0,\sigma)\)</span>. To simulate non-normal distributions, we convert reponse values <span class="math inline">\(y_{ijk}\)</span> as follows. First, we derive their cumulative density distribution using the cumulative density function of the normal distribution. Then, we use the inverse quantile function of the target distribution to derive the final distribution. For example, to convert normal responses to log-normal, we use the following R function:</p>
@@ -1284,9 +1289,10 @@ y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_
 <p>We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.</p>
 <p><strong>Measures</strong>. We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set <span class="math inline">\(a_{12} = 0\)</span>. Likewise, to evaluate the Type I error rate for the second factor <span class="math inline">\(X_2\)</span>, we set <span class="math inline">\(a_{2} = 0\)</span>. For each population configuration and sample size <span class="math inline">\(n\)</span>, we run <span class="math inline">\(5000\)</span> iterations and test two significance levels: <span class="math inline">\(\alpha = .05\)</span> and <span class="math inline">\(\alpha = .01\)</span>. For brievity, we only report results for <span class="math inline">\(\alpha = .05\)</span> in the main paper, while additional results are presented in supplementary materials.</p>
 </section>
-<section id="results" class="level3">
-<h3 class="anchored" data-anchor-id="results">Results</h3>
-<p><a href="#fig-results1">Figure&nbsp;2</a> presents Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the interaction effect when increasing the magnitude of effect of both factors <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>.</p>
+<section id="ratio-variables" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Ratio variables</h1>
+<p>To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 <span class="math inline">\(\times\)</span> 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section.</p>
+<p><strong>Interaction effects</strong>. <a href="#fig-results1">Figure&nbsp;2</a> presents Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the interaction effect when increasing the magnitude of effect of both factors <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>.</p>
 <div id="fig-results1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell">
@@ -1316,7 +1322,7 @@ y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_
 </figure>
 </div>
 <p>RNK and INT keep Type I error rates close to <span class="math inline">\(5\%\)</span> across all distributions. The regular parametric ANOVA does not inflate errors, but error rates for some configurations are significantly lower than <span class="math inline">\(5\%\)</span>, which may suggest loss of statistical power. ART’s behavior is again problematic for all non-normal distributions, inflating Type I error rates beyond acceptable levels.</p>
-<p>But ART does not only inflate error rates on interaction effects. <a href="#fig-results3">Figure&nbsp;4</a> presents the Type I error rates for the main effect of <span class="math inline">\(X_2\)</span> when the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases. We observe similar patterns as for interaction effects, although error rates are even larger now.</p>
+<p><strong>Main effects</strong>. But ART does not only inflate error rates on interaction effects. <a href="#fig-results3">Figure&nbsp;5</a> presents the Type I error rates for the main effect of <span class="math inline">\(X_2\)</span> when the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases. We observe similar patterns as for interaction effects, although error rates are even larger now.</p>
 <div id="fig-results3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell">
@@ -1327,7 +1333,17 @@ y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_
 <figcaption class="figure-caption">Figure&nbsp;4: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect of <span class="math inline">\(X_2\)</span></strong>, as the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases</figcaption>
 </figure>
 </div>
-</section>
+<p><strong>Contrasts</strong>.</p>
+<div id="fig-results3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;5: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect of <span class="math inline">\(X_2\)</span></strong>, as the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases</figcaption>
+</figure>
+</div>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">Summary</h3>
 <p>Our first results on a balanced repeated-measures 4 <span class="math inline">\(\times\)</span> 3 factorial design demonstrate that unless distributions are normal, ART does not provide any grarantee for the Type I errors of main and interaction effects. Its failure under the Cauchy distribution is not a surprise, since it was also observed by <span class="citation" data-cites="Salter:1993">Salter and Fawcett (<a href="#ref-Salter:1993" role="doc-biblioref">1993</a>)</span>, and later by <span class="citation" data-cites="elkin:2021">Elkin et al. (<a href="#ref-elkin:2021" role="doc-biblioref">2021</a>)</span>. However, the authors had argued that ART is robust under other distributions, such as the exponential and the log-normal distributions. Our results demonstrate that this is not the case and corroborate the warnings of <span class="citation" data-cites="luepsen:2018">Luepsen (<a href="#ref-luepsen:2018" role="doc-biblioref">2018</a>)</span>.</p>
@@ -1338,23 +1354,80 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 -->
 </section>
 </section>
-<section id="ordinal-data" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Ordinal data</h1>
+<section id="ordinal-variables" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Ordinal variables</h1>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p><strong>Interaction effects</strong>.</p>
+<div id="fig-results-ordinal-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;6: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong>, as the magnitude of the main effects of <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> increases</figcaption>
+</figure>
+</div>
+<div id="fig-results-ordinal-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;7: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong>, as the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases</figcaption>
+</figure>
+</div>
+<p><strong>Main effects</strong>.</p>
+<div id="fig-results-ordinal-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;8: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect of <span class="math inline">\(X_2\)</span></strong>, as the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases</figcaption>
+</figure>
+</div>
 </section>
-<section id="additional-experiments" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Additional experiments</h1>
-<section id="different-experimental-designs" class="level3">
-<h3 class="anchored" data-anchor-id="different-experimental-designs">Different experimental designs</h3>
+</section>
+<section id="additional-experiments" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Additional experiments</h1>
+<section id="type-i-errors-across-designs" class="level3">
+<h3 class="anchored" data-anchor-id="type-i-errors-across-designs">Type I errors across designs</h3>
 </section>
 <section id="unequal-variances" class="level3">
 <h3 class="anchored" data-anchor-id="unequal-variances">Unequal variances</h3>
+<p><strong>Interaction effects</strong>.</p>
+<div id="fig-results-hetero-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;9: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong>, as the variance difference on <span class="math inline">\(X_1\)</span> increases</figcaption>
+</figure>
+</div>
+<p><strong>Main effects</strong>.</p>
+<div id="fig-results-hetero-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;10: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect of <span class="math inline">\(X_2\)</span></strong>, as the variance difference on <span class="math inline">\(X_1\)</span> increases</figcaption>
+</figure>
+</div>
 </section>
-<section id="unbalanced-designs" class="level3">
-<h3 class="anchored" data-anchor-id="unbalanced-designs">Unbalanced designs</h3>
+<section id="power" class="level3">
+<h3 class="anchored" data-anchor-id="power">Power</h3>
 </section>
+<section id="effect-sizes" class="level3">
+<h3 class="anchored" data-anchor-id="effect-sizes">Effect sizes</h3>
 </section>
-<section id="statistical-power-and-effect-sizes" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Statistical power and effect sizes</h1>
 </section>
 <section id="understanding-arts-poor-performance" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Understanding ART’s poor performance</h1>
@@ -1368,9 +1441,6 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 <section id="references" class="level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-baguley2012" class="csl-entry" role="listitem">
-Baguley, Thom. 2012. <em>Serious Stat: A Guide to Advanced Statistics for the Behavioral Sciences</em>. Bloomsbury Academic. <a href="https://books.google.fr/books?id=RFZHXwAACAAJ">https://books.google.fr/books?id=RFZHXwAACAAJ</a>.
-</div>
 <div id="ref-barr:2013" class="csl-entry" role="listitem">
 Barr, Dale J, Roger Levy, Christoph Scheepers, and Harry J Tily. 2013. <span>“Random Effects Structure for Confirmatory Hypothesis Testing: Keep It Maximal.”</span> <em>J Mem Lang</em> 68 (3). <a href="https://doi.org/10.1016/j.jml.2012.11.001">https://doi.org/10.1016/j.jml.2012.11.001</a>.
 </div>
