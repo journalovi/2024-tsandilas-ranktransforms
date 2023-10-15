@@ -46,7 +46,7 @@ source("plotting.R")
 # Introduction
 We will demonstrate that the aligned rank transform procedure [@higgins:1990; @Salter:1993; @wobbrock:2011] is problematic, raising Type I error rates at very high levels for a range of non-normal data distributions. We will show that the more recent implementation of the procedure for contrasts [@elkin:2021] does not address these issues. Although warnings have been raised by other researchers in the past [@luepsen:2017; @luepsen:2018], those have been largely ignored. 
 
-We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In the light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples came from populations that did not significantly deviate from normal.
+We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In the light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels, should be considered as especially problematic. 
 
 ### Illustrative example
 <!----- 
@@ -237,7 +237,7 @@ We evaluate three sample sizes: $n=10$, $n=20$, and $n=30$.
 
 ```{r}
 inverseNormalTransform <- function(x){
-	qnorm((rank(x, na.last = "keep") - 0.5)/sum(!is.na(x)))
+	qnorm((rank(x) - 0.5)/length(x))
 }
 ```
 
@@ -307,7 +307,7 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the mag
 
 **Contrasts**.
 
-::: {#fig-results3}
+::: {#fig-contrasts}
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 prefix <- "5_test_4x3_Contrasts"
 alpha=.05
@@ -342,15 +342,27 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 ::: {#fig-results-ordinal-1}
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 prefix <- "2_test_4x3_Ordinal"
-alpha=.05
+alpha <- .05
 
-distr = c("likert5", "likert7", "likert20", "likert5B", "likert7B", "likert20B")
+distr <- c("likert5", "likert5B", "likert7", "likert7B", "likert20", "likert20B")
 
 df <- rbind(
   readData(prefix, 10, alpha, 0, distributions = distr), 
   readData(prefix, 20, alpha, 0, distributions = distr),
   readData(prefix, 30, alpha, 0, distributions = distr)
 )
+
+names <- c("5 levels (equidistant)", "5 levels (random)", "7 levels (equidistant)", "7 levels (random)", "20 levels (equidistant)", "20 levels (random)")
+
+df <- df %>% 
+      mutate(distr = str_replace(distr, "likert5B", names[2])) %>% 
+      mutate(distr = str_replace(distr, "likert7B", names[4])) %>% 
+      mutate(distr = str_replace(distr, "likert20B", names[6])) %>%
+      mutate(distr = str_replace(distr, "likert5", names[1])) %>% 
+      mutate(distr = str_replace(distr, "likert7", names[3])) %>% 
+      mutate(distr = str_replace(distr, "likert20", names[5]))
+
+df$distr <- factor(df$distr, levels = names)
 
 plotErrorGrid(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
 ```
@@ -366,7 +378,19 @@ df2 <- rbind(
   readData(prefix, 30, alpha, 1, distributions = distr)
 )
 
-plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+names <- c("5 levels (equidistant)", "5 levels (random)", "7 levels (equidistant)", "7 levels (random)", "20 levels (equidistant)", "20 levels (random)")
+
+df2 <- df2 %>% 
+      mutate(distr = str_replace(distr, "likert5B", names[2])) %>% 
+      mutate(distr = str_replace(distr, "likert7B", names[4])) %>% 
+      mutate(distr = str_replace(distr, "likert20B", names[6])) %>%
+      mutate(distr = str_replace(distr, "likert5", names[1])) %>% 
+      mutate(distr = str_replace(distr, "likert7", names[3])) %>% 
+      mutate(distr = str_replace(distr, "likert20", names[5]))
+
+df2$distr <- factor(df2$distr, levels = names)
+
+plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])), ystep=10)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effect of $X_1$ increases
 :::
@@ -375,7 +399,7 @@ Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magni
 
 ::: {#fig-results-ordinal-3}
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-plotErrorGrid(df2, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+plotErrorGrid(df2, max = 54, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])), ystep=10)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
 :::
@@ -384,7 +408,55 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the mag
 # Additional experiments
 ### Type I errors across designs
 
-### Unequal variances
+**Interaction effects**.
+
+::: {#fig-designs-1}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+prefix <- "3_test-Designs"
+alpha=.05
+distr = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+names = c("norm", "lnorm", "exp", "poisson", "binom", "ordinal (5 levels)")
+
+df <- readData(prefix, 20, alpha, 0, distributions = distr) 
+df <- df %>% 
+      mutate(design = str_replace(design, "2x3", "2x3 between")) %>% 
+      mutate(design = str_replace(design, "2x4", "2x4 mixed")) %>% 
+      mutate(design = str_replace(design, "3x3x3", "3x3x3 within")) %>%
+      mutate(distr = str_replace(distr, "likert5B", names[6]))
+df$distr <- factor(df$distr, levels = names)     
+
+plotErrorGridByDesign(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$, as the magnitude of the main effects of $X_1$ and $X_2$ increases ($n=20$)
+:::
+
+::: {#fig-designs-2}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+df2 <- readData(prefix, 20, alpha, 1, distributions = distr) 
+df2 <- df2 %>% 
+      mutate(design = str_replace(design, "2x3", "2x3 between")) %>% 
+      mutate(design = str_replace(design, "2x4", "2x4 mixed")) %>% 
+      mutate(design = str_replace(design, "3x3x3", "3x3x3 within")) %>%
+      mutate(distr = str_replace(distr, "likert5B", names[6]))
+df2$distr <- factor(df2$distr, levels = names)     
+
+plotErrorGridByDesign(df2, max = 81, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$, as the magnitude of the main effect of $X_1$ increases ($n=20$)
+:::
+
+
+**Main effects**.
+
+::: {#fig-designs-3}
+```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+plotErrorGridByDesign(df2, max = 80, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```
+Type I error rates ($\alpha = .05$) for the **main effect** $X_2$, as the magnitude of the main effect of $X_1$ increases ($n=20$)
+:::
+
+
+### Type I errors under unequal variances
 **Interaction effects**.
 
 ::: {#fig-results-hetero-1}
@@ -393,6 +465,7 @@ prefix <- "4_test_2x4_Hetero"
 alpha=.05
 
 distr = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+names = c("norm", "lnorm", "exp", "poisson", "binom", "ordinal (5 levels)")
 
 df <- rbind(
   readData(prefix, 10, alpha, 0, distributions = distr), 
@@ -400,7 +473,10 @@ df <- rbind(
   readData(prefix, 30, alpha, 0, distributions = distr)
 )
 
-plotErrorGrid(df, max = 40, "rateX1X2", xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]))
+df <- df %>% mutate(distr = str_replace(distr, "likert5B", names[6]))
+df$distr <- factor(df$distr, levels = names) 
+
+plotErrorGrid(df, max = 33, "rateX1X2", xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]), ystep = 10)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction effect**, as the variance difference on $X_1$ increases
 :::
@@ -410,12 +486,12 @@ Type I error rates ($\alpha = .05$) for the **interaction effect**, as the varia
 
 ::: {#fig-results-hetero-2}
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-plotErrorGrid(df, max = 40, "rateX2",  xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]))
+plotErrorGrid(df, max = 33, "rateX2",  xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]), ystep = 10)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the variance difference on $X_1$ increases
 :::
 
-### Power
+### Statistical power
 
 ### Effect sizes
 

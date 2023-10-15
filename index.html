@@ -128,7 +128,7 @@ div.csl-indent {
   <li><a href="#additional-experiments" id="toc-additional-experiments" class="nav-link" data-scroll-target="#additional-experiments"><span class="header-section-number">6</span> Additional experiments</a>
   <ul class="collapse">
   <li><a href="#type-i-errors-across-designs" id="toc-type-i-errors-across-designs" class="nav-link" data-scroll-target="#type-i-errors-across-designs">Type I errors across designs</a></li>
-  <li><a href="#unequal-variances" id="toc-unequal-variances" class="nav-link" data-scroll-target="#unequal-variances">Unequal variances</a></li>
+  <li><a href="#type-i-errors-under-unequal-variances" id="toc-type-i-errors-under-unequal-variances" class="nav-link" data-scroll-target="#type-i-errors-under-unequal-variances">Type I errors under unequal variances</a></li>
   <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power">Power</a></li>
   <li><a href="#effect-sizes" id="toc-effect-sizes" class="nav-link" data-scroll-target="#effect-sizes">Effect sizes</a></li>
   </ul></li>
@@ -187,7 +187,7 @@ div.csl-indent {
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>We will demonstrate that the aligned rank transform procedure <span class="citation" data-cites="higgins:1990 Salter:1993 wobbrock:2011">(<a href="#ref-higgins:1990" role="doc-biblioref">Higgins, Blair, and Tashtoush 1990</a>; <a href="#ref-Salter:1993" role="doc-biblioref">Salter and Fawcett 1993</a>; <a href="#ref-wobbrock:2011" role="doc-biblioref">Wobbrock et al. 2011</a>)</span> is problematic, raising Type I error rates at very high levels for a range of non-normal data distributions. We will show that the more recent implementation of the procedure for contrasts <span class="citation" data-cites="elkin:2021">(<a href="#ref-elkin:2021" role="doc-biblioref">Elkin et al. 2021</a>)</span> does not address these issues. Although warnings have been raised by other researchers in the past <span class="citation" data-cites="luepsen:2017 luepsen:2018">(<a href="#ref-luepsen:2017" role="doc-biblioref">Luepsen 2017</a>, <a href="#ref-luepsen:2018" role="doc-biblioref">2018</a>)</span>, those have been largely ignored.</p>
-<p>We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In the light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples came from populations that did not significantly deviate from normal.</p>
+<p>We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In the light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels, should be considered as especially problematic.</p>
 <section id="illustrative-example" class="level3">
 <h3 class="anchored" data-anchor-id="illustrative-example">Illustrative example</h3>
 <!----- 
@@ -1283,7 +1283,7 @@ y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_
 <p><strong>Transformation methods</strong>. We evaluate the three rank-based transformations that we introduced earlier. For the aligned rank transformation (ART), we use the R implementation of ARTool <span class="citation" data-cites="artool">(<a href="#ref-artool" role="doc-biblioref">Kay et al. 2021</a>)</span>. For the pure rank transformation (RNK), we use R’s <em>rank()</em> function. We use the <em>Rankit</em> formulation <span class="citation" data-cites="Bliss:1956">(<a href="#ref-Bliss:1956" role="doc-biblioref">Bliss, Greenwood, and White 1956</a>)</span> for the inverse normal transformation (INT), as past simulation studies <span class="citation" data-cites="Solomon2009">(<a href="#ref-Solomon2009" role="doc-biblioref">Solomon and Sawilowsky 2009</a>)</span> have shown that it is more accurate than alternative formulations. We implement it in R as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>inverseNormalTransform <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qnorm</span>((<span class="fu">rank</span>(x, <span class="at">na.last =</span> <span class="st">"keep"</span>) <span class="sc">-</span> <span class="fl">0.5</span>)<span class="sc">/</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(x)))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">qnorm</span>((<span class="fu">rank</span>(x) <span class="sc">-</span> <span class="fl">0.5</span>)<span class="sc">/</span><span class="fu">length</span>(x))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.</p>
@@ -1322,7 +1322,7 @@ y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_
 </figure>
 </div>
 <p>RNK and INT keep Type I error rates close to <span class="math inline">\(5\%\)</span> across all distributions. The regular parametric ANOVA does not inflate errors, but error rates for some configurations are significantly lower than <span class="math inline">\(5\%\)</span>, which may suggest loss of statistical power. ART’s behavior is again problematic for all non-normal distributions, inflating Type I error rates beyond acceptable levels.</p>
-<p><strong>Main effects</strong>. But ART does not only inflate error rates on interaction effects. <a href="#fig-results3">Figure&nbsp;5</a> presents the Type I error rates for the main effect of <span class="math inline">\(X_2\)</span> when the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases. We observe similar patterns as for interaction effects, although error rates are even larger now.</p>
+<p><strong>Main effects</strong>. But ART does not only inflate error rates on interaction effects. <a href="#fig-results3">Figure&nbsp;4</a> presents the Type I error rates for the main effect of <span class="math inline">\(X_2\)</span> when the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases. We observe similar patterns as for interaction effects, although error rates are even larger now.</p>
 <div id="fig-results3" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell">
@@ -1334,7 +1334,7 @@ y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_
 </figure>
 </div>
 <p><strong>Contrasts</strong>.</p>
-<div id="fig-results3" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-contrasts" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell">
 <div class="cell-output-display">
@@ -1396,18 +1396,50 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 <h1 data-number="6"><span class="header-section-number">6</span> Additional experiments</h1>
 <section id="type-i-errors-across-designs" class="level3">
 <h3 class="anchored" data-anchor-id="type-i-errors-across-designs">Type I errors across designs</h3>
-</section>
-<section id="unequal-variances" class="level3">
-<h3 class="anchored" data-anchor-id="unequal-variances">Unequal variances</h3>
 <p><strong>Interaction effects</strong>.</p>
-<div id="fig-results-hetero-1" class="quarto-figure quarto-figure-center anchored">
+<div id="fig-designs-1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="864"></p>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;9: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong>, as the variance difference on <span class="math inline">\(X_1\)</span> increases</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;9: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong> <span class="math inline">\(X_1 \times X_2\)</span>, as the magnitude of the main effects of <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> increases (<span class="math inline">\(n=20\)</span>)</figcaption>
+</figure>
+</div>
+<div id="fig-designs-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;10: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong> <span class="math inline">\(X_1 \times X_2\)</span>, as the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases (<span class="math inline">\(n=20\)</span>)</figcaption>
+</figure>
+</div>
+<p><strong>Main effects</strong>.</p>
+<div id="fig-designs-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;11: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect</strong> <span class="math inline">\(X_2\)</span>, as the magnitude of the main effect of <span class="math inline">\(X_1\)</span> increases (<span class="math inline">\(n=20\)</span>)</figcaption>
+</figure>
+</div>
+</section>
+<section id="type-i-errors-under-unequal-variances" class="level3">
+<h3 class="anchored" data-anchor-id="type-i-errors-under-unequal-variances">Type I errors under unequal variances</h3>
+<p><strong>Interaction effects</strong>.</p>
+<div id="fig-results-hetero-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="864"></p>
+</div>
+</div>
+<figcaption class="figure-caption">Figure&nbsp;12: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>interaction effect</strong>, as the variance difference on <span class="math inline">\(X_1\)</span> increases</figcaption>
 </figure>
 </div>
 <p><strong>Main effects</strong>.</p>
@@ -1415,10 +1447,10 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 <figure class="figure">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="864"></p>
 </div>
 </div>
-<figcaption class="figure-caption">Figure&nbsp;10: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect of <span class="math inline">\(X_2\)</span></strong>, as the variance difference on <span class="math inline">\(X_1\)</span> increases</figcaption>
+<figcaption class="figure-caption">Figure&nbsp;13: Type I error rates (<span class="math inline">\(\alpha = .05\)</span>) for the <strong>main effect of <span class="math inline">\(X_2\)</span></strong>, as the variance difference on <span class="math inline">\(X_1\)</span> increases</figcaption>
 </figure>
 </div>
 </section>
