@@ -16,3 +16,14 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 	}
 	return(df[df$alpha == alpha,])
 }
+
+prefix <- "1_test_4x3_Ratio"
+alpha=.05
+
+df <- rbind(
+  readData(prefix, 10, alpha, 0), 
+  readData(prefix, 20, alpha, 0),
+  readData(prefix, 30, alpha, 0)
+)
+
+df <- reshape(df, idvar=c("design", "distr","method","alpha","effectX1","effectX2","effectX1X2"), timevar = "n", direction = "wide")

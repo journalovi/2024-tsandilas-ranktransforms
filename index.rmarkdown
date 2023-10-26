@@ -42,6 +42,7 @@ source("plotting.R")
 ```
 
 
+
 # Introduction
 We will demonstrate that the aligned rank transform procedure [@higgins:1990; @Salter:1993; @wobbrock:2011] is problematic, raising Type I error rates at very high levels for a range of non-normal data distributions. We will show that the more recent implementation of the procedure for contrasts [@elkin:2021] does not address these issues. Although warnings have been raised by other researchers in the past [@luepsen:2017; @luepsen:2018], those have been largely ignored. 
 
@@ -56,10 +57,12 @@ We will start with an example to illustrate how the aligned rank transform can i
 Suppose an HCI researcher conducts an experiment to compare the performance of three user interface techniques (A, B, and C) that help users complete image editing tasks of four different difficulty levels. The experiment is structured using a fully balanced 4 x 3 repeated-measures factorial design, where each participant (N = 12) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. The following table presents the experimental results: 
 
 ::: {#tbl-example}
+
 ```{r, echo=FALSE, warning=FALSE}
 df <- read.csv("example_data.csv", sep=",", header=TRUE, strip.white=TRUE)
 kbl(df) %>% kable_paper(position = "center") %>% scroll_box(width = "740px", height = "170px")
 ``` 
+
 Example dataset: Time (in minutes) spent by 12 participants for four difficulty levels and three user interface techniques. Scroll down to see the full results.
 :::
 
@@ -69,6 +72,7 @@ The experiment is hypothetical but has similarities with real-world experiments.
 We also observe that for the most difficult tasks (Level 4), the median time for Technique C is lower than the median time for Techniques A and B, so we may suspect that *Difficulty* interacts with *Technique*. However, since the spread of observed values is extremely large and the number of data points is small, such differences could be the result of random noise. 
 
 ::: {#fig-example}
+
 ```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
 cbPalette <- c("#999999", "#E69F00", "#F15854")
 
@@ -94,6 +98,7 @@ p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = m
 
 grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
 ```
+
 Boxplots summarizing the results of our example. Dots represent the median time performance of each individual participant. 
 :::
 
@@ -109,9 +114,11 @@ We opt for a multiverse analysis [@Dragicevic:2019] to analyse the data, where w
 
 For each ANOVA analysis, we use a linear mixed-effects model, treating the participant identifier as a random effect. To simplify our analysis and like @elkin:2021, we consider random intercepts but no random slopes. For example, we use the following R code to create the model for the log-transformed response: 
 
+
 ```{r, echo=TRUE, warning=FALSE}
 m.log <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data = df)
 ```
+
 
 The table below presents the *p*-values for the main effects of the two factors and for their interaction:  
 
@@ -216,12 +223,14 @@ While random slope effects can have an impact on real experimental data [@barr:2
 
 We follow the approach of @DeBruine:2021 and use the R package *faux* [@faux] to simulate data for our mixed-effects models. As a starting point, we assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate non-normal distributions, we convert reponse values $y_{ijk}$ as follows. First, we derive their cumulative density distribution using the cumulative density function of the normal distribution. Then, we use the inverse quantile function of the target distribution to derive the final distribution. For example, to convert normal responses to log-normal, we use the following R function:  
 
+
 ```{r}
 norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...) {
 	 p <- pnorm(x, mu, sd) 
  	 qlnorm(p, meanlog, sdlog, ...) 
 }
 ```
+
 For our first series of experiments, we evaluate conversions to three continuous and two discrete distributions:
 
 - Log-normal (*lnorm*) distribution: $LogN(\mu, \sigma)$ with $\mu = 0$ and $\sigma = 1$
@@ -238,11 +247,13 @@ We evaluate three sample sizes: $n=10$, $n=20$, and $n=30$.
 
 **Transformation methods**. We evaluate the three rank-based transformations that we introduced earlier. For the aligned rank transformation (ART), we use the R implementation of ARTool [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
 
+
 ```{r}
 inverseNormalTransform <- function(x){
 	qnorm((rank(x) - 0.5)/length(x))
 }
 ```
+
 
 We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.
 
@@ -257,6 +268,7 @@ To better understand the behavior of rank transformation methods, we start with 
 
 
 ::: {#fig-results0}
+
 ```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 library(plotly)
 library(dplyr)
@@ -329,6 +341,7 @@ fig <- df %>%
 fig
 
 ```
+
 Type I error rates for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2$
 :::
 
@@ -345,6 +358,7 @@ Let's first examine the performance of each method individually.
 Let us now examine the performance of the four methods in the presence of a single main effect. @fig-results2 presents the Type I error rates ($\alpha = .05$) for the interaction effect as the magnitude of the main effect on factor $X_1$ increases, while the effect of factor $X_2$ is zero. 
 
 ::: {#fig-results2}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 df2 <- rbind(
   readData(prefix, 10, alpha, 1), 
@@ -354,6 +368,7 @@ df2 <- rbind(
 
 plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effect of $X_1$ increases
 :::
 
@@ -362,15 +377,18 @@ RNK and INT keep Type I error rates close to $5\%$ across all distributions. The
 **Main effects**. But ART does not only inflate error rates on interaction effects. @fig-results3 presents the Type I error rates for the main effect of $X_2$ when the magnitude of the main effect of $X_1$ increases. We observe similar patterns as for interaction effects, although error rates are even larger now.   
 
 ::: {#fig-results3}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 plotErrorGrid(df2, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
 :::
 
 **Contrasts**.
 
 ::: {#fig-contrasts}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 prefix <- "5_test_4x3_Contrasts"
 alpha=.05
@@ -383,6 +401,7 @@ df <- rbind(
 
 plotErrorGrid(df, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
 :::
 
@@ -403,6 +422,7 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 **Interaction effects**.
 
 ::: {#fig-results-ordinal-1}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 prefix <- "2_test_4x3_Ordinal"
 alpha <- .05
@@ -429,11 +449,13 @@ df$distr <- factor(df$distr, levels = names)
 
 plotErrorGrid(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effects of $X_1$ and $X_2$ increases
 :::
 
 
 ::: {#fig-results-ordinal-2}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 df2 <- rbind(
   readData(prefix, 10, alpha, 1, distributions = distr), 
@@ -455,15 +477,18 @@ df2$distr <- factor(df2$distr, levels = names)
 
 plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])), ystep=10)
 ```
+
 Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effect of $X_1$ increases
 :::
 
 **Main effects**.
 
 ::: {#fig-results-ordinal-3}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 plotErrorGrid(df2, max = 54, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])), ystep=10)
 ```
+
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
 :::
 
@@ -474,6 +499,7 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the mag
 **Interaction effects**.
 
 ::: {#fig-designs-1}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 prefix <- "3_test-Designs"
 alpha=.05
@@ -490,10 +516,12 @@ df$distr <- factor(df$distr, levels = names)
 
 plotErrorGridByDesign(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$, as the magnitude of the main effects of $X_1$ and $X_2$ increases ($n=20$)
 :::
 
 ::: {#fig-designs-2}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 df2 <- readData(prefix, 20, alpha, 1, distributions = distr) 
 df2 <- df2 %>% 
@@ -505,6 +533,7 @@ df2$distr <- factor(df2$distr, levels = names)
 
 plotErrorGridByDesign(df2, max = 81, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$, as the magnitude of the main effect of $X_1$ increases ($n=20$)
 :::
 
@@ -512,9 +541,11 @@ Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X
 **Main effects**.
 
 ::: {#fig-designs-3}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 plotErrorGridByDesign(df2, max = 80, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
 ```
+
 Type I error rates ($\alpha = .05$) for the **main effect** $X_2$, as the magnitude of the main effect of $X_1$ increases ($n=20$)
 :::
 
@@ -523,6 +554,7 @@ Type I error rates ($\alpha = .05$) for the **main effect** $X_2$, as the magnit
 **Interaction effects**.
 
 ::: {#fig-results-hetero-1}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 prefix <- "4_test_2x4_Hetero"
 alpha=.05
@@ -541,6 +573,7 @@ df$distr <- factor(df$distr, levels = names)
 
 plotErrorGrid(df, max = 33, "rateX1X2", xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]), ystep = 10)
 ```
+
 Type I error rates ($\alpha = .05$) for the **interaction effect**, as the variance difference on $X_1$ increases
 :::
 
@@ -548,9 +581,11 @@ Type I error rates ($\alpha = .05$) for the **interaction effect**, as the varia
 **Main effects**.
 
 ::: {#fig-results-hetero-2}
+
 ```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
 plotErrorGrid(df, max = 33, "rateX2",  xvar = "sd_ratio", xlab = expression(ratio~of~standard~deviations~between~levels~of~factor~X[1]), ystep = 10)
 ```
+
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the variance difference on $X_1$ increases
 :::
 
@@ -570,3 +605,4 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the var
 
 ::: {#refs}
 :::
+
