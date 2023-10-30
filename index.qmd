@@ -256,80 +256,23 @@ To better understand the behavior of rank transformation methods, we start with 
 **Interaction effects**. @fig-results1 presents Type I error rates ($\alpha = .05$) for the interaction effect when increasing the magnitude of effect of both factors $X_1$ and $X_2$. 
 
 
-::: {#fig-results0}
+::: {#fig-results1}
 ```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-library(plotly)
 library(dplyr)
 library(tidyverse)
-library(crosstalk)
 source("dataReaders.R")
+source("plotlying.R")
 
 prefix <- "1_test_4x3_Ratio"
-alpha=.05
-
+alpha <- .05
+distributions <- c("norm", "lnorm", "exp", "cauchy", "poisson", "binom")
 dnames <- c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial")
-
-# To be used as labels on the subplots
-annots <- lapply(1:length(dnames), function(index){list(x = (index-0.5)/length(dnames), y = 1, text = dnames[index], xref = "paper", yref = "paper", xanchor = "center", yanchor = "bottom", showarrow = F)})
-
-df <- rbind(
-  readData(prefix, 10, alpha, 0), 
-  readData(prefix, 20, alpha, 0),
-  readData(prefix, 30, alpha, 0)
-)
-
-# Different column for each n
-df <- reshape(df, idvar=c("design", "distr","method","alpha","effectX1","effectX2","effectX1X2"), timevar = "n", direction = "wide")
-
-df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
-df$distr <- factor(df$distr, levels = dnames)
+df <- readlyData(prefix, alpha, 0, distributions, dnames)
 
 #xlab <- TeX("\\text{main effect of factors }X_1\\text{ and }X_2\\text{ }(a_1 = a_2)")
-xlab <- "magnitude of effects"
-
-symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")
-cbPalette <- c("#888888", "#E69F00", "#009E73", "#FF5E00")
-m <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
-
-nmethods <- 4
-
-
-createPlot <- function(data, dnames, symbols) {
-  p <- plot_ly(data,  x = ~factor(effectX1), y = ~100*rateX1X2.10, color = ~method, symbol = ~method, symbols = symbols, colors = cbPalette, type = 'scatter', mode = 'lines+markers', marker = list(line = list(width = 2)), legendgroup = ~method, showlegend = unique(data$distr == dnames[1]), visible = F) 
-
-  p <- add_trace(p, data = data, x = ~factor(effectX1), y = ~100*rateX1X2.20, color = ~method, symbol = ~method, symbols = symbols, colors = cbPalette, type = 'scatter', mode = 'lines+markers', marker = list(line = list(width = 2)), legendgroup = ~method, showlegend = unique(data$distr == dnames[1]), visible = T) 
-
-  p <- add_trace(p, data = data, x = ~factor(effectX1), y = ~100*rateX1X2.30, color = ~method, symbol = ~method, symbols = symbols, colors = cbPalette, type = 'scatter', mode = 'lines+markers', marker = list(line = list(width = 2)), legendgroup = ~method, showlegend = unique(data$distr == dnames[1]), visible = F) %>%
-  layout(
-    legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.3, x = .5),
-    xaxis = list(title = NA, showline=T, mirror = F, fixedrange=T, ticks="outside",tickangle=60, tickfont = list(size = 11)),
-    yaxis = list(title = 'Type I errors (%)', font = list(size = 13), zeroline = F, showline=T, linewidth=1, mirror = F,  nticks=6, ticks="inside", tickfont = list(size = 11), range=c(0, 105))
-  ) 
-
-  return(p)
-}
-
-fig <- df %>% 
-      do(
-        p = createPlot(., dnames, symbols) 
-      ) %>% 
-      subplot(nrows = 1, shareX = TRUE, shareY = T, margin = 0.004) %>% layout(annotations = annots) %>% 
-        layout(annotations = list(x = 0.5, y = 0, yshift = -36, xref = "paper", yref = "paper", xanchor = "center", yanchor = "top", showarrow = F, text = xlab), margin = m) %>%
-      layout(
-        updatemenus = list(list(
-          y = 1.25, x = -0.06, yanchor = 'bottom', xanchor = 'left', direction = 'right', active = 1,
-          buttons = list(
-            list(label = 'n = 10', method = 'restyle', args = list("visible", list(T, T, T, T, F, F, F, F, F, F, F, F))),
-            list(label = 'n = 20', method = 'restyle', args = list("visible", list(F, F, F, F, T, T, T, T, F, F, F, F))),
-            list(label = 'n = 30', method = 'restyle', args = list("visible", list(F, F, F, F, F, F, F, F, T, T, T, T)))
-          )))
-      ) %>% 
-      config(displayModeBar = TRUE, scrollZoom = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "pan2d", "zoomIn2d", "zoomOut2d", "autoscale"))
-
-fig
-
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
-Type I error rates for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2$
+Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2$
 :::
 
 Let's first examine the performance of each method individually. 
@@ -345,16 +288,12 @@ Let's first examine the performance of each method individually.
 Let us now examine the performance of the four methods in the presence of a single main effect. @fig-results2 presents the Type I error rates ($\alpha = .05$) for the interaction effect as the magnitude of the main effect on factor $X_1$ increases, while the effect of factor $X_2$ is zero. 
 
 ::: {#fig-results2}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-df2 <- rbind(
-  readData(prefix, 10, alpha, 1), 
-  readData(prefix, 20, alpha, 1),
-  readData(prefix, 30, alpha, 1)
-)
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readlyData(prefix, alpha, 1, distributions, dnames)
 
-plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 45)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effect of $X_1$ increases
+Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of $X_1$'s main effect $a_1$
 :::
 
 RNK and INT keep Type I error rates close to $5\%$ across all distributions. The regular parametric ANOVA does not inflate errors, but error rates for some configurations are significantly lower than $5\%$, which may suggest loss of statistical power. ART's behavior is again problematic for all non-normal distributions, inflating Type I error rates beyond acceptable levels. 
@@ -362,28 +301,22 @@ RNK and INT keep Type I error rates close to $5\%$ across all distributions. The
 **Main effects**. But ART does not only inflate error rates on interaction effects. @fig-results3 presents the Type I error rates for the main effect of $X_2$ when the magnitude of the main effect of $X_1$ increases. We observe similar patterns as for interaction effects, although error rates are even larger now.   
 
 ::: {#fig-results3}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-plotErrorGrid(df2, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 64)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude of $X_1$'s main effect $a_1$
 :::
 
 **Contrasts**.
 
 ::: {#fig-contrasts}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "5_test_4x3_Contrasts"
-alpha=.05
 
-df <- rbind(
-  readData(prefix, 10, alpha, 1), 
-  readData(prefix, 20, alpha, 1),
-  readData(prefix, 30, alpha, 1)
-)
-
-plotErrorGrid(df, max = 65, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+df <- readlyData(prefix, alpha, 1, distributions, dnames)
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 52)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
+Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as a function of the magnitude of $X_1$'s main effect $a_1$
 :::
 
 
@@ -403,38 +336,24 @@ For non-normal distributions, INT tends to exhibit the lowest error rates, which
 **Interaction effects**.
 
 ::: {#fig-results-ordinal-1}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "2_test_4x3_Ordinal"
-alpha <- .05
 
-distr <- c("likert5", "likert5B", "likert7", "likert7B", "likert20", "likert20B")
+distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert20", "likert20B")
+dnames <- c("5 - equidistant", "5 - variable", "7 - equidistant", "7 - variable", "20 - equidistant", "20 - variable")
 
-df <- rbind(
-  readData(prefix, 10, alpha, 0, distributions = distr), 
-  readData(prefix, 20, alpha, 0, distributions = distr),
-  readData(prefix, 30, alpha, 0, distributions = distr)
-)
+df <- readlyData(prefix, alpha, 0, distributions, dnames)
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 
-names <- c("5 levels (equidistant)", "5 levels (variable)", "7 levels (equidistant)", "7 levels (variable)", "20 levels (equidistant)", "20 levels (variable)")
-
-df <- df %>% 
-      mutate(distr = str_replace(distr, "likert5B", names[2])) %>% 
-      mutate(distr = str_replace(distr, "likert7B", names[4])) %>% 
-      mutate(distr = str_replace(distr, "likert20B", names[6])) %>%
-      mutate(distr = str_replace(distr, "likert5", names[1])) %>% 
-      mutate(distr = str_replace(distr, "likert7", names[3])) %>% 
-      mutate(distr = str_replace(distr, "likert20", names[5]))
-
-df$distr <- factor(df$distr, levels = names)
-
-plotErrorGrid(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effects of $X_1$ and $X_2$ increases
+Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2$
 :::
 
 
 ::: {#fig-results-ordinal-2}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+
+distr = distributions
 df2 <- rbind(
   readData(prefix, 10, alpha, 1, distributions = distr), 
   readData(prefix, 20, alpha, 1, distributions = distr),
@@ -443,28 +362,19 @@ df2 <- rbind(
 
 names <- c("5 levels (equidistant)", "5 levels (variable)", "7 levels (equidistant)", "7 levels (variable)", "20 levels (equidistant)", "20 levels (variable)")
 
-df2 <- df2 %>% 
-      mutate(distr = str_replace(distr, "likert5B", names[2])) %>% 
-      mutate(distr = str_replace(distr, "likert7B", names[4])) %>% 
-      mutate(distr = str_replace(distr, "likert20B", names[6])) %>%
-      mutate(distr = str_replace(distr, "likert5", names[1])) %>% 
-      mutate(distr = str_replace(distr, "likert7", names[3])) %>% 
-      mutate(distr = str_replace(distr, "likert20", names[5]))
-
-df2$distr <- factor(df2$distr, levels = names)
-
-plotErrorGrid(df2, max = 42, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])), ystep=10)
+df <- readlyData(prefix, alpha, 1, distributions, dnames)
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 45)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect**, as the magnitude of the main effect of $X_1$ increases
+Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of $X_1$'s main effect $a_1$
 :::
 
 **Main effects**.
 
 ::: {#fig-results-ordinal-3}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-plotErrorGrid(df2, max = 54, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])), ystep=10)
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 64)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the magnitude of the main effect of $X_1$ increases
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude of $X_1$'s main effect $a_1$
 :::
 
 
@@ -474,48 +384,35 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the mag
 **Interaction effects**.
 
 ::: {#fig-designs-1}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "3_test-Designs"
-alpha=.05
-distr = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-names = c("norm", "lnorm", "exp", "poisson", "binom", "ordinal (5 levels)")
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-df <- readData(prefix, 20, alpha, 0, distributions = distr) 
-df <- df %>% 
-      mutate(design = str_replace(design, "2x3", "2x3 between")) %>% 
-      mutate(design = str_replace(design, "2x4", "2x4 mixed")) %>% 
-      mutate(design = str_replace(design, "3x3x3", "3x3x3 within")) %>%
-      mutate(distr = str_replace(distr, "likert5B", names[6]))
-df$distr <- factor(df$distr, levels = names)     
+df <- readlyDataByDesign(prefix, 20, alpha, 0, distributions, dnames)
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105, byDesign = TRUE)
 
-plotErrorGridByDesign(df, max = 104, "rateX1X2", xlab = expression(main~effect~of~factors~X[1]~and~X[2]~(alpha[1] == alpha[2])))
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$, as the magnitude of the main effects of $X_1$ and $X_2$ increases ($n=20$)
+Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2 (n = 20)$
 :::
 
 ::: {#fig-designs-2}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-df2 <- readData(prefix, 20, alpha, 1, distributions = distr) 
-df2 <- df2 %>% 
-      mutate(design = str_replace(design, "2x3", "2x3 between")) %>% 
-      mutate(design = str_replace(design, "2x4", "2x4 mixed")) %>% 
-      mutate(design = str_replace(design, "3x3x3", "3x3x3 within")) %>%
-      mutate(distr = str_replace(distr, "likert5B", names[6]))
-df2$distr <- factor(df2$distr, levels = names)     
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readlyDataByDesign(prefix, 20, alpha, 1, distributions, dnames)
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 81, byDesign = TRUE)
 
-plotErrorGridByDesign(df2, max = 81, "rateX1X2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$, as the magnitude of the main effect of $X_1$ increases ($n=20$)
+Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$ as a function of $X_1$'s main effect $a_1$ ($n=20$)
 :::
 
 
 **Main effects**.
 
 ::: {#fig-designs-3}
-```{r, echo=FALSE, fig.height=5, fig.width = 9, warning=FALSE}
-plotErrorGridByDesign(df2, max = 80, "rateX2", xlab = expression(main~effect~of~factor~X[1]~(alpha[1])))
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX2", xvar = "effectX1", max = 80, byDesign = TRUE)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect** $X_2$, as the magnitude of the main effect of $X_1$ increases ($n=20$)
+Type I error rates ($\alpha = .05$) for the **main effect** $X_2$ as a function of $X_1$'s main effect $a_1$ ($n=20$)
 :::
 
 

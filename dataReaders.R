@@ -17,13 +17,41 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 	return(df[df$alpha == alpha,])
 }
 
-prefix <- "1_test_4x3_Ratio"
-alpha=.05
+# the effectType parameter determines if I'm interested in results where there are effects on both factors (effectType = 0) 
+# or only on the first factor (effectType = 1) or in all the results (effectType = 2)
+readlyData <- function(prefix, alpha = .05, effectType = 0,
+		distributions=c("norm", "lnorm", "exp", "cauchy", "poisson", "binom"),
+		dnames = c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial"),
+		methods = c("PAR", "RNK", "INT", "ART"), effectvars = c("effectX1","effectX2","effectX1X2")) {
 
-df <- rbind(
-  readData(prefix, 10, alpha, 0), 
-  readData(prefix, 20, alpha, 0),
-  readData(prefix, 30, alpha, 0)
-)
+	df <- rbind(
+	  readData(prefix, 10, alpha, effectType, distributions, methods), 
+	  readData(prefix, 20, alpha, effectType, distributions, methods),
+	  readData(prefix, 30, alpha, effectType, distributions, methods)
+	)
 
-df <- reshape(df, idvar=c("design", "distr","method","alpha","effectX1","effectX2","effectX1X2"), timevar = "n", direction = "wide")
+	# Different column for each n
+	df <- reshape(df, idvar=c("design", "distr","method","alpha", effectvars), timevar = "n", direction = "wide")
+	df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
+	df$distr <- factor(df$distr, levels = dnames)
+
+	df
+}
+
+# the effectType parameter determines if I'm interested in results where there are effects on both factors (effectType = 0) 
+# or only on the first factor (effectType = 1) or in all the results (effectType = 2)
+readlyDataByDesign <- function(prefix, n = 20, alpha = .05, effectType = 0,
+		distributions=c("norm", "lnorm", "exp", "cauchy", "poisson", "binom"),
+		dnames = c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial"),
+		methods = c("PAR", "RNK", "INT", "ART"), effectvars = c("effectX1","effectX2","effectX1X2")) {
+
+	df <- readData(prefix, 20, alpha, effectType, distributions, methods)
+
+	# Different column for each design
+	df <- reshape(df, idvar=c("distr","method","alpha", "n", effectvars), timevar = "design", direction = "wide")
+	df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
+	df$distr <- factor(df$distr, levels = dnames)
+
+	df
+}
+

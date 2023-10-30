@@ -17,7 +17,7 @@ plotError <- function(df, n, max = 100, var = "rateX1X2", xvar = "effectX1", xla
   		label = c(paste("n=", n, sep=""), rep(NA, length(distr_levels) - 1)) 
 	)
 
-	plot <- ggplot(df, aes(x=factor(eval(as.symbol(effectX1))), y=100*eval(as.symbol(var))))+ 
+	plot <- ggplot(df, aes(x=factor(eval(as.symbol(xvar))), y=100*eval(as.symbol(var))))+ 
 		facet_wrap(~factor(distr), nrow=1) +
 	    geom_line(aes(group = method, color=method)) + 
 	    geom_point(aes(color=method, shape=method))+
