@@ -38,6 +38,17 @@ source("plotting.R")
 .math.inline .MathJax  {
   font-size: 105% !important;
 }
+
+.g::before {
+  content: "[G:";
+}
+
+.g::after {
+  content: "]";
+}
+.g {
+  color: #F28C28;
+}
 </style>
 ```
 
@@ -45,13 +56,13 @@ source("plotting.R")
 # Introduction
 We will demonstrate that the aligned rank transform procedure [@higgins:1990; @Salter:1993; @wobbrock:2011] is problematic, raising Type I error rates at very high levels for a range of non-normal data distributions. We will show that the more recent implementation of the procedure for contrasts [@elkin:2021] does not address these issues. Although warnings have been raised by other researchers in the past [@luepsen:2017; @luepsen:2018], those have been largely ignored. 
 
-We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In the light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels, should be considered as especially problematic. 
+We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In the light [In light]{.g} of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels, should be considered as especially problematic. 
 
 ### Illustrative example
 <!----- 
 The aligned rank transfom was introduced as a remedy to the problematic behavior of the simple rank transformation [@conover:1981]. @higgins:1990, as well as later @Salter:1993 used an example of normally distributed data to illustrate how the rank transform fails to correctly assess interaction effects when large main effects appear. I will use a different example to illustrate how the aligned rank transform fails when data follow instead a log-normal distribution [@Limbert:2001]. Older results from the 90s [@Salter:1993; @Mansouri:1995] suggest that the method is robust under log-normal distributions, and more recent work [@elkin:2021] states the same for contrast tests. But to what extent can we trust these results?   
 ----->
-We will start with an example to illustrate how the aligned rank transform can increase false positives and singificantly inflate observed effects. The example will also serve as a quick introduction to key concepts and methods used throughout the paper. 
+We will start with an example to illustrate how the aligned rank transform can increase false positives and significantly inflate observed effects. The example will also serve as a quick introduction to key concepts and methods used throughout the paper. 
 
 Suppose an HCI researcher conducts an experiment to compare the performance of three user interface techniques (A, B, and C) that help users complete image editing tasks of four different difficulty levels. The experiment is structured using a fully balanced 4 x 3 repeated-measures factorial design, where each participant (N = 12) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. The following table presents the experimental results: 
 
