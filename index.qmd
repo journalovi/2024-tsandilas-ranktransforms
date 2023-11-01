@@ -25,6 +25,7 @@ library(kableExtra)
 library(gridExtra)
 library(lmerTest)
 library(tidyverse)
+library(plotly)
 ```
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -111,6 +112,51 @@ grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
 ```
 Boxplots summarizing the results of our example. Dots represent the median time performance of each individual participant. 
 :::
+
+
+[I've made a try with plotly: individual plots look good but when using subplot, the bars are pretty narrow and I can't figure out how to fix that. ]{.g}
+
+::: {#fig-exampleUsingPlotly}
+```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
+cbPalette <- c("#999999", "#E69F00", "#F15854")
+
+p1 <- df %>%  
+  group_by(Participant, Technique) %>%
+  summarise(Time = median(Time), .groups="drop") %>%
+  plot_ly(x = ~Technique, y = ~Time, type = "box", color = ~Technique,
+          colors = cbPalette,
+          line = list(color = "black"),
+          marker = list(color = cbPalette), 
+          boxpoints = "all", jitter = 0.3, pointpos = 0
+          ) %>%
+  layout(yaxis = list(title = "Median Time (min)", range = c(0,3)),
+         xaxis = list(title = "Technique"),
+         showlegend = FALSE
+         )
+
+
+p2 <- df %>%  
+  group_by(Participant, Difficulty, Technique) %>%
+  summarise(Time = median(Time), .groups="drop") %>%
+  plot_ly(x = ~Difficulty, y = ~Time, type = "box", color = ~Technique,
+          colors = cbPalette,
+          line = list(color = "black"),
+          marker = list(color = cbPalette), 
+          boxpoints = "all", jitter = 0.3, pointpos = 0
+          ) %>%
+  layout(yaxis = list(title = "Median Time (min)", range = c(0,6)),
+         xaxis = list(title = "Difficulty"),
+         showlegend = FALSE,
+         boxmode = "group"
+         )
+p1
+p2
+subplot(p1, p2, nrows = 1, widths = c(0.4, 0.6))
+```
+Boxplots summarizing the results of our example. Dots represent the median time performance of each individual participant. 
+::: 
+
+
 
 We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where we conduct a repeated-measures ANOVA with four different data-transformation methods:
 
