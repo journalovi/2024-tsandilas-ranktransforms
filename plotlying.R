@@ -53,3 +53,4 @@ plotlyError <- function(df, xlab = "magnitude of main effects", var = "rateX1X2"
 
 	fig
 }
+
