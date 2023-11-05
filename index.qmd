@@ -57,11 +57,46 @@ source("plotting.R")
 </style>
 ```
 
+::: {.callout-note appearance="simple" icon=false collapse=true}
+## Abstract {.unnumbered}
 
-# Introduction
-We will demonstrate that the aligned rank transform procedure [@higgins:1990; @Salter:1993; @wobbrock:2011] is problematic, raising Type I error rates at very high levels for a range of non-normal data distributions. We will show that the more recent implementation of the procedure for contrasts [@elkin:2021] does not address these issues. [Although warnings have been raised by other researchers]{.f} [Although other researchers have raised warnings] in the past [@luepsen:2017; @luepsen:2018], those have been largely ignored. 
+###### Introduction
+The research question and a succinct motivation for answering it. 
 
-We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. [In the light]{.f} [In light]{.g} of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels, [should be considered as especially problemati]{.f} [are also concerned]{.g}. 
+###### Background
+Background research. 
+
+:::
+
+
+::: {.callout-note appearance="simple" icon=false collapse=true}
+## Materials, Authorship, License, Conflicts
+
+Fill in the following sections in this infobox per the [JoVI Author Guide](https://www.journalovi.org/author-guide.html#sections), then delete this line.
+
+###### Research materials
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#research-material-statements).
+
+###### Authorship
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#authorship).
+
+###### License
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#license).
+
+###### Conflicts of interest
+
+See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#conflicts-of-interest).
+
+:::
+
+
+## Introduction {#intro}
+We will demonstrate that the aligned rank transform procedure [@higgins:1990; @Salter:1993; @wobbrock:2011] is problematic, raising Type I error rates at very high levels for a range of non-normal data distributions. We will show that the more recent implementation of the procedure for contrasts [@elkin:2021] does not address these issues. Although warnings have been raised by other researchers in the past [@luepsen:2017; @luepsen:2018], those have been largely ignored. 
+
+We will also demonstrate that simpler transformation methods exhibit a better behavior, although they have their own limitations. In light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method as obsolete and replace it by better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels are also concerned. 
 
 ### Illustrative example
 <!----- 
@@ -79,13 +114,9 @@ kbl(df) %>% kable_paper(position = "center") %>% scroll_box(width = "740px", hei
 Example dataset: Time (in minutes) spent by 12 participants for four difficulty levels and three user interface techniques. Scroll down to see the full results.
 :::
 
-<<<<<<< HEAD
-The experiment is hypothetical but has similarities with real-world experiments. Time performances have been randomly sampled from a population in which: (1) *Difficulty* has a large effect; (2) *Technique* has no effect; and (3) there is no interaction effect between the two factors. To generate time values, we drew samples from a log-normal distribution. The log-normal distribution is often a good fit for real-world measurements that are bounded by zero and have low means but large variance [@Limbert:2001]. Task-completion times are good examples of such measurements [@Sauro:2010]. 
-=======
-The experiment is hypothetical but has similarities with real-world experiments [Could cite [@Fruchard:2023]]{.g}. Time performances have been randomly sampled from a population in which: (1) *Difficulty* has a large effect; (2) *Technique* has no effect; and (3) there is no interaction effect between the two factors. To generate time values, we drew samples from a log-normal distribution. The log-normal distribution is often a good fit for real-world measurements that are bounded by zero and have low means but large variance [@Limbert:2001]. Task-completion times are good examples of such measurements. 
->>>>>>> 9d8a7c991dac374dbb4df2012519bbbb6b315701
+The experiment is hypothetical but has similarities with real-world experiments, e.g., see the experiments of @Fruchard:2023. Time performances have been randomly sampled from a population in which: (1) *Difficulty* has a large effect; (2) *Technique* has no effect; and (3) there is no interaction effect between the two factors. To generate time values, we drew samples from a log-normal distribution. The log-normal distribution is often a good fit for real-world measurements that are bounded by zero and have low means but large variance [@Limbert:2001]. Task-completion times are good examples of such measurements [@Sauro:2010]. 
 
-@fig-example presents two boxplots that visually summarize the main effects observed through the experiment. We plot medians to account for the fact that distributions are skewed. We observe that differences in the overall time performance of the three techniques are not visually clear [despite the fact that]{.f} [although]{.g} the overall median time is somewhat higher for Technique B. In contrast, time performance clearly deteriorates as task difficulty increases. 
+@fig-example presents two boxplots that visually summarize the main effects observed through the experiment. We plot medians to account for the fact that distributions are skewed. We observe that differences in the overall time performance of the three techniques are not visually clear, although the overall median time is somewhat higher for Technique B. In contrast, time performance clearly deteriorates as task difficulty increases. 
 We also observe that for the most difficult tasks (Level 4), the median time for Technique C is lower than the median time for Techniques A and B, so we may suspect that *Difficulty* interacts with *Technique*. However, since the spread of observed values is extremely large and the number of data points is small, such differences could be the result of random noise. 
 
 ::: {#fig-example}
@@ -118,11 +149,14 @@ Boxplots summarizing the results of our example. Dots represent the median time 
 :::
 
 
+<!-- 
 [I've made a try with plotly: individual plots look good but when using subplot, the bars are pretty narrow and I can't figure out how to fix that. ]{.g}
 
 ::: {#fig-exampleUsingPlotly}
 ```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
 cbPalette <- c("#999999", "#E69F00", "#F15854")
+
+df <- read.csv("example_data.csv", sep=",", header=TRUE, strip.white=TRUE)
 
 p1 <- df %>%  
   group_by(Participant, Technique) %>%
@@ -135,7 +169,7 @@ p1 <- df %>%
           ) %>%
   layout(yaxis = list(title = "Median Time (min)", range = c(0,3)),
          xaxis = list(title = "Technique"),
-         showlegend = FALSE
+         showlegend = FALSE, boxgap=0.01
          )
 
 
@@ -148,23 +182,23 @@ p2 <- df %>%
           marker = list(color = cbPalette), 
           boxpoints = "all", jitter = 0.3, pointpos = 0
           ) %>%
-  layout(yaxis = list(title = "Median Time (min)", range = c(0,6)),
+  layout( yaxis = list(title = "Median Time (min)", range = c(0,6)),
          xaxis = list(title = "Difficulty"),
-         showlegend = FALSE,
-         boxmode = "group"
-         )
-p1
-p2
-subplot(p1, p2, nrows = 1, widths = c(0.4, 0.6))
+         showlegend = FALSE, boxmode = "group"
+        )
+#p1
+#p2
+subplot(p1, p2, widths = c(0.6, 0.4))
 ```
 Boxplots summarizing the results of our example. Dots represent the median time performance of each individual participant. 
 ::: 
+-->
 
 
 
 We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where we conduct a repeated-measures ANOVA with four different data-transformation methods:
 
-1. *Log transformation (LOG).* Data are transformed with the logarithmic function. For our data, this is the most appropriate method [as we drew samples from a log-normal distribution]{.g}. 
+1. *Log transformation (LOG).* Data are transformed with the logarithmic function. For our data, this is the most appropriate method as we drew samples from a log-normal distribution. 
 
 2. *Aligned rank transformation (ART).* Data are transformed and analyzed with the ARTool [@wobbrock:2011;@elkin:2021].
 
@@ -178,7 +212,7 @@ For each ANOVA analysis, we use a linear mixed-effects model, treating the parti
 m.log <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data = df)
 ```
 
-The table below presents the *p*-values for the main effects of the two factors and for their interaction: [Would it be worth also running LOG + ART? I guess it would provide the expected results then.]{.g} 
+The table below presents the *p*-values for the main effects of the two factors and for their interaction: [Would it be worth also running LOG + ART? I guess it would provide the expected results then.]{.g} [F: Yes, I don't see how this could reinforce our argumentation.]{.f}
 
 |        | LOG  | ART | RNK | INT |
 |--------|------|-----|-----|-----|
@@ -218,7 +252,7 @@ In addition to evaluating false positive (Type I) and false negative (Type II) e
 ### Overview
 The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. Even worse, while the rank transformation has been criticized for inflating errors for interaction only effects, ART inflates errors for both interaction and main effects, as we observed in our example. 
 
-# Background
+## Background {#background}
 
 ### Non-parametric statistics
 Parametric statistical procedures, such as ANOVA, are known to be fairly robust to deviations from normality assumptions, and this is especially the case when sample sizes are large. However, in many situations [...]
@@ -246,15 +280,18 @@ Include here all the background related to the
 
 [@casiez:2022] [@luepsen:2017; @luepsen:2018]
 
-# Methodology
-**Model structure**. We assume that observations for the response variable $Y$ come from a two-way balanced mixed-effects model with the following form: 
+## Methodology {#methodology}
+
+### Model structure
+We assume that observations for the response variable $Y$ come from a two-way balanced mixed-effects model with the following form: 
 
 $$ 
 y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
 $${#eq-linear-model}
 
-[Reorder the variables in the way they appear in the equation?]{.g}
  - $\mu$ is the grand mean
+
+ - $s_k$ is the random intercept effect of the *k*-th subject, where $k = 1..n$ 
 
  - $x_{1i}$ is a numerical encoding of the *i*-th level of factor $X_1$, where $i = 1..m_1$
 
@@ -262,15 +299,13 @@ $${#eq-linear-model}
 
  - $a_1$, $a_2$, and $a_{12}$ express the magnitude of main and interaction effects 
 
- - $s_k$ is the random intercept effect of the *k*-th subject, where $k = 1..n$ 
-
  - $\epsilon_{ijk}$ is the experimental error effect
 
 To encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we proceed as follows: 
 
 1. We normalize the distance between their first and their second levels such that $x_{12} - x_{11} = 1$ and $x_{22} - x_{21} = 1$. This approach enables us to conveniently control for the main and interaction effects by simply varying the parameters $a_1$, $a_2$, and $a_{12}$.
 
-2. For the remaining levels, we randomly sample from a uniform distribution between the two extremes [Which extremes exactly?]{.g}. Thus, we generate and evaluate a large number of different configurations of relative effects between levels.  
+2. For the remaining levels, we randomly sample from a uniform distribution that spans the range between these two extreme levels, i.e., between $x_{11}$ and $x_{12}$ for $X_1$, and between $x_{21}$ and $x_{22}$ for $X_2$. This approach allows us to generate and evaluate a substantial variety of configurations, each representing different relative effects between levels.  
 
 3. We require all levels to sum up to 0, or $\sum\limits_{i=1}^{m_1}  x_{1i} = 0$ and $\sum\limits_{j=1}^{m_2}  x_{2j} = 0$, which ensures that the grand mean is $\mu$.
 
@@ -278,7 +313,8 @@ For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or
 
 While random slope effects can have an impact on real experimental data [@barr:2013], we do not incorporate them into our simulations for three reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; (2) because random slope effects make the control for equal variances and sphericity assumptions more challenging; and (3) because mixed-effects procedures that account for random slope effects are more computationally demanding, adding strain to our simulation resources. However, there is no good reason to believe that adding random slope effects would affect our key findigns and conclusions.
 
-**Population control, sampling, and distribution conversions**. To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and $a_{12}$. 
+### Population control, sampling, and distribution conversions 
+To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and $a_{12}$. 
 
 We follow the approach of @DeBruine:2021 and use the R package *faux* [@faux] to simulate data for our mixed-effects models. As a starting point, we assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate non-normal distributions, we convert response values $y_{ijk}$ as follows. First, we derive their cumulative density distribution using the cumulative density function of the normal distribution. Then, we use the inverse quantile function of the target distribution to derive the final distribution. For example, to convert normal responses to log-normal, we use the following R function:  
 
@@ -288,6 +324,26 @@ norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...)
  	 qlnorm(p, meanlog, sdlog, ...) 
 }
 ```
+
+### Rank transformation methods 
+We evaluate the three rank-based transformations that we introduced earlier. For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
+
+```{r}
+inverseNormalTransform <- function(x){
+	qnorm((rank(x) - 0.5)/length(x))
+}
+```
+
+We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.
+
+### Measures
+We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materials. 
+
+
+## Ratio variables {#ratio}
+To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 $\times$ 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section. 
+
+### Distributions
 For our first series of experiments, we evaluate conversions to three continuous and two discrete distributions: [No idea which of those distributions are representative of the ones we can find in HCI and whether the parameters are also representative. However, ART is also used outside of HCI field. What distributions were used in previous work working on ART?]{.g}
 
 - Log-normal (*lnorm*) distribution: $LogN(\mu, \sigma)$ with $\mu = 0$ and $\sigma = 1$
@@ -302,22 +358,8 @@ For our first series of experiments, we evaluate conversions to three continuous
  
 We evaluate three sample sizes: $n=10$, $n=20$, and $n=30$. 
 
-**Transformation methods**. We evaluate the three rank-based transformations that we introduced earlier. For the aligned rank transformation (ART), we use the R implementation of ARTool [@artool] [Provide the version of the package used, in case they change something later.]{.g}. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
 
-```{r}
-inverseNormalTransform <- function(x){
-	qnorm((rank(x) - 0.5)/length(x))
-}
-```
-
-We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.
-
-**Measures**.
-We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materials. 
-
-
-# Ratio variables
-To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 $\times$ 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section. 
+### Results
 
 **Interaction effects**. @fig-results1 presents Type I error rates ($\alpha = .05$) for the interaction effect when increasing the magnitude of effect of both factors $X_1$ and $X_2$. 
 
@@ -395,7 +437,10 @@ If we only focus on interaction effects, we observe that all four techniques fai
 For non-normal distributions, INT tends to exhibit the lowest error rates, which corroborates previous results [@luepsen:2018]. Although the method also fails when effects sizes become large, we should mention that the effect sizes that we tested are especially large. Effects with $a_1$ and $a_2$ greater than $0.8$ result in $100\%$ statistical power for sample sizes as low as $n=10$. Such power levels are uncommon in real experimental designs. Thus, given its simplicity, the inverse normal transformation might still be a viable alternative. We will evaluate its performance with additional tests 
 -->
 
-# Ordinal variables
+## Ordinal variables {#ordinal}
+
+### Distributions
+
 
 ### Results
 
@@ -444,8 +489,9 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a functi
 :::
 
 
-# Additional experiments
-### Type I errors across designs
+## Other experimental designs {#extra}
+
+### Results
 
 **Interaction effects**.
 
@@ -481,8 +527,10 @@ plotlyError(df, xlab = "magnitude of main effects", var = "rateX2", xvar = "effe
 Type I error rates ($\alpha = .05$) for the **main effect** $X_2$ as a function of $X_1$'s main effect $a_1$ ($n=20$)
 :::
 
+## Unequal variances
 
-### Type I errors under unequal variances
+### Results
+
 **Interaction effects**.
 
 ::: {#fig-results-hetero-1}
@@ -507,19 +555,17 @@ plotlyError(df, xlab = "ratio of variances between level of X1", var = "rateX2",
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the variance difference on $X_1$ increases
 :::
 
-### Statistical power
-
-### Effect sizes
+## Statistical power and effect sizes
 
 <!--
 # Understanding ART's breakdown
 --> 
 
-# Recommendations 
+## Recommendations {#recommendations}
 
-# Conclusion
+## Conclusion {#conclusion}
 
-# References {.unnumbered}
+## References {.unnumbered}
 
 ::: {#refs}
 :::
