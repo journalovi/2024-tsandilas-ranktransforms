@@ -275,14 +275,34 @@ Data transformations provide a convinient solution
 While rank transformations are widespread, they are not  
 --->
 
-### Previous warnings
+### The use of ART in experimental research 
+[F: Pesent the survey of papers using ART here?]{.f}
+
+### Past warnings
 Include here all the background related to the 
 
 [@casiez:2022] [@luepsen:2017; @luepsen:2018]
 
-## Methodology {#methodology}
+Also, check those for heteroscedacity issues: [@Carletti:2005; @Leys:2010]
 
-### Model structure
+## Methodology {#methodology}
+To evaluate ART, we compare it to the regular parmateric ANOVA without transformation (*PAR*) and the two rank-based transformations that we introduced earlier: the regular rank transformation (*RNK*) and the inverse normal transformation (*INT*). We conduct a series of Monte Carlo experiments that assess performance under a variety of experimental configurations:
+
+1. We evaluate *ratio* and *interval* data. For ratio data, we examine four representative *continuous* distributions (normal, log-normal, exponential, and Cauchy distribution) and two *discrete* distributions (Poisson and binomial distribution). For interval data, we examine distributions for 5- and 7-level Likert item responses, as well as responses with 20 levels, as they are typically used in NASA-TXL evaluation questionnaires.
+
+2. We present results for four experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 repeated-measures factorial design. We then show how our conclusions generalize to three additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a repeated-measures factor; and (iii) a 3 $\times$ 3 $\times$ 3 repeated-measures design.
+
+3. We evaluate three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. For within-subjects designs where all factors are treated as repeated measures, $n$ coincides with the number of subjects (or commonly participants in HCI research). 
+
+4. We test the robustness of the methods under unequal variances. 
+
+5. In addition to Type I error rates, we compare the statistical power of the methods and also evaluate the quality of their effect size estimates.  
+
+6. We assess the above measures for both main and interaction effects. In distinction with the experimental method of @elkin:2021, we examine how growing effects on one or two factors affect the Type I error rate on other factors or their interactions. 
+
+Some previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also evaluated unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variance, such unbalanced designs are often problematic both for regular ANOVA [?] and for rank transformation methods [@Beasley:2009; @luepsen:2018]. Since unbalanced designs are exceptions in HCI experimental research, we do not consider them here. 
+
+### Statistical modeling
 We assume that observations for the response variable $Y$ come from a two-way balanced mixed-effects model with the following form: 
 
 $$ 
@@ -316,7 +336,7 @@ While random slope effects can have an impact on real experimental data [@barr:2
 ### Population control, sampling, and distribution conversions 
 To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and $a_{12}$. 
 
-We follow the approach of @DeBruine:2021 and use the R package *faux* [@faux] to simulate data for our mixed-effects models. As a starting point, we assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate non-normal distributions, we convert response values $y_{ijk}$ as follows. First, we derive their cumulative density distribution using the cumulative density function of the normal distribution. Then, we use the inverse quantile function of the target distribution to derive the final distribution. For example, to convert normal responses to log-normal, we use the following R function:  
+We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. As a starting point, we assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate non-normal distributions, we convert response values $y_{ijk}$ as follows. First, we derive their cumulative density distribution using the cumulative density function of the normal distribution. Then, we use the inverse quantile function of the target distribution to derive the final distribution. For example, to convert normal responses to log-normal, we use the following R function:  
 
 ```{r}
 norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...) {
@@ -325,8 +345,8 @@ norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...)
 }
 ```
 
-### Rank transformation methods 
-We evaluate the three rank-based transformations that we introduced earlier. For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
+### Implementation of rank transformation methods 
+For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
 
 ```{r}
 inverseNormalTransform <- function(x){
@@ -340,7 +360,7 @@ We compare the three rank-based methods against the naive parametric method (PAR
 We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materials. 
 
 
-## Ratio variables {#ratio}
+## Ratio data {#ratio}
 To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 $\times$ 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section. 
 
 ### Distributions
@@ -437,7 +457,7 @@ If we only focus on interaction effects, we observe that all four techniques fai
 For non-normal distributions, INT tends to exhibit the lowest error rates, which corroborates previous results [@luepsen:2018]. Although the method also fails when effects sizes become large, we should mention that the effect sizes that we tested are especially large. Effects with $a_1$ and $a_2$ greater than $0.8$ result in $100\%$ statistical power for sample sizes as low as $n=10$. Such power levels are uncommon in real experimental designs. Thus, given its simplicity, the inverse normal transformation might still be a viable alternative. We will evaluate its performance with additional tests 
 -->
 
-## Ordinal variables {#ordinal}
+## Ordinal data {#ordinal}
 
 ### Distributions
 
@@ -489,7 +509,7 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a functi
 :::
 
 
-## Other experimental designs {#extra}
+## Performance accross experimental designs {#extra}
 
 ### Results
 
@@ -528,6 +548,7 @@ Type I error rates ($\alpha = .05$) for the **main effect** $X_2$ as a function 
 :::
 
 ## Unequal variances
+Experiments for a 2 x 4 mixed design 
 
 ### Results
 
