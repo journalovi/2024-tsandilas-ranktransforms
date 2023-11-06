@@ -300,7 +300,7 @@ To evaluate ART, we compare it to the regular parmateric ANOVA without transform
 
 6. We assess the above measures for both main and interaction effects. In distinction with the experimental method of @elkin:2021, we examine how growing effects on one or two factors affect the Type I error rate on other factors or their interactions. 
 
-Some previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also evaluated unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variance, such unbalanced designs are often problematic both for regular ANOVA [?] and for rank transformation methods [@Beasley:2009; @luepsen:2018]. Since unbalanced designs are exceptions in HCI experimental research, we do not consider them here. 
+Some previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also evaluated unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both regular ANOVA [?] and rank transformation methods [@Beasley:2009; @luepsen:2018]. Since unbalanced designs are not common in HCI experimental research, we do not consider them here. 
 
 ### Statistical modeling
 We assume that observations for the response variable $Y$ come from a two-way balanced mixed-effects model with the following form: 
