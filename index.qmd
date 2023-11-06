@@ -212,7 +212,7 @@ For each ANOVA analysis, we use a linear mixed-effects model, treating the parti
 m.log <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data = df)
 ```
 
-The table below presents the *p*-values for the main effects of the two factors and for their interaction: [Would it be worth also running LOG + ART? I guess it would provide the expected results then.]{.g} [F: Yes, I don't see how this could reinforce our argumentation.]{.f}
+The table below presents the *p*-values for the main effects of the two factors and for their interaction: [Would it be worth also running LOG + ART? I guess it would provide the expected results then.]{.g} [F: Yes, I don't see how this could reinforce our argumentation.]{.f}[It would not reinforce our argumentation. Just a sanity check, as according to what is below, ART should work on normally distributed data. If it does not work, it could mean there is something special with our example. If it works, it can be a teaser for after.]{.g}
 
 |        | LOG  | ART | RNK | INT |
 |--------|------|-----|-----|-----|
