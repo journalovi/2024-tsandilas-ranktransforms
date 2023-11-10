@@ -194,8 +194,6 @@ Boxplots summarizing the results of our example. Dots represent the median time 
 ::: 
 -->
 
-
-
 We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where we conduct a repeated-measures ANOVA with four different data-transformation methods:
 
 1. *Log transformation (LOG).* Data are transformed with the logarithmic function. For our data, this is the most appropriate method as we drew samples from a log-normal distribution. 
@@ -303,7 +301,7 @@ To evaluate ART, we compare it to the regular parmateric ANOVA without transform
 Some previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also evaluated unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both regular ANOVA [?] and rank transformation methods [@Beasley:2009; @luepsen:2018]. Since unbalanced designs are not common in HCI experimental research, we do not consider them here. 
 
 ### Statistical modeling
-We assume that observations for the response variable $Y$ come from a two-way balanced mixed-effects model with the following form: 
+We assume that observations for the response variable $Y$ come from a two-way (two factors) or three-way (three factors) mixed-effects model. For clarity, we explain here the model for two factors, but its extention to three factors is straightforward. The model has the following form:
 
 $$ 
 y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
@@ -356,28 +354,41 @@ inverseNormalTransform <- function(x){
 
 We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.
 
-### Measures
-We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materials. 
+### Evaluation measures
+Significance tests have two types of errors. *Type I errors*, or false positives, are mistaken rejections of the null hypothesis. Type II errors, of false negatives, are failures to reject a null hypothesis that is actually true. In our illustrative example in @fig-example, a Type I error is finding that there is an effect of the choice of the technique on time performance. A *Type II error*, in turn, is finding that the task difficulty has no effect on time perfromance. 
 
+Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the singificance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. [Sections 4 - 7](#ratio) specifically focus on evaluating the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper. We include additional results in our supplementary material. 
 
-## Ratio data {#ratio}
-To better understand the behavior of rank transformation methods, we start with a series of Monte Carlo simulations, focusing on a 4 $\times$ 3 repeated-measures design, like in our illustrative example. We extend our analysis to other designs in the following section. 
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. As there is a tradeoff between power and Type I errors, we assess power with respect to Type I error rates. If Type I error rates are inflated beyond acceptable levels, power comparions are misleading, so we avoid them.
 
-### Distributions
-For our first series of experiments, we evaluate conversions to three continuous and two discrete distributions: [No idea which of those distributions are representative of the ones we can find in HCI and whether the parameters are also representative. However, ART is also used outside of HCI field. What distributions were used in previous work working on ART?]{.g}
+In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, such as a parametric ANOVA under a normal distribution. 
 
-- Log-normal (*lnorm*) distribution: $LogN(\mu, \sigma)$ with $\mu = 0$ and $\sigma = 1$
+We present our results on power and effect sizes in [Section 8](#power). 
 
-- Exponential (*exp*) distribution: $Exp(\lambda)$ with $\lambda = 2$
+### Iterations and apparatus
+Our power and Type I error rate estimates are based on $5000$ iterations per population configuration and per sample size. Our experimental code is written in R and is available in our supplementary material. 
+Our different experiments were run seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
 
-- Cauchy (*cauchy*) distribution: $Cauchy(x_0,\gamma)$ with $x_0 = 0$ and $\gamma = 1$ 
+<!--
+We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materialsxa
+-->
 
-- Poisson (*poisson*) distribution: $Pois(\lambda)$ with $\lambda = 3$
+## Ratio scales {#ratio}
+Our first series of experiments evaluate the Type I error rate of the methods for ratio variables. We test four continuous and two discrete distributions with a fixed set of parameters.  
 
-- Binomial (*binom*) distribution: $B(n,p)$ with $n = 10$ and $p=.1$
+1. The normal distribution $N(\mu, \sigma)$ with parameters $\mu = 0$ and $\sigma = 1$. 
+
+2. The log-normal distribution $LogN(\mu, \sigma)$ with parameters $\mu = 0$ and $\sigma = 1$. It is a highly skewed distribution. As discussed in [the introduction](#intro), the log-normal distribution is a good model for a range of measures that are bounded by zero, such as task-completion times. 
+
+3. The exponential distribution $Exp(\lambda)$ with a parameter $\lambda = 2$. 
+
+4. The Cauchy distribution $Cauchy(x_0,\gamma)$ with parameters $x_0 = 0$ and $\gamma = 1$ 
+
+5. The Poisson distribution $Pois(\lambda)$ with a parameter $\lambda = 3$
+
+6. The binomial distribution $B(n,p)$ with parameters $n = 10$ and $p=.1$ 
  
-We evaluate three sample sizes: $n=10$, $n=20$, and $n=30$. 
-
+For this series of experiments, we study a 4 $\times$ 3 repeated-measures design. In the following, we refer to the first factor with the four levels as $X_1$ and the second factor with three levels as $X_2$.
 
 ### Results
 
@@ -457,7 +468,7 @@ If we only focus on interaction effects, we observe that all four techniques fai
 For non-normal distributions, INT tends to exhibit the lowest error rates, which corroborates previous results [@luepsen:2018]. Although the method also fails when effects sizes become large, we should mention that the effect sizes that we tested are especially large. Effects with $a_1$ and $a_2$ greater than $0.8$ result in $100\%$ statistical power for sample sizes as low as $n=10$. Such power levels are uncommon in real experimental designs. Thus, given its simplicity, the inverse normal transformation might still be a viable alternative. We will evaluate its performance with additional tests 
 -->
 
-## Ordinal data {#ordinal}
+## Ordinal scales {#ordinal}
 
 ### Distributions
 
@@ -576,7 +587,7 @@ plotlyError(df, xlab = "ratio of variances between level of X1", var = "rateX2",
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the variance difference on $X_1$ increases
 :::
 
-## Statistical power and effect sizes
+## Statistical power and effect sizes {#power}
 
 <!--
 # Understanding ART's breakdown
