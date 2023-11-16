@@ -41,8 +41,10 @@ mlog <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Para
 mart <- art(Time ~ Difficulty*Technique + (1|Participant), data=df) # ARTool
 mrnk <- lmer(rank(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Rank transformation 
 mint <- lmer(inverseNormalTransform(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
+mpar <- lmer(Time ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - no transformation
 
 printAnalysis(1, "Logarithmic Transformation", mlog)
 printAnalysis(2, "ART", mart)
 printAnalysis(3, "Rank Transformation", mrnk)
 printAnalysis(4, "Inverse Normal Transformation", mint)
+printAnalysis(5, "No Transformation", mpar)

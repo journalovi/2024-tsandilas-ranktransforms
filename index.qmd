@@ -204,7 +204,7 @@ We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where w
 
 4. *Inverse normal transformation (INT).* The data are transformed by using their normal scores. This rank-based method is simple to implement and has been commonly used in some disciplines. However, it has also received criticisms [@Beasley:2009].  
 
-For each ANOVA analysis, we use a linear mixed-effects model, treating the participant identifier as a random effect. To simplify our analysis and like @elkin:2021, we consider random intercepts but no random slopes. For example, we use the following R code to create the model for the log-transformed response: 
+For comparison, we also report the results of the regular parameteric ANOVA with no tranformation (*PAR*). For each ANOVA analysis, we use a linear mixed-effects model, treating the participant identifier as a random effect. To simplify our analysis and like @elkin:2021, we consider random intercepts but no random slopes. For example, we use the following R code to create the model for the log-transformed response: 
 
 ```{r, echo=TRUE, warning=FALSE}
 m.log <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data = df)
@@ -212,25 +212,44 @@ m.log <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data = df)
 
 The table below presents the *p*-values for the main effects of the two factors and for their interaction: [Would it be worth also running LOG + ART? I guess it would provide the expected results then.]{.g} [F: Yes, I don't see how this could reinforce our argumentation.]{.f}[It would not reinforce our argumentation. Just a sanity check, as according to what is below, ART should work on normally distributed data. If it does not work, it could mean there is something special with our example. If it works, it can be a teaser for after.]{.g}
 
+|        | PAR  | LOG  | ART | RNK | INT |
+|--------|------|------|-----|-----|-----|
+| Difficulty  | $1.8 \times 10^{-26}$ | $8.1 \times 10^{-47}$  |  $9.0 \times 10^{-43}$ | $4.3 \times 10^{-46}$ | $4.4 \times 10^{-44}$ |
+| Technique   | $.10$ | $.18$  | $.00061$ | $.38$ | $.17$ |
+| Difficulty $\times$ Technique | $.056$ | $.10$ | $.0017$ | $.24$ | $.23$ |
+: *p*-values for main and interaction effects {.sm}
+
+
+<!--
 |        | LOG  | ART | RNK | INT |
 |--------|------|-----|-----|-----|
 | Difficulty  | $8.1 \times 10^{-47}$  |  $9.0 \times 10^{-43}$ | $4.3 \times 10^{-46}$ | $4.4 \times 10^{-44}$ |
 | Technique   | $.18$  | $.00061$ | $.38$ | $.17$ |
 | Difficulty $\times$ Technique | $.10$ | $.0017$ | $.24$ | $.23$ |
 : *p*-values for main and interaction effects {.sm}
+--> 
 
-The disparity in findings between ART and the three alternative methods is striking. ART suggests that all three effects are statistically significant. What adds to the intrigue is the fact that ART's *p*-values for *Technique* and its interaction with *Difficulty* are orders of magnitude lower than the *p*-values obtained from the other methods. We will observe similar discripancies if we conduct contrast tests with the ART procedure [@elkin:2021], though we leave this as an exercise for the reader.
+The disparity in findings between ART and the three alternative transformation methods is striking. ART suggests that all three effects are statistically significant. What adds to the intrigue is the fact that ART's *p*-values for *Technique* and its interaction with *Difficulty* are orders of magnitude lower than the *p*-values obtained from all other methods. We will observe similar discripancies if we conduct contrast tests with the ART procedure [@elkin:2021], though we leave this as an exercise for the reader.
 
 We also examine effect size measures, which are commonly reported in scientific papers. The table below presents results for partial $\eta^2$, which describes the ratio of variance explained by a variable or an interaction: 
 
+|        | PAR  | LOG  | ART | RNK | INT |
+|--------|------|------|-----|-----|-----|
+| Difficulty  | $.64\ [.55, 1.00]$  | $.83\ [.79, 1.00]$  |  $.80\ [.76, 1.00]$ | $.83\ [.79, 1.00]$ | $.81\ [.77, 1.00]$  |
+| Technique   | $.04\ [.00, 1.00]$ | $.03\ [.00, 1.00]$  | $.11\ [.03, 1.00]$ | $.02\ [.00, 1.00]$ | $.03\ [.00, 1.00]$ |
+| Difficulty $\times$ Technique | $.10\ [.00, 1.00]$ | $.08\ [.00, 1.00]$  | $.16\ [.04, 1.00]$| $.06\ [.00, 1.00]$| $.06\ [.00, 1.00]$ |
+: partial $\eta^2$ and its 95\% confidence interval {.sm}
+
+<!--
 |        | LOG  | ART | RNK | INT |
 |--------|------|-----|-----|-----|
 | Difficulty  | $.83\ [.79, 1.00]$  |  $.80\ [.76, 1.00]$ | $.83\ [.79, 1.00]$ | $.81\ [.77, 1.00]$  |
 | Technique   | $.03\ [.00, 1.00]$  | $.11\ [.03, 1.00]$ | $.02\ [.00, 1.00]$ | $.03\ [.00, 1.00]$ |
 | Difficulty $\times$ Technique | $.08\ [.00, 1.00]$  | $.16\ [.04, 1.00]$| $.06\ [.00, 1.00]$| $.06\ [.00, 1.00]$ |
 : partial $\eta^2$ and its 95\% confidence interval {.sm}
+-->
 
-Clearly, ART exagerates the effect of *Technique* and its interaction with *Difficulty*. 
+We observe that ART exagerates both the effect of *Technique* and its interaction with *Difficulty*. 
 
 <!--
 In addition to evaluating false positive (Type I) and false negative (Type II) errors, we will also evaluate how well the different methods estimate effect sizes. 
@@ -263,6 +282,8 @@ Unfortunately, each non-parametric statistical test addresses a specific experim
 [@Mansouri:1995]
 [@Beasley:2009]
 
+[@Payton:2006] To check: This paper tests Poisson data and surprisingly, it shows that PAR and ART work well for interaction effects.
+
 <!---
 So previous litterature has investigatedd data transformations that could 
 
@@ -282,6 +303,30 @@ Include here all the background related to the
 [@casiez:2022] [@luepsen:2017; @luepsen:2018]
 
 Also, check those for heteroscedacity issues: [@Carletti:2005; @Leys:2010]
+
+## What could go wrong?
+
+### Interactions under non-linear transformations
+As we discussed in the previous section, ART emerged in the early 90s as a remedy to the rank transform procedure. 
+As @higgins:1990 explained, non-linear transformations such as the rank transform change the structure of interactions. As a result, *"interaction may exist in the transformed data but not in the original data, or vice versa"* [@higgins:1990]. ART aims to correct this problem. However, the distributions of observed measures may also be the result of non-linear transformations, which often makes the interpretation of observed interaction effects problematic. 
+
+Consider again our introduction's illustrative example. 
+
+there is another problem that the literature on the ART procedure does not address. 
+
+ Distributions of observed measures are often  
+
+@Loftus:1978    
+
+### Ordinal scales and discretization issues
+
+
+### The problem of unequal variances
+
+
+<!--
+Check https://psyteachr.github.io/mms/slides/rousselet-interactions.pdf
+--> 
 
 ## Methodology {#methodology}
 To evaluate ART, we compare it to the regular parmateric ANOVA without transformation (*PAR*) and the two rank-based transformations that we introduced earlier: the regular rank transformation (*RNK*) and the inverse normal transformation (*INT*). We conduct a series of Monte Carlo experiments that assess performance under a variety of experimental configurations:
@@ -359,36 +404,35 @@ Significance tests have two types of errors. *Type I errors*, or false positives
 
 Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the singificance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. [Sections 4 - 7](#ratio) specifically focus on evaluating the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper. We include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. As there is a tradeoff between power and Type I errors, we assess power with respect to Type I error rates. If Type I error rates are inflated beyond acceptable levels, power comparions are misleading, so we avoid them.
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. Since there is a tradeoff between power and Type I errors, we avoid power comparisons when Type I error rates are inflated beyond acceptable levels.
 
-In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, such as a parametric ANOVA under a normal distribution. 
+In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA under normal distributions. We present our results on power and effect sizes in [Section 8](#power). 
 
-We present our results on power and effect sizes in [Section 8](#power). 
+### Apparatus and iterations
+Our experimental code is written in R and is available in our supplementary material. We ran our experiments seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
 
-### Iterations and apparatus
-Our power and Type I error rate estimates are based on $5000$ iterations per population configuration and per sample size. Our experimental code is written in R and is available in our supplementary material. 
-Our different experiments were run seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
+To estimate the power and Type I error rates of the four methods with enough precision, we ran $5000$ iterations for each population configuration and each sample size. 
 
 <!--
 We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materialsxa
 -->
 
 ## Ratio scales {#ratio}
-Our first series of experiments evaluate the Type I error rate of the methods for ratio variables. We test four continuous and two discrete distributions with a fixed set of parameters.  
+We first evaluate Type I error rates for ratio variables. We test four continuous and two discrete distributions with a fixed set of parameters:  
 
 1. The normal distribution $N(\mu, \sigma)$ with parameters $\mu = 0$ and $\sigma = 1$. 
 
-2. The log-normal distribution $LogN(\mu, \sigma)$ with parameters $\mu = 0$ and $\sigma = 1$. It is a highly skewed distribution. As discussed in [the introduction](#intro), the log-normal distribution is a good model for a range of measures that are bounded by zero, such as task-completion times. 
+2. The log-normal distribution $LogN(\mu, \sigma)$ with parameters $\mu = 0$ and $\sigma = 1$. As discussed in [the introduction](#intro), the log-normal distribution is a good model for a range of measures bounded by zero, such as task-completion times.
 
-3. The exponential distribution $Exp(\lambda)$ with a parameter $\lambda = 2$. 
+3. The exponential distribution $Exp(\lambda)$ with a single parameter $\lambda = 2$. The exponential distribution naturally emerges when describing the time ellapsed between events. For example, it could be used to model the time random person spends with a public display or the waiting time before a new passenger approaches to interact with the display, when the average waiting time is $\frac{1}{\lambda}$. 
 
-4. The Cauchy distribution $Cauchy(x_0,\gamma)$ with parameters $x_0 = 0$ and $\gamma = 1$ 
+4. The Cauchy distribution $Cauchy(x_0,\gamma)$ with parameters $x_0 = 0$ and $\gamma = 1$. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. We include it in our evaluation because previous evaluations of ART [@elkin:2021]  
 
-5. The Poisson distribution $Pois(\lambda)$ with a parameter $\lambda = 3$
+5. The Poisson distribution $Pois(\lambda)$ with a single parameter $\lambda = 3$
 
 6. The binomial distribution $B(n,p)$ with parameters $n = 10$ and $p=.1$ 
  
-For this series of experiments, we study a 4 $\times$ 3 repeated-measures design. In the following, we refer to the first factor with the four levels as $X_1$ and the second factor with three levels as $X_2$.
+For this experiment, we tested a 4 $\times$ 3 repeated-measures design. We refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$.
 
 ### Results
 
@@ -592,6 +636,9 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the var
 <!--
 # Understanding ART's breakdown
 --> 
+
+## Case studies {#casestudies}
+
 
 ## Recommendations {#recommendations}
 
