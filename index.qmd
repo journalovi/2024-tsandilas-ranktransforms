@@ -219,16 +219,6 @@ The table below presents the *p*-values for the main effects of the two factors 
 | Difficulty $\times$ Technique | $.056$ | $.10$ | $.0017$ | $.24$ | $.23$ |
 : *p*-values for main and interaction effects {.sm}
 
-
-<!--
-|        | LOG  | ART | RNK | INT |
-|--------|------|-----|-----|-----|
-| Difficulty  | $8.1 \times 10^{-47}$  |  $9.0 \times 10^{-43}$ | $4.3 \times 10^{-46}$ | $4.4 \times 10^{-44}$ |
-| Technique   | $.18$  | $.00061$ | $.38$ | $.17$ |
-| Difficulty $\times$ Technique | $.10$ | $.0017$ | $.24$ | $.23$ |
-: *p*-values for main and interaction effects {.sm}
---> 
-
 The disparity in findings between ART and the three alternative transformation methods is striking. ART suggests that all three effects are statistically significant. What adds to the intrigue is the fact that ART's *p*-values for *Technique* and its interaction with *Difficulty* are orders of magnitude lower than the *p*-values obtained from all other methods. We will observe similar discripancies if we conduct contrast tests with the ART procedure [@elkin:2021], though we leave this as an exercise for the reader.
 
 We also examine effect size measures, which are commonly reported in scientific papers. The table below presents results for partial $\eta^2$, which describes the ratio of variance explained by a variable or an interaction: 
@@ -240,31 +230,9 @@ We also examine effect size measures, which are commonly reported in scientific 
 | Difficulty $\times$ Technique | $.10\ [.00, 1.00]$ | $.08\ [.00, 1.00]$  | $.16\ [.04, 1.00]$| $.06\ [.00, 1.00]$| $.06\ [.00, 1.00]$ |
 : partial $\eta^2$ and its 95\% confidence interval {.sm}
 
-<!--
-|        | LOG  | ART | RNK | INT |
-|--------|------|-----|-----|-----|
-| Difficulty  | $.83\ [.79, 1.00]$  |  $.80\ [.76, 1.00]$ | $.83\ [.79, 1.00]$ | $.81\ [.77, 1.00]$  |
-| Technique   | $.03\ [.00, 1.00]$  | $.11\ [.03, 1.00]$ | $.02\ [.00, 1.00]$ | $.03\ [.00, 1.00]$ |
-| Difficulty $\times$ Technique | $.08\ [.00, 1.00]$  | $.16\ [.04, 1.00]$| $.06\ [.00, 1.00]$| $.06\ [.00, 1.00]$ |
-: partial $\eta^2$ and its 95\% confidence interval {.sm}
--->
 
 We observe that ART exagerates both the effect of *Technique* and its interaction with *Difficulty*. 
 
-<!--
-In addition to evaluating false positive (Type I) and false negative (Type II) errors, we will also evaluate how well the different methods estimate effect sizes. 
--->
-
-<!--
- We observe similar discripancies if we conduct contrast tests with the ART procedure [@elkin:2021]. The following table presents *p*-values for pairwise comparisons between techniques: 
-
-|        | LOG  | ART | RNK | INT |
-|--------|------|-----|-----|-----|
-| A - B  | $1.0$  |  $.10$ | $1.0$ | $1.0$ |
-| A - C   | $.71$  | $.22$ | $1.0$ | $.82$ |
-| B - C | $.20$ | $.0004$ | $.54$ | $.19$ |
-: *p*-values for pairwise comparisons between techniques (Bonferroni correction) {.sm}
--->
 
 ### Overview
 The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. Even worse, while the rank transformation has been criticized for inflating errors for interaction only effects, ART inflates errors for both interaction and main effects, as we observed in our example. 
@@ -284,16 +252,6 @@ Unfortunately, each non-parametric statistical test addresses a specific experim
 
 [@Payton:2006] To check: This paper tests Poisson data and surprisingly, it shows that PAR and ART work well for interaction effects.
 
-<!---
-So previous litterature has investigatedd data transformations that could 
-
-An alternative approach is to use the 
-
-Data transformations provide a convinient solution   
-
-While rank transformations are widespread, they are not  
---->
-
 ### The use of ART in experimental research 
 [F: Pesent the survey of papers using ART here?]{.f}
 
@@ -304,25 +262,143 @@ Include here all the background related to the
 
 Also, check those for heteroscedacity issues: [@Carletti:2005; @Leys:2010]
 
-## What could go wrong?
+- The problem of unequal variances
 
-### Interactions under non-linear transformations
-As we discussed in the previous section, ART emerged in the early 90s as a remedy to the rank transform procedure. 
-As @higgins:1990 explained, non-linear transformations such as the rank transform change the structure of interactions. As a result, *"interaction may exist in the transformed data but not in the original data, or vice versa"* [@higgins:1990]. ART aims to correct this problem. However, the distributions of observed measures may also be the result of non-linear transformations, which often makes the interpretation of observed interaction effects problematic. 
-
-Consider again our introduction's illustrative example. 
-
-there is another problem that the literature on the ART procedure does not address. 
-
- Distributions of observed measures are often  
-
-@Loftus:1978    
-
-### Ordinal scales and discretization issues
+-  Data discretization and ordinal scales
 
 
-### The problem of unequal variances
+## Interpreting effects
+The ART procedure was originally designed to address limitations of rank transformations for testing interactions. As @higgins:1990 explained, non-linear transformations such as the rank transform change the structure of interactions. Therefore, *"interaction may exist in the transformed data but not in the original data, or vice versa"* [@higgins:1990]. ART aims to correct this problem. However, how to interpret effects, end especially interactions, can be challenging because non-linear transformations come into place in different ways in experimental designs [@Loftus:1978; @Wagenmakers:2012]. Before moving to our evaluation method and results, we discuss these problems and explain how our approach takes them into consideration. 
 
+### The null hypothesis of interest
+To compare different statistical methods, we first need to assess whether these methods are comparable. If two methods are not designed to test the same null hypothesis, then making direct comparisons between them could be misleading. Let us elucidate this problem.  
+
+The traditional ANOVA is used to test differences between two or more means. However, non-parametric tests often target other population parameters. For example, the Wilcoxon sign-rank test is commonly described as a test of medians for paired samples [@McDonald:2014] and is used when population means are not of interest, e.g., when population distributions are skewed. The Mann-Whitney U and the Kruskal–Wallis tests are used, instead, to assess whether two or more independent samples come from the same population, or more technically, whether the mean ranks of the groups are the same. They can be only interpreted as tests of medians under the strict assumption that the population distributions of all groups have identical shapes and scales [@Divine:2018]. 
+
+Interpreting the null hypothesis of interest of a rank transformation is more challenging. @conover:1981 show that the simple rank transformation procedure *RNK* is equivalent to the Mann-Whitney U and Kruskal–Wallis tests for independent samples. For paired samples, however, it results in a new test, which is different than the Wilcoxon sign-rank test. Defining the null hypothesis of interest of ART is even more challenging because of the hybrid nature of the method. In particular, while ART is a rank-based transformation procedure, it aligns data with respect to means, where alignment is performed independently for each group.
+
+To partly avoid these interpretation issues, we focus on effects that apply monotonic transformations to population distributions. This also ensures a monotonic relationship between different measures of central tendancy such medians and means (with the exception of the Cauchy distribution, where the mean is undefined). In other words, if a treament increases the population mean, it will also increase the population median. We present an example in @fig-distributions. The figure shows two population distributions corresponding to the two intermediate levels of difficulty of our illustrative example (see @fig-example). We observe that the increased difficulty of the task translates both the population mean and the median to the right. In this case, we expect a statistical test to reject the null hypothesis, no matter whether it tests the population mean, the median, or the overall population shape.   
+
+::: {#fig-distributions}
+```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+library(plotly)
+
+palette <- c("#E69F00", "#009E73")
+
+logsd <- 0.5
+logm1 <- -0.3
+logm2 <- 0.3
+
+xs <- seq(0, 10, length.out = 1000)
+y1s <- dlnorm(xs, logm1, logsd)
+y2s <- dlnorm(xs, logm2, logsd)
+
+m1 <- exp(logm1 + (logsd^2)/2)
+m2 <- exp(logm2 + (logsd^2)/2)
+med1 <- exp(logm1)
+med2 <- exp(logm2)
+
+anot_m1 <- list(x = m1, y = 0, text = "mean", xref = "x", yref = "y",
+  showarrow = TRUE, arrowhead = 6, arrowsize = 1, arrowcolor = palette[1],
+  ax = 0, ay = -40
+)
+
+anot_med1 <- list(x = med1, y = 0, text = "median", xref = "x", yref = "y", 
+  showarrow = TRUE, arrowhead = 7, arrowsize = 1, arrowcolor = palette[1],
+  ax = 0, ay = 30
+)
+
+anot_m2 <- list(x = m2, y = 0, text = "mean", xref = "x", yref = "y",
+  showarrow = TRUE, arrowhead = 6, arrowsize = 1, arrowcolor = palette[2],
+  ax = 0, ay = -43
+)
+
+anot_med2 <- list(x = med2, y = 0, text = "median", xref = "x", yref = "y", 
+  showarrow = TRUE, arrowhead = 7, arrowsize = 1, arrowcolor = palette[2],
+  ax = 0, ay = 30
+)
+
+annot1 <- paste("Log-normal: meanlog = ", logm1, ", sdlog = ", logsd)
+annot2 <- paste("Log-normal: meanlog = ", logm2, ", sdlog = ", logsd)
+
+fig <- plot_ly() %>%  
+      add_lines(x = xs, y = y1s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot1, hoverinfo = 'text', line=list(color=palette[1])) %>%
+      add_lines(x = xs, y = y2s, visible = TRUE, type = 'scatter', mode = 'lines', text = annot2, hoverinfo = 'text', line=list(color=palette[2])) %>%      
+      add_annotations(x = med1, y = max(y1s), text = "Difficulty Level 2", xref = "x", yref = "y", showarrow = F, font = list(color = palette[1]), xanchor = 'left') %>% 
+      add_annotations(x = med2, y = max(y2s), text = "Difficulty Level 3", xref = "x", yref = "y", showarrow = F, font = list(color = palette[2]), xanchor = 'left') %>% 
+      layout(annotations = anot_m1) %>% layout(annotations = anot_med1) %>%      
+      layout(annotations = anot_m2) %>% layout(annotations = anot_med2) %>%    
+      layout(
+        showlegend = FALSE,
+        xaxis = list(title = "Time (min)", range = c(0, 4.5), showgrid = F, showticks = T, ticks="outside", zeroline = F), 
+        yaxis = list(showgrid = F, showticklabels = F, showline = F, range=c(0, max(y1s) + .05), fixedrange=T)
+      ) %>% 
+	      config(displayModeBar = TRUE, scrollZoom = FALSE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale", "hoverclosest", 'hoverCompare'))
+
+fig
+
+```
+Time distributions for two task populations with dificulty levels 2 and 3 (see @fig-example). 
+:::
+
+Nevertheless, the increased difficulty of the task does not simply translate the distribution to the rigth. The shape and scale of the distribution also change -- the variance increases, and the mean and median do not increase by the same amount. As we discuss below, such non-linear transformations complexify the interpretation of interactions.     
+
+### Removable interactions
+
+Let us take a different [dataset](removable_interactions.csv) from a fictional experiment (within-participants design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). The experiment, for example, could test a mobile typing task, where the levels of difficulty correspond to texts of different lengths (short vs. long) under two typing techniques (with vs. without auto-completion). We assume that the researchers measure two dependent variables: task-completion time and perceived performance, which is measured through a five-level ordinal scale (from *very quick* to *very slow*). In this example, the main effects of task difficulty and technique are large. What is less clear however is whether there is an interaction between the two factors. 
+
+@fig-interactions visualizes the means for each combination of the levels of the factors and highlights the possible interactions. Let us first concentrate on the first two plots that present results for the time measure. The trends in the left plot indicates an interaction effect, since the two lines seem to diverge as the task difficulty increases. 
+
+::: {#fig-interactions}
+```{r, echo=FALSE, message=FALSE, fig.height=3.5, fig.width = 9, warning=FALSE}
+source("removable_interactions_plot.R")
+
+df <- read.csv("removable_interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
+dftime <- aggregate(Time ~ Difficulty+Technique, data = df, mean)
+dfpref <- aggregate(PerceivedPerformance ~ Difficulty+Technique, data = df, mean)
+
+fig1 <- createInteractionPlot(dftime)
+fig2 <- createInteractionPlot(dftime, logscale = TRUE)
+fig3 <- createInteractionPlot(dfpref, likert = TRUE)
+#fig <- subplot(fig1, fig2, fig3, titleY = TRUE, titleX = TRUE, margin = 0.08, widths = c(0.32, 0.36, 0.32))
+
+fig <- subplot(fig1, fig2, titleY = TRUE, titleX = TRUE, margin = 0.06) %>% subplot(fig3, titleY = TRUE, titleX = TRUE, margin = 0.07, widths = c(0.66, 0.33)) 
+
+fig
+```
+The linecharts visualize the effects of task difficulty (*easy* vs. *hard*) and technique (*Tech* A vs. *Tech B*) for two measures: task-completion time (left and middle) and perceived speed (right). All data points represent group means. 
+:::
+
+But how meaningful is this interpretation of interaction? Time measurements are often taken from distributions of different scales, that is, large effects are harder to observe in quick tasks than in slow ones. For example, perfromance differences in sprint races are in the range of centiseconds, while differences in long-distance races can be in the range of several seconds or minutes. So if we compare the time performance of any two groups of people (e.g., 14- vs. 12-year-old children), we will always find that absolute differences grow as race distance increases. However, such trends do not necessarily reveal any real interactions, because they are simply due to observations at different time scales. This issues is not specific to running races. @Wagenmakers:2007 show that the standard deviation of reponse times increases linearly with their mean. This relationship is depicted in @fig-example and @fig-distributions, where the mean and the spread of the time distributions grow together as task difficulty increases. 
+
+In our example in @fig-interactions, each task (typing a piece of text) is a sequence of elementary tasks (typing a word). We thus expect both means and standard deviations to grow as a function of the number of words in the text. In this case, meaningful interaction effects (e.g., Tech B suffers from more intense fatigue effects in longer texts) will be manifested as growing time ratios rather than growing time differences. An easy way to visually assess the presence of such interactions is to show time on a logarithmic scale, as shown in the middle plot of @fig-interactions. Notice that the lines in the plot are now almost parallel, suggesting no interaction effect.
+
+The concept of *removable interactions*, that is, interactions that disappear by applying a monotonic non-linear transformation, was introduced by @Loftus:1978. @Wagenmakers:2012 revisited this work 33 years later. Their litterature review showed that researchers are widely unaware of the concept, drawing incorrect conclusions about psychological effects on the basis of meaningless interactions. The problem, of course, is not specific to time measurements, or more generally to skewed distributions and distributions with unequal variances. The right plot in @fig-interactions shows experimental results for perceived performance. The line trends suggest an interaction effect, in the inverse now direction. Unfortunately, the scale is ordinal, which means that distances between the five levels of the scale may not be perceived as equal by people. Furthermore, the scale is bounded, so the reason that the two lines are not parallel might be simply due to the absence of additional levels beyond the extreme "very slow" ranking. Concluding that there is a real interaction here is likely to be incorrect. 
+
+**Applying rank transformations**. Let us now formally test the above interactions, using different transformation methods. Below, we present the *p*-value returned by each method for task-completion time: 
+
+| PAR  | LOG  | ART | RNK | INT |
+|------|------|-----|-----|-----|
+| $.023$ | $.67$ | $.00073$ | $.66$ | $.67$ |
+: *p*-values for interaction effect on task-completion time {.sm}
+
+We observe that *RNK* and *INT* lead to *p*-values very close to the *p*-value of *LOG*, which suggests a similar interpretation of interaction effects. In contrast, ART returns a very low *p*-value (lower than the *p*-value of the regular ANOVA), showing that the method is extermely sensitive to scale effects.  
+
+We also test the interaction effect on the ordinal dependant variable:
+
+| PAR  | ART | RNK | INT |
+|------|-----|-----|-----|
+| $.0020$ | $.00075$ | $.0067$ | $.0037$ |
+: *p*-values for interaction effect on perceived performance {.sm}
+
+Notice that we omit the log-transformation method (*LOG*), as it is not relevant here. All *p*-values are low, suggesting that an interaction effect exists. However, if we conduct a more appropriate analysis using an ordered probit model [@Liddell:2018; @Burkner:2019], we will reach the conclusion that there is no supportive evidence for such an effect. We do not present this analysis here, but we return to these models later in the paper.  
+
+<!--
+Consider our illustrative example in [Section 1](#intro). The log-transformation we applied removes the skew of the data, ensuring the robustness of the ANOVA procedure. Nevertheless, since means are not preserved under non-linear transformations, the interpretation of ANOVA's *p*-values for interaction effects is altered [@Lo:2015]. A convenient solution is to base our interpretations on medians because medians are preserved under monotonic transformations. The three transformation methods *LOG*, *RNK*, and *INT* are all monotonic. In our example, their resulting *p*-values indicate that we cannot reject the null hypothesis of *no interaction* with respect to medians. Nevertheless, we cannot draw any conclusions regarding interactions of the means. 
+-->
+
+
+### Our experimental approach
 
 <!--
 Check https://psyteachr.github.io/mms/slides/rousselet-interactions.pdf
