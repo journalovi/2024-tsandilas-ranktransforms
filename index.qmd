@@ -301,7 +301,7 @@ To compare different statistical methods, we first need to assess whether these 
 
 **Rank transformations.** Interpreting the null hypothesis of interest of a rank transformation is more challenging. @conover:1981 show that the simple rank transformation procedure *RNK* is equivalent to the Mann-Whitney U and Kruskal–Wallis tests for independent samples. For paired samples, however, it results in a new test, which is different than the Wilcoxon sign-rank test. Defining the null hypothesis of interest of ART is even more challenging because of the hybrid nature of the method. In particular, while ART is a rank-based transformation procedure, it aligns data with respect to means, where alignment is performed independently for each group.
 
-**Dealing with the interpretation of main effects.** To partly avoid these interpretation issues, we focus on effects that apply monotonic transformations to population distributions. This also ensures a monotonic relationship between different measures of central tendancy such medians and means (with the exception of the Cauchy distribution, where the mean is undefined). In other words, if a treament increases the population mean, it will also increase the population median. We present an example in @fig-distributions. The figure shows two population distributions corresponding to the two intermediate levels of difficulty of our illustrative example (see @fig-example). We observe that the increased difficulty of the task translates both the population mean and the median to the right. In this case, we expect a statistical test to reject the null hypothesis, no matter whether it tests the population mean, the median, or the overall population shape.   
+**Dealing with the interpretation of main effects.** To partly avoid these interpretation issues, we focus on effects that apply monotonic transformations to population distributions. This also ensures a monotonic relationship between different measures of central tendancy such medians and means (with the exception of the Cauchy distribution, where the mean is undefined). In other words, if a treament increases the population mean, it will also increase the population median. We present an example in @fig-distributions. The figure shows two population distributions corresponding to the two intermediate levels of difficulty of our illustrative example (see @fig-example). We observe that the increased difficulty of the task translates both the population mean and the median to the right. In this case, we expect a statistical test to reject the null hypothesis, no matter whether it tests the population mean, the median, or the overall distribution shape.   
 
 ::: {#fig-distributions}
 ```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
@@ -415,7 +415,7 @@ We also test the interaction effect on the ordinal dependant variable:
 
 Notice that we omit the log-transformation method (*LOG*), as it is not relevant here. All *p*-values are low, suggesting that an interaction effect exists. However, if we conduct a more appropriate analysis using an ordered probit model [@Liddell:2018; @Burkner:2019], we will reach the conclusion that there is no supportive evidence for such an effect (check our analysis in the supplementary material). We return to these models in the following sections. 
 
-### Approach
+### Approach {#approach}
 Our analysis shows that inference errors are not simply due to the lack of robustness of a statistical procedure. In the case of interaction effects, errors will also emerge when the procedure makes inference on the wrong scale. As @Wagenmakers:2012 explain, *"the dependent variable reflects merely the output of a latent psychological process",* and unfortunally, *"in most experimental paradigms the exact relationship between unobserved process and observed behavior is unknown ..."* 
 
 Ideally, a statistical procedure should lead to conclusions that capture the true effects on the latent variable of interest. But as we discussed above, this might not be the case for the rank transformation methods that we study. For example, all four methods (*PAR*, *RNK*, *ART*, and *INT*) suggest that task difficulty interacts with use of technique on perceived performance because they disregard the fact that the observed data are simply projections on a discrete ordinal scale. Our goal is to understand how ART and the other methods deal with such problems. 
@@ -465,24 +465,24 @@ To transform the latent variable to an ordinal scale, we implement an ordered-pr
 However, depending on how the statistical procedure we use deals with different scales, observations of interactions among two or more factors on the transformed variable $Y'$ may lead to incorrect conclusions about the presence of interactions on the latent space of $Y$. Such errors only emerge when the main effect of all interacting factors on the latent (or observed) variable is non-zero. In our analysis, we count them as statistical inference errors (Type I and II errors). Nevertheless, we try to distinguish them from typical inference errors, for which interaction interpretation issues do not come into place.
 
 ## Experimental method {#methodology}
-We compare four different versions of linear mixed-effects models (or ANOVA): (i) without transformation (*PAR*); (ii) with a rank transformation (*RNK*); (iii) with an inverse normal transformation (*INT*); and (iv) *ART*. We conduct a series of Monte Carlo experiments that assess their performance under a variety of experimental configurations:
+We can now detail our experimental method. We evaluate the standard parametric approach (*PAR*) and the three rank-transformation methods (*RNK*, *INT*, and *ART*) that we intruduced earlier. We conduct a series of Monte Carlo experiments that assess their performance under a variety of experimental configurations:
 
-1. We evaluate *ratio* and *interval* data. For ratio data, we examine four representative *continuous* distributions (normal, log-normal, exponential, and Cauchy distribution) and two *discrete* distributions (Poisson and binomial distribution). For interval data, we examine distributions for 5- and 7-level Likert item responses, as well as responses with 20 levels, as they are typically used in NASA-TXL evaluation questionnaires.
+1. We evaluate *ratio* and *ordinal* data. For ratio data, we examine four representative *continuous* distributions (normal, log-normal, exponential, and Cauchy distribution) and two *discrete* distributions (Poisson and binomial distribution). For ordinal data, we examine distributions for 5- and 7-level Likert item responses, as well as responses with 20 levels, as they are typically used in NASA-TXL evaluation questionnaires.
 
-2. We present results for four experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 repeated-measures factorial design. We then show how our conclusions generalize to three additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a repeated-measures factor; and (iii) a 3 $\times$ 3 $\times$ 3 repeated-measures design.
+2. We present results for five experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 repeated-measures factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a repeated-measures factor; (iii) a 2 $\times$ 2 $\times$ 2 repeated-measures design, and (iv) a 3 $\times$ 3 $\times$ 3 repeated-measures design.
 
-3. We evaluate three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. For within-subjects designs where all factors are treated as repeated measures, $n$ coincides with the number of subjects (or commonly participants in HCI research). 
+3. We evaluate three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. For within-subjects designs where all factors are treated as repeated measures, $n$ coincides with the number of subjects (or commonly human participants in HCI research). 
 
 4. We test the robustness of the methods under unequal variances. 
 
 5. In addition to Type I error rates, we compare the statistical power of the methods and also evaluate the quality of their effect size estimates.  
 
-6. We assess the above measures for both main and interaction effects. In distinction with the experimental method of @elkin:2021, we examine how growing effects on one or two factors affect the Type I error rate on other factors or their interactions. 
+6. We assess the above measures for both main and interaction effects and examine how growing effects on one or two factors affect the Type I error rate on other factors and their interactions. 
 
-Some previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also evaluated unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both regular ANOVA [?] and rank transformation methods [@Beasley:2009; @luepsen:2018]. Since unbalanced designs are not common in HCI experimental research, we do not consider them here. 
+Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also tested unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. However, since unbalanced designs are not common in HCI experimental research, we do not consider them here. 
 
 ### Statistical modeling
-We assume that observations for the response variable $Y$ come from a two-way (two factors) or three-way (three factors) mixed-effects model. For clarity, we explain here the model for two factors, but its extention to three factors is straightforward. The model has the following form:
+To model the latent variable $Y$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extention to three factors is straightforward. The model has the following form:
 
 $$ 
 y_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j} + \epsilon_{ijk}
@@ -510,18 +510,12 @@ To encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we
 
 For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or as $\{-.5, .5, .3, -.3\}$. 
 
-While random slope effects can have an impact on real experimental data [@barr:2013], we do not incorporate them into our simulations for three reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; (2) because random slope effects make the control for equal variances and sphericity assumptions more challenging; and (3) because mixed-effects procedures that account for random slope effects are more computationally demanding, adding strain to our simulation resources. However, there is no good reason to believe that adding random slope effects would affect our key findigns and conclusions.
+While random slope effects can have an impact on real experimental data [@barr:2013], we do not consider them here for two main reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; and (2) because mixed-effects procedures with random slope effects are computationally demanding, adding strain to simulation resources. However, there is no good reason to believe that adding random slope effects would impact our findings and conclusions.
 
 ### Population control, sampling, and distribution conversions 
 To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and $a_{12}$. 
 
-We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. As a starting point, we assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate non-normal distributions, we convert response values $y_{ijk}$ as follows. First, we derive their cumulative density distribution using the cumulative density function of the normal distribution. Then, we use the inverse quantile function of the target distribution to derive the final distribution. For example, to convert normal responses to log-normal, we use the following R function:  
-```{r}
-norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...) {
-	 p <- pnorm(x, mu, sd) 
- 	 qlnorm(p, meanlog, sdlog, ...) 
-}
-```
+We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate the observed variable $Y'$, we transform the response values $y_{ijk}$ through the approach we presented in [Section 3](#approach). This allows us to generate observed responses for a range of distributions, while we always control for effects in the exact same way.
 
 ### Implementation of rank transformation methods 
 For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
@@ -532,19 +526,17 @@ inverseNormalTransform <- function(x){
 }
 ```
 
-We compare the three rank-based methods against the naive parametric method (PAR) that assumes normality and does not apply any data transformation.
-
 ### Evaluation measures
 Significance tests have two types of errors. *Type I errors*, or false positives, are mistaken rejections of the null hypothesis. Type II errors, of false negatives, are failures to reject a null hypothesis that is actually true. In our illustrative example in @fig-example, a Type I error is finding that there is an effect of the choice of the technique on time performance. A *Type II error*, in turn, is finding that the task difficulty has no effect on time performance. 
 
 Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the singificance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. [Sections 4 - 7](#ratio) specifically focus on evaluating the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper. We include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. Since there is a tradeoff between power and Type I errors, we avoid power comparisons when Type I error rates are inflated beyond acceptable levels.
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA under normal distributions. We present our results on power and effect sizes in [Section 8](#power). 
 
-In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA under normal distributions. We present our results on power and effect sizes in [Section 8](#power). 
+As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable. In our analysis, we make this distinction whenever it is relevant.  
 
 ### Apparatus and iterations
-Our experimental code is written in R and is available in our supplementary material. We ran our experiments seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
+Our experimental R code is available in our supplementary material. We ran our experiments seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
 
 To estimate the power and Type I error rates of the four methods with enough precision, we ran $5000$ iterations for each population configuration and each sample size. 
 
