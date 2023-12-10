@@ -512,10 +512,19 @@ For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or
 
 While random slope effects can have an impact on real experimental data [@barr:2013], we do not consider them here for two main reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; and (2) because mixed-effects procedures with random slope effects are computationally demanding, adding strain to simulation resources. However, there is no good reason to believe that adding random slope effects would impact our findings and conclusions.
 
-### Population control, sampling, and distribution conversions 
-To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and $a_{12}$. 
+### Population control and distribution conversions 
+To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments $a_{12}$. @fig-effects presents the range of values that we test for $a_1$ and $a_2$. We also visualize their effects on the latent variable for factors with two, three, and four levels. 
 
-We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$. To simulate the observed variable $Y'$, we transform the response values $y_{ijk}$ through the approach we presented in [Section 3](#approach). This allows us to generate observed responses for a range of distributions, while we always control for effects in the exact same way.
+::: {#fig-effects}
+```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
+source("effects_plot.R")
+plotEffects()
+```
+Varying the parameters $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $Y$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four levels (bottom).    
+:::
+
+We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$.
+To simulate the observed variable $Y'$, we then transform the response values $y_{ijk}$ as described in [Section 3](#approach). A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.
 
 ### Implementation of rank transformation methods 
 For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. We implement it in R as follows: 
