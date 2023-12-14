@@ -26,6 +26,20 @@ toNumber <- function(factorvalues) {
 }
 
 
+getThresholds = function(values, nlevels = 5, equidistant = TRUE) {
+	lim <- 2*sd(values) # I take 2 standard deviations that should contain the largest portion of the data
+
+	thresholds <- NA
+	if(equidistant) {
+		thresholds <- seq(from=-lim, to=lim, by=2*lim/nlevels)[c(-1, -(nlevels + 1))]
+	} else {
+		thresholds <- sort(runif(nlevels - 1))*2*lim-lim
+	}
+
+	thresholds
+}
+
+
 simulate <- function(n = 30, nlevels = 2, effectSize = 1,  sd_0 = 1, sd_error = 1, convertFun = categ2ratio){
 		data <- add_random(s = n) %>%
 		add_within("s", x1 = paste('A', 1:nlevels, sep="")) %>% 
@@ -39,12 +53,12 @@ simulate <- function(n = 30, nlevels = 2, effectSize = 1,  sd_0 = 1, sd_error = 
 }
 
 
-plotDensities <- function(n = 10000, nlevels = 2, effectSize = 4) {
+plotDensities <- function(n = 10000, nlevels = 2, effectSize = 4, alpha = 0.5) {
   data <- simulate(n, nlevels, effectSize) 
 
   palette <- c("#888888", "#4E84C4", "red", "#FF5E00")
 
-  plot <- ggplot(data) + geom_density(aes(x = dv, fill = x1, color = x1), alpha = 0.5) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
+  plot <- ggplot(data) + geom_density(aes(x = dv, fill = x1, color = x1), alpha = alpha) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
   theme_classic() +
   theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.x  = element_blank(), axis.line.y  = element_blank(), 
   	axis.title.y = element_blank(), axis.ticks.y  = element_blank(), axis.text.y  = element_blank()) +
@@ -53,6 +67,21 @@ plotDensities <- function(n = 10000, nlevels = 2, effectSize = 4) {
   plot
 }
 
+
+plotDensitiesThres <- function(data, nlevels = 2, alpha = 0.4,  equidistant = TRUE) {
+  thres = getThresholds(data$dv, 5, equidistant)
+
+  palette <- c("#888888", "#4E84C4", "red", "#FF5E00")
+
+  plot <- ggplot(data) + geom_density(aes(x = dv, fill = x1, color = x1), alpha = alpha) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
+  theme_classic() +
+  theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.x  = element_blank(), axis.line.y  = element_blank(), 
+  	axis.title.y = element_blank(), axis.ticks.y  = element_blank(), axis.text.y  = element_blank()) +
+  scale_x_continuous(name =element_blank(), breaks = seq(-8, 8, by=4), limits = c(-10, 10)) + 
+  geom_vline(xintercept = thres, linetype="solid", color = "black", linewidth=0.5)
+
+  plot
+}
 
 plotEffects <- function(){
 	set.seed(200)
@@ -88,6 +117,32 @@ plotEffects <- function(){
 		 ncol= 5) 
 } 
 
+
+middleY <- function(plot) {
+	layer_scales(plot)$y$range$range[2]/2
+}
+
+
+plotThresholds <- function(){
+	set.seed(600)
+
+  data1 <- simulate(n = 1000, nlevels = 4, effectSize = 2) 
+  data2 <- simulate(n = 1000, nlevels = 4, effectSize = 8) 
+
+	plot1 <- plotDensitiesThres(data1, nlevels=4, alpha = 0.35, equidistant = TRUE)
+	plot2 <- plotDensitiesThres(data2, nlevels=4, alpha = 0.35, equidistant = TRUE)
+	plot3 <- plotDensitiesThres(data1, nlevels=4, alpha = 0.35, equidistant = FALSE)
+	plot4 <- plotDensitiesThres(data2, nlevels=4, alpha = 0.35, equidistant = FALSE)
+
+	centered <- theme(plot.title = element_text(hjust = 0.5, size = 12))
+
+	ggarrange(
+	  plot1 + ggtitle(TeX("$\\alpha_1 = 2$")) + centered + annotate("text", x=-10, y=middleY(plot1), label="Equidistant", family = "Arial", size = 4, hjust = 0),
+	  plot2 + ggtitle(TeX("$\\alpha_1 = 8$")) + centered,
+	  plot3 + annotate("text", x=-10, y=middleY(plot3), label="Random", family = "Arial", size = 4, hjust = 0),
+	  plot4,
+		ncol= 2) 
+} 
 
 
 
