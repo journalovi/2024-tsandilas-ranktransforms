@@ -513,14 +513,14 @@ For example, we can encode a factor with four levels as $\{-.6, .4, .1, .1\}$ or
 While random slope effects can have an impact on real experimental data [@barr:2013], we do not consider them here for two main reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; and (2) because mixed-effects procedures with random slope effects are computationally demanding, adding strain to simulation resources. However, there is no good reason to believe that adding random slope effects would impact our findings and conclusions.
 
 ### Population control and distribution conversions 
-To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments $a_{12}$. @fig-effects presents the range of values that we test for $a_1$ and $a_2$. We also visualize their effects on the latent variable for factors with two, three, and four levels. 
+To simplify our simulations, we fix the following population parameters: $\mu = 0$, $\sigma = 1$, and $\sigma_s = 1$. We then control the magnitude of effects by varying $a_1$, $a_2$, and, for some experiments $a_{12}$. @fig-effects presents the range of values that we test for $a_1$ and $a_2$. We also visualize their effects on the latent variable for factors with two, three, and four categorical levels. 
 
 ::: {#fig-effects}
 ```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
 source("effects_plot.R")
 plotEffects()
 ```
-Varying the parameters $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $Y$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four levels (bottom).    
+Varying $a_1$ or $a_2$ to control the magnitude of main effects. The plots show examples of population distributions on the latent variable $Y$ for factors ($X_1$ or $X_2$) with two (top), three (middle), or four categorical levels (bottom).    
 :::
 
 We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@faux] to simulate data for our mixed-effects models. We assume that the distributions of random intercepts and errors are normal, or $s_k \sim N(0,\sigma_s)$ and $\epsilon_{ijk} \sim N(0,\sigma)$.
@@ -571,7 +571,7 @@ Our first experiments evaluates Type I error rates for ratio scales. We test a 4
 ### Results
 We first present results for main effects and continue with interaction effects.
 
-**Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases.   
+**Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases. The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution. However, we also show that the method can be problematic with other distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
 
 ::: {#fig-ratio-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -587,12 +587,10 @@ dnames <- c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomia
 df <- readlyData(prefix, alpha, 1, distributions, dnames)
 plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 64)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of $X_1$'s magnitude of main effect ($a_1$)
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
 
-The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution. However, we also show that the method can be problematic with other distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
-
-The same problems appear when we run ART's procedure for contrasts [@elkin:2021]. @fig-ratio-contrasts shows our results, where we report average error rates for three pairwise comparisons (since $X_2$ has three levels). 
+The same problems appear when we run ART's procedure for contrasts [@elkin:2021]. @fig-ratio-contrasts shows our results, where we report average error rates for three pairwise comparisons (since $X_2$ has three levels). In the rest of the paper, we only show results for overall effects, since results for contrasts exhibit the same patterns. 
 
 ::: {#fig-ratio-contrasts}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -601,12 +599,10 @@ prefix <- "5_test_4x3_Contrasts"
 df <- readlyData(prefix, alpha, 1, distributions, dnames)
 plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 52)
 ```
-Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as a function of $X_1$'s magnitude of main effect ($a_1$)
+Average Type I error rates ($\alpha = .05$) for **contrasts on factor $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-In the rest of the paper, we only show results for overall effects, since results for contrasts exhibit the same patterns. 
-
-**Interaction effects**. @fig-ratio-interaction-1 presents Type I error rates for the interaction effect $X_1 \times X_2$, when the main effect on $X_2$ is zero while the main effect on $X_1$ increases. 
+**Interaction effects**. @fig-ratio-interaction-1 presents Type I error rates for the interaction effect $X_1 \times X_2$, when the main effect on $X_2$ is zero while the main effect on $X_1$ increases. Overall, we observe the same trends as for main effects. Again, ART fails in similar ways, although its error rates are now slightly lower. 
 
 ::: {#fig-ratio-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -615,12 +611,10 @@ df <- readlyData(prefix, alpha, 1, distributions, dnames)
 
 plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 52)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$ as a function of $X_1$'s magnitude of main effect ($a_1$)
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-Overall, we observe the same trends as for main effects. Again, ART fails in similar ways, although its error rates are now slightly lower. 
-
-Finally, @fig-ratio-interaction-1 presents our results when the main effects on the two factors increase in parallel. 
+Finally, @fig-ratio-interaction-1 presents our results when the main effects on the two factors increase in parallel. Error rates become exceptionally high in some cases, growing up to $100\%$. 
 
 ::: {#fig-ratio-interaction-2}
 ```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -629,10 +623,10 @@ df <- readlyData(prefix, alpha, 0, distributions, dnames)
 #xlab <- TeX("\\text{main effect of factors }X_1\\text{ and }X_2\\text{ }(a_1 = a_2)")
 plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$ as a function of $X_1$'s and $X_2$'s magnitude of main effects ($a_1 = a_2$)
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::
 
-Error rates become exceptionally high in some cases, growing up to $100\%$. These results require special attention since interaction interpretation issues come now into place. We discuss the performance of each method: 
+However, these results require special attention since interaction interpretation issues come now into place. Let us examine the performance of each method: 
 
 - *PAR*. Error rates are high for all non-normal distributions, and become even higher when the sample size increases. As we exlained in [Section 3](#interpretation), the parametric method cannot deal with scale differences that emerge when effects are transformed in a non-linear fashion. Of course, if we interpreted interactions based on absolute mean differences, disregarding their different scales (i.e., if we decided that the trend in @fig-interactions (left) is indeed a valid interaction effect), we would not observe these high error rates. 
 
@@ -643,20 +637,18 @@ Error rates become exceptionally high in some cases, growing up to $100\%$. Thes
 - *ART.* It keeps error rates at correct levels as long as population distributions are normal. For all other distributions, its error rates grow rapidly as effect sizes increase. We distinguish between two sources of errors: (i) lack of statistical robustness as observed in our previous tests; and (ii) interaction interpretation issues (see [Section 3](#interpretation)). Our results confirm that ART is not scale invariant. On the contrary, it is extremely sensitive to the scale of the observed data. 
 
 ## Ordinal scales {#ordinal}
-Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit model [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 20 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of responses $y_{ijk}$. We then divide this range into 5, 7, or, 20 intervals with two different stategies: (i) setting thresholds to be equidistant; or (ii) varying the intervals' size by randomly drawing thresholds in the above range. @fig-ordinal presents examples of equidistant and random thresholds for a 5-level scale when the magnitude of $X_1$'s main effect is $a_1 = 2$ or $a_1 = 8$ and all other effects are zero. 
+Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit model [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 20 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of responses $y_{ijk}$. We then divide this range into 5, 7, or, 20 intervals, following two different stategies: (i) setting thresholds to be equidistant; or (ii) varying the intervals' size by randomly drawing thresholds in the above range. @fig-ordinal presents examples of equidistant and random thresholds for a 5-level scale when the magnitude of $X_1$'s main effect is $a_1 = 2$ or $a_1 = 8$ and all other effects are zero. 
 
 ::: {#fig-ordinal}
 ```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
 plotThresholds()
 ```
-The black vertical lines represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or randomly distanced one from each other (bottom) within a range of $\pm 2$ standard deviations around zero.  
+The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or randomly distanced one from each other (bottom) within a range of $\pm 2$ standard deviations around zero.  
 :::
-
-
 
 ### Results
 
-**Main effects**.
+**Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. Our results indicate that PAR, RNK, and INT consitently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe as the number of levels increases. Notably, error rates are more pronounced for thresholds at random distances and tend to increase with sample size. 
 
 ::: {#fig-ordinal-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -666,22 +658,22 @@ distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert20", "li
 dnames <- c("5 - equidistant", "5 - random", "7 - equidistant", "7 - random", "20 - equidistant", "20 - random")
 df <- readlyData(prefix, alpha, 1, distributions, dnames)
 
-plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 64)
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 52)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude of $X_1$'s main effect $a_1$
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
 
-
-**Interaction effects**.
+**Interaction effects**. @fig-ordinal-interaction-1 diplays error rates for the interaction $X_1 \times X_2$ with a single main effect applied to $X_1$. The observed patterns align with our previous findings; ART consistently inflates error rates, although to a lesser extent now.  
 
 ::: {#fig-ordinal-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 
 plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 45)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of $X_1$'s main effect $a_1$
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
+Finally, @fig-ordinal-interaction-1 presents our results when main effects are applied to both factors. None of the methods successfully maintains low error rates across all conditions. Intriguingly, we note that ART consistently performs worse than both PAR and INT. INT performs worse than ART in one specific case ($a_2, a_2 = 8$ in a scale with 20 equidistant levels).  
 
 ::: {#fig-ordinal-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -689,11 +681,11 @@ df <- readlyData(prefix, alpha, 0, distributions, dnames)
 plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
 
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2$
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::
 
 
-## Performance accross experimental designs {#extra}
+## Type I errors accross designs {#extra}
 
 ### Results
 
