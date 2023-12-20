@@ -290,7 +290,7 @@ fig
 Visualization of interaction effect for a 3 $\times$ 2 experimental design before and after applying a rank transformation on an [example dataset](interactions_rank.csv) (within-participants design, $n = 20$). All data points represent means.
 :::
 
-We observe that while no interaction effect appears in the original data (lines are parallel), the rank transformation causes the trends to slightly change. In particular, differences are more pronounced for the middle points of the three-level factor ("medium difficulty"). This problem emerges when at least one factor of the interation of interest has more than two levels, and when main effects appear on all interacting factors. The trend deformation is weak, so the problem may only become apparent in studies with high statistical power, when main effects and/or sample sizes are sufficiently large.  
+We observe that while no interaction effect appears in the original data (lines are parallel), the rank transformation causes the trends to slightly change. In particular, differences are more pronounced for the middle points of the three-level factor ("medium difficulty"). This problem emerges when main effects appear on all interacting factors. The trend deformation is weak, so the problem may only become apparent in studies with high statistical power, when main effects and/or sample sizes are sufficiently large.  
 
 ART aims to correct this problem. However, non-linear transformations come into place in various ways in experimental designs [@Loftus:1978; @Wagenmakers:2012]. They can deform distributions, making the interpretation of observed effects especially challenging. Before presenting our experimental method and results, we discuss these problems and explain how our approach takes them into consideration. 
 
@@ -542,7 +542,7 @@ Statistical significance testing requires setting a significance threshold known
 
 We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA over the normal latent variable. We present our results on power and effect sizes in [Section 8](#power). 
 
-As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable. We make this distinction whenever it is relevantin our analysis.  
+As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable. We make this distinction whenever it is relevant in our analysis.  
 
 ### Hardware platform and iterations
 Our experimental R code is available in our supplementary material. We ran our experiments seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
@@ -564,9 +564,9 @@ Our first experiments evaluates Type I error rates for ratio scales. We test a 4
 
 4. Cauchy distribution $Cauchy(x_0,\gamma)$ with global parameters $x_0 = 0$ and $\gamma = 1$. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. Previous experiments of ART [@Salter:1993; @elkin:2021] show that the method fails under the Cauchy distribution.
 
-5. The Poisson distribution $Pois(\lambda)$ with a single parameter $\lambda = 3$. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people how stop to interact with a public display in an hour, when the average rate is $\lambda = 3$ people per hour.
+5. The Poisson distribution $Pois(\lambda)$ with a single parameter $\lambda = 3$. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who stop to interact with a public display in an hour, when the average rate is $\lambda = 3$ people per hour.
 
-6. The binomial distribution $B(n,p)$ with parameters $n = 10$ and $p=.1$. It commonly appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. For example, we could use it to model the number of errors that participants make in a series of $n = 10$ repetitions of a memorization task, when the average error rate is $10\%$, thus the average error probability is $p=.1$. 
+6. The binomial distribution $B(n,p)$ with parameters $n = 10$ and $p=.1$. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. For example, we could use it to model the number of errors that participants make in a series of $n = 10$ repetitions of a memorization task, when the average error rate is $10\%$, thus the average error probability is $p=.1$. 
 
 ### Results
 We first present results for main effects and continue with interaction effects.
@@ -628,7 +628,7 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 
 However, these results require special attention since interaction interpretation issues come now into place. Let us examine the performance of each method: 
 
-- *PAR*. Error rates are high for all non-normal distributions, and become even higher when the sample size increases. As we exlained in [Section 3](#interpretation), the parametric method cannot deal with scale differences that emerge when effects are transformed in a non-linear fashion. Of course, if we interpreted interactions based on absolute mean differences, disregarding their different scales (i.e., if we decided that the trend in @fig-interactions (left) is indeed a valid interaction effect), we would not observe these high error rates. 
+- *PAR*. Error rates are high for all non-normal distributions, and become even higher when the sample size increases. As we exlained in [Section 3](#interpretation), the parametric method cannot deal with scale differences that emerge when effects are transformed in a non-linear fashion. If we interpreted interactions based on absolute mean differences, disregarding their different scales (i.e., if we decided that the trend in @fig-interactions (left) is indeed a valid interaction effect), we would not observe these high error rates. 
 
 - *RNK.* Error rates explode when both main effects exceed a certain level (e.g., when $a_1, a_2 \ge 4$ and $n = 20$). As shown in @fig-interactions-rank, the problem is due to the way the rank transformation deforms interactions.
 
@@ -637,18 +637,18 @@ However, these results require special attention since interaction interpretatio
 - *ART.* It keeps error rates at correct levels as long as population distributions are normal. For all other distributions, its error rates grow rapidly as effect sizes increase. We distinguish between two sources of errors: (i) lack of statistical robustness as observed in our previous tests; and (ii) interaction interpretation issues (see [Section 3](#interpretation)). Our results confirm that ART is not scale invariant. On the contrary, it is extremely sensitive to the scale of the observed data. 
 
 ## Ordinal scales {#ordinal}
-Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit model [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 20 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of responses $y_{ijk}$. We then divide this range into 5, 7, or, 20 intervals, following two different stategies: (i) setting thresholds to be equidistant; or (ii) varying the intervals' size by randomly drawing thresholds in the above range. @fig-ordinal presents examples of equidistant and random thresholds for a 5-level scale when the magnitude of $X_1$'s main effect is $a_1 = 2$ or $a_1 = 8$ and all other effects are zero. 
+Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit method [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 20 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the responses $y_{ijk}$. We then divide this range into 5, 7, or 20 intervals, following two different stategies: (i) setting thresholds to be equidistant; or (ii) varying the intervals' size by randomly drawing thresholds in the above range. @fig-ordinal presents examples of equidistant and random thresholds for a 5-level scale when the magnitude of $X_1$'s main effect is $a_1 = 2$ or $a_1 = 8$ and all other effects are zero. 
 
 ::: {#fig-ordinal}
 ```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
 plotThresholds()
 ```
-The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or randomly distanced one from each other (bottom) within a range of $\pm 2$ standard deviations around zero.  
+The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or randomly distanced one from each other (bottom) within a range of $\pm 2$ standard deviations around the grand mean $\mu = 0$.  
 :::
 
 ### Results
 
-**Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. Our results indicate that PAR, RNK, and INT consitently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe as the number of levels increases. Notably, error rates are more pronounced for thresholds at random distances and tend to increase with sample size. 
+**Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. Our results indicate that PAR, RNK, and INT consitently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe when the number of levels increases. Notably, error rates are more pronounced for thresholds at random distances and tend to increase with sample size. 
 
 ::: {#fig-ordinal-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -673,7 +673,7 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "eff
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
 :::
 
-Finally, @fig-ordinal-interaction-1 presents our results when main effects are applied to both factors. None of the methods successfully maintains low error rates across all conditions. Intriguingly, we note that ART consistently performs worse than both PAR and INT. INT performs worse than ART in one specific case ($a_2, a_2 = 8$ in a scale with 20 equidistant levels).  
+Finally, @fig-ordinal-interaction-1 presents our results when main effects are applied to both factors. None of the methods successfully maintains low error rates across all conditions. Intriguingly, we note that ART consistently performs worse than PAR. INT performs worse than ART and PAR in one specific case ($a_2, a_2 = 8$ in a scale with 20 equidistant levels), but overall, it exhibits a better behavior than all other methods. 
 
 ::: {#fig-ordinal-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -684,44 +684,65 @@ plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "ef
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::
 
-
-## Type I errors accross designs {#extra}
+## Type I errors accross experimental designs {#extra}
+Our third experiment investigates the generalizability of the aforementioned results to other experimental designs involving two or three factors. We assess five out of the six ratio scales examined in Section 5. We exclude the Cauchy distribution and replace it by a 5-level ordinal scale with random thresholds, as detailed in Section 6.
 
 ### Results
 
-**Interaction effects**.
+**Main effects**. @fig-designs-main illustrates Type I errors for the main effect of $X_2$ while varying the magnitude of the main effect of $X_1$, with a focus on $n = 20$. Across all cases, RNK and INT consistently maintain error rates close to $5%$. PAR's error rate remains overall close to $5\%$ but reaches notably low levels for specific combinations of designs ($2 \times 2 \times 2$ and $3 \times 3 \times 3$ repeated-measures) and distributions (log-normal and exponential). In contrast, ART inflates error rates for all non-normal distributions, with discrepancies across different designs. We observe that ART is particularly problematic in discrete distributions when applied to the $2 \times 2 \times 2$ and $3 \times 3 \times 3$ designs.
 
-::: {#fig-designs-1}
+::: {#fig-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "3_test-Designs"
+alpha = 0.05
+
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-df <- readlyDataByDesign(prefix, 20, alpha, 0, distributions, dnames)
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105, byDesign = TRUE)
+df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
+df <- reshapeByDesign(df, dnames)
 
+plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 62)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** as a function of the magnitude of the main effects $a_1 = a_2$ $(n = 20)$
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-::: {#fig-designs-2}
+We provide additional results for the between-subjects design in @fig-2x3-main, where we vary the effect of $X_2$ and measure Type I error rates on $X_1$. ART's error rates for the three discrete distributions appear higher than those observed in @fig-designs-main, indicating a potential dependence on the number of levels of the factors. Again, we observe a consistent trend where error rates increase with the sample size.
+
+::: {#fig-2x3-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readlyDataByDesign(prefix, 20, alpha, 1, distributions, dnames)
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 81, byDesign = TRUE)
+prefix2 <- "3_test-Designs_2x3"
 
+df2x3 <- readlyData2(prefix2, alpha, effectType = 2, distributions, dnames)
+
+plotlyError(df2x3, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 62)
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect** $X_1 \times X_2$ as a function of $X_1$'s main effect $a_1$ ($n=20$)
+Additional results for the $2 \times 3$ between-subjects design, where we measure Type I error rates ($\alpha = .05$) for the **main effect of $X_1$.** We now vary the magnitude $a_2$ of the main effect of $X_2$.
 :::
 
+**Interaction effects**. @fig-designs-interaction-1 displays Type I error rates for the interaction effect $X_1 \times X_2$ while varying the effect of $X_1$ ($n = 20$). We observe consistent trends in line with our previous findings. For additional insights, we direct readers to our raw experimental data and supplementary materials, which demonstrate that these trends persist across other interaction terms, namely $X_1 \times X_3$, $X_2 \times X_3$, and $X_1 \times X_2 \times X_3$, within the two 3-factor designs.
 
-**Main effects**.
-
-::: {#fig-designs-3}
+::: {#fig-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyError(df, xlab = "magnitude of main effects", var = "rateX2", xvar = "effectX1", max = 80, byDesign = TRUE)
+plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 62)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect** $X_2$ as a function of $X_1$'s main effect $a_1$ ($n=20$)
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$) 
 :::
+
+Our results in @fig-designs-interaction-2 confirm that all methods exhibit varying degrees of difficulty in accurately inferring interaction effects when main effects are present on all interacting factors. While PAR and ART perform well for normal distributions, their error rates escalate more rapidly across all other distributions. INT performs adequately when main effects are small. For specific designs (e.g., $2 \times 3$ and $2 \times 2 \times 2$), its error rates become exceptionally low, suggesting a challenge in detecting small interaction effects when main effects are relatively large. RNK exhibits a similar pattern for the $2 \times 2 \times 2$ design. Notably, both methods display high error rates under ordinal and binomial scales, although these rates are lower compared to those of PAR and ART.
+
+::: {#fig-designs-interaction-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames)
+plotlyErrorByDesign(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
+:::
+
 
 ## Unequal variances
 Experiments for a 2 x 4 mixed design 
