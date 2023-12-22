@@ -538,9 +538,9 @@ inverseNormalTransform <- function(x){
 ### Evaluation measures
 Significance tests have two types of errors. *Type I errors*, or false positives, are mistaken rejections of the null hypothesis. Type II errors, of false negatives, are failures to reject a null hypothesis that is actually true. In our illustrative example in @fig-example, a Type I error is finding that there is an effect of the choice of the technique on time performance. A *Type II error*, in turn, is finding that the task difficulty has no effect on time performance. 
 
-Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the singificance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. [Sections 4 - 7](#ratio) specifically focus on evaluating the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper. We include additional results in our supplementary material. 
+Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the singificance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. Four of our experiments specifically assess the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper and include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA over the normal latent variable. We present our results on power and effect sizes in [Section 8](#power). 
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA over the normal latent variable. 
 
 As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable. We make this distinction whenever it is relevant in our analysis.  
 
@@ -553,7 +553,10 @@ To estimate the power and Type I error rates of the four methods with enough pre
 We evaluate the Type I error rate, that is the rate of false positives of each method. To evaluate the Type I error rate for the interaction effect, we set $a_{12} = 0$. Likewise, to evaluate the Type I error rate for the second factor $X_2$, we set $a_{2} = 0$. For each population configuration and sample size $n$, we run $5000$ iterations and test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brievity, we only report results for $\alpha = .05$ in the main paper, while additional results are presented in supplementary materialsxa
 -->
 
-## Ratio scales {#ratio}
+## Results
+Each experiment concentrated on a unique combination of distributions, experimental designs, and evaluation measures. Consequently, we organize our results into several subsections, addressing both main and interaction effects.
+
+### Type I error rates in ratio scales {#ratio}
 Our first experiments evaluates Type I error rates for ratio scales. We test a 4 $\times$ 3 repeated-measures design, where we refer to the 4-level factor as $X_1$ and the 3-level factor as $X_2$. For the observed response variable $Y' = \mathcal{T}(Y)$, we evaluate transformations to four continuous and two discrete distributions:  
 
 1. No transformation, or $Y' = Y$. Distributions are normal with an grand mean $\mu = 0$ (e.g., see @fig-effects). 
@@ -567,9 +570,6 @@ Our first experiments evaluates Type I error rates for ratio scales. We test a 4
 5. The Poisson distribution $Pois(\lambda)$ with a single parameter $\lambda = 3$. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who stop to interact with a public display in an hour, when the average rate is $\lambda = 3$ people per hour.
 
 6. The binomial distribution $B(n,p)$ with parameters $n = 10$ and $p=.1$. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. For example, we could use it to model the number of errors that participants make in a series of $n = 10$ repetitions of a memorization task, when the average error rate is $10\%$, thus the average error probability is $p=.1$. 
-
-### Results
-We first present results for main effects and continue with interaction effects.
 
 **Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases. The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution. However, we also show that the method can be problematic with other distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
 
@@ -636,8 +636,8 @@ However, these results require special attention since interaction interpretatio
 
 - *ART.* It keeps error rates at correct levels as long as population distributions are normal. For all other distributions, its error rates grow rapidly as effect sizes increase. We distinguish between two sources of errors: (i) lack of statistical robustness as observed in our previous tests; and (ii) interaction interpretation issues (see [Section 3](#interpretation)). Our results confirm that ART is not scale invariant. On the contrary, it is extremely sensitive to the scale of the observed data. 
 
-## Ordinal scales {#ordinal}
-Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit method [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 20 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the responses $y_{ijk}$. We then divide this range into 5, 7, or 20 intervals, following two different stategies: (i) setting thresholds to be equidistant; or (ii) varying the intervals' size by randomly drawing thresholds in the above range. @fig-ordinal presents examples of equidistant and random thresholds for a 5-level scale when the magnitude of $X_1$'s main effect is $a_1 = 2$ or $a_1 = 8$ and all other effects are zero. 
+### Type I error rates in ordinal scales {#ordinal}
+Our second experiment evaluates Type I error rates for ordinal scales. We test again a $4 \times 3$ repeated-measures design. We focus on individual Likert items levels and implement an ordered-probit method [@Liddell:2018] to discretize the latent variable $Y$ into 5, 7, or 20 ordinal levels. To derive the discretization thresholds, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the responses $y_{ijk}$. We then divide this range into 5, 7, or 20 intervals, following two different stategies: (i) setting thresholds to be equidistant; or (ii) varying the intervals' size by randomly drawing thresholds in the above range. @fig-ordinal presents examples of equidistant and random thresholds for a 5-level scale when the magnitude of main effect of $X_1$ is either $a_1 = 2$ or $a_1 = 8$, while all other effects are zero. 
 
 ::: {#fig-ordinal}
 ```{r, echo=FALSE, message=FALSE, fig.height=2.5, fig.width = 9, warning=FALSE}
@@ -645,8 +645,6 @@ plotThresholds()
 ```
 The four vertical lines in each plot represent thresholds defining 5-level ordinal scales. Thresholds are either equidistant (top) or randomly distanced one from each other (bottom) within a range of $\pm 2$ standard deviations around the grand mean $\mu = 0$.  
 :::
-
-### Results
 
 **Main effects**. @fig-ordinal-main present Type I errors for $X_2$'s main effect, as we vary $X_1$'s magnitude of main effect. Our results indicate that PAR, RNK, and INT consitently maintain error rates close to $5\%$ across all tested ordinal scales. In contrast, ART exhibits a significant inflation of error rates, although this issue becomes less severe when the number of levels increases. Notably, error rates are more pronounced for thresholds at random distances and tend to increase with sample size. 
 
@@ -684,10 +682,8 @@ plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "ef
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::
 
-## Type I errors accross experimental designs {#extra}
-Our third experiment investigates the generalizability of the aforementioned results to other experimental designs involving two or three factors. We assess five out of the six ratio scales examined in Section 5. We exclude the Cauchy distribution and replace it by a 5-level ordinal scale with random thresholds, as detailed in Section 6.
-
-### Results
+### Type I errors across experimental designs {#extra}
+Our third experiment investigates the generalizability of the aforementioned results to other experimental designs involving two or three factors. We assess five out of the six ratio scales examined earlier. We exclude the Cauchy distribution and replace it by a 5-level ordinal scale with random thresholds, as detailed above.
 
 **Main effects**. @fig-designs-main illustrates Type I errors for the main effect of $X_2$ while varying the magnitude of the main effect of $X_1$, with a focus on $n = 20$. Across all cases, RNK and INT consistently maintain error rates close to $5%$. PAR's error rate remains overall close to $5\%$ but reaches notably low levels for specific combinations of designs ($2 \times 2 \times 2$ and $3 \times 3 \times 3$ repeated-measures) and distributions (log-normal and exponential). In contrast, ART inflates error rates for all non-normal distributions, with discrepancies across different designs. We observe that ART is particularly problematic in discrete distributions when applied to the $2 \times 2 \times 2$ and $3 \times 3 \times 3$ designs.
 
@@ -743,44 +739,69 @@ plotlyErrorByDesign(df, xlab = "magnitude of main effects", var = "rateX1X2", xv
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
 :::
 
+### Type I errors under unequal variances
+Many statistical procedures assume equal variances among all levels of each independent variable, or more strictly, among all possible pairs of indepednent variable levels (known as sphericity assumption in repeated-measures ANOVA). Non-parametric tests are often mistakenly considered to be free of such as assumptions, but as we discussed earlier, this is generally incorrect.
 
-## Unequal variances
-Experiments for a 2 x 4 mixed design 
+Our fourth experiment evaluates the behavior of the four methods when populations on the latent variable $Y$ have unequal variances. We examine three 2-factor designs: (i) a $4 \times 3$ within-subjects design; (ii) a $2 \times 3$ between-subjects design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and then vary the ratio $r_{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios that we test when $X_1$ has two levels. When $X_1$ has additional levels ($4 \times 3$ design), their standard deviation is randomly drawn in a range between the standard deviations of the first two levels. 
 
-### Results
+::: {#fig-unequal}
+```{r, echo=FALSE, message=FALSE, fig.height=1.5, fig.width = 9, warning=FALSE}
+plotVariances()
+```
+Varying the ratio $r_{sd}$ of standard deviations between the levels of $X_1$. The plots show examples of population distributions for factors with two categorical levels.    
+:::
 
-**Interaction effects**.
+**Main effects**. We begin by investigating how the four methods detect main effects on $X_1$. The interpretation of results in this scenario is challenging due to differences in the original populations — although they share the same means (and medians), their variances differ. Depending on the null hypothesis of interest, conclusions may vary. Complicating matters further, non-linear transformations can result in distributions with differing means and medians. Consequently, the choice of statistical method may lead to different outcomes; one method may be sensitive to mean differences while others to median differences.
 
-::: {#fig-results-hetero-1}
+In @fig-unequal-main-1, we present the percentage of times each method rejects the null hypothesis ($\%$ positives) at a significance level of $\alpha = .05$. If the null hypothesis of interest posits that "$X_1$ has no effect on the mean of the latent variable $Y$," then these instances should be considered Type I errors.
+
+::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "4_test_2x4_Hetero"
+prefix <- "4_test_Unequal_Variances"
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-df <- readlyData(prefix, alpha, 0, distributions, dnames, effectvars = c("effectX1","effectX2","effectX1X2", "sd_ratio"))
-plotlyError(df, xlab = "ratio of variances between level of X1", var = "rateX1X2", xvar = "sd_ratio", max = 33)
+df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", var = "rateX1", xvar = "sd_ratio", max = 82, ytitle = 'Positives (%)')
 ```
-Type I error rates ($\alpha = .05$) for the **interaction effect**, as the variance difference on $X_1$ increases
+The percentage of positives (i.e., rejecting the null hypothesis) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$). Depening on the hypothesis of interest, these percentages can be interpreted as Type I error rates ($\alpha = .05$).
 :::
 
+Under normal distributions, positives can be reliably interpreted as Type I errors. We observe that as $r_{sd}$ increases, all methods either moderately inflate or deflate error rates. Notably, for the $4 \times 3$ within-subjects design ($r_{sd} \ge 2.5$), error rates for PAR, RNK, and ART reach levels of around $7-8\%$, while error rates for INT drop below $3\%$ for the $2 \times 4$ mixed design ($r_{sd} \ge 2.5$).
 
-**Main effects**.
+The performance of RNK and INT is consistent across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates among the four methods.
 
-::: {#fig-results-hetero-2}
+We also investigate the influence of unequal variances among the levels of $X_1$ on Type I error rates for $X_2$, as depicted in @fig-unequal-main-2. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions. The observed error rates are comparatively more moderate under the $2 \times 3$ between-subjects design.
+
+::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyError(df, xlab = "ratio of variances between level of X1", var = "rateX2", xvar = "sd_ratio", max = 33)
+plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", var = "rateX2", xvar = "sd_ratio", max = 52)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$**, as the variance difference on $X_1$ increases
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
 :::
 
-## Statistical power and effect sizes {#power}
+**Interaction effects**. Finally, we measure Type I error rates for the interaction effect $X_1 \times X_2$, shown in @fig-unequal-interaction. The error rates of ART exhibit similar trends, with a somewhat lower level under the $4 \times 3$ within-subjects design (compared to @fig-unequal-main-2). Additionally, for this design, we observe error inflation for the three other methods, albeit to a significantly lesser degree.
+
+::: {#fig-unequal-interaction}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", var = "rateX1X2", xvar = "sd_ratio", max = 52)
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
+:::
+
+
+
+### Statistical power {#power}
+
+### Effect sizes {#effect-sizes}
 
 <!--
 # Understanding ART's breakdown
 --> 
 
 ## Case studies {#casestudies}
-
+The analysis of @Martin:2023 useing ART (see Table 1) is higly problematic. First, ART returns non-zero F values for aligned responses and a warning (probably because the design is unbalanced), so it should not have been used. Second, it is used on binary responses, where ART completely fails! We have additional experimental results on that!  
 
 ## Recommendations {#recommendations}
 

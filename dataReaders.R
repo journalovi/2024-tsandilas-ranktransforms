@@ -78,4 +78,3 @@ reshapeByDesign <- function(df, dnames = c("Normal", "Log-normal", "Exponential"
 
 	df
 }
-

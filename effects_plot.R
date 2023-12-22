@@ -25,6 +25,13 @@ toNumber <- function(factorvalues) {
 	as.numeric(as.character(factorvalues))
 }
 
+# This function produces difference variance ratios for each variable level
+# where the most extreme will be 1 to maxratio
+sd.ratios <- function(nlevels = 4, maxratio = 1.5) {
+	ratios <- c(1, maxratio, 1 + runif(nlevels - 2)*(maxratio - 1))
+	sample(ratios, replace=FALSE) - mean(ratios) + 1
+}
+
 
 getThresholds = function(values, nlevels = 5, equidistant = TRUE) {
 	lim <- 2*sd(values) # I take 2 standard deviations that should contain the largest portion of the data
@@ -47,6 +54,20 @@ simulate <- function(n = 30, nlevels = 2, effectSize = 1,  sd_0 = 1, sd_error = 
 		add_ranef(.by ="s", intercept = sd_0) %>% # Intercept random effect
 		add_ranef(sigma = sd_error) %>% # error term
 		mutate(dv = intercept + effectSize * x1.t + sigma)
+
+	data$s = factor(data$s)
+	return(data)
+}
+
+# Simulate data under unequal variances
+simulate.sd <- function(n = 30, nlevels = 2, effectSize = 1,  sd_0 = 1, sd_error = 1, convertFun = categ2ratio, sd_ratio = 1){
+		data <- add_random(s = n) %>%
+		add_within("s", x1 = paste('A', 1:nlevels, sep="")) %>% 
+		mutate(x1.t = toNumber(plyr::mapvalues(x1, from = levels(x1), to = convertFun(nlevels)))) %>%  # Decode the categorical values to numeric ones
+		mutate(x1.w = toNumber(plyr::mapvalues(x1, from = levels(x1), to = sd.ratios(nlevels[1], sd_ratio)))) %>% # This is to assign random weights to levels different variances within x1
+		add_ranef(.by ="s", intercept = sd_0) %>% # Intercept random effect
+		add_ranef(sigma = sd_error) %>% # error term
+		mutate(dv = intercept + effectSize * x1.t + x1.w*sigma)
 
 	data$s = factor(data$s)
 	return(data)
@@ -83,6 +104,21 @@ plotDensitiesThres <- function(data, nlevels = 2, alpha = 0.4,  equidistant = TR
   plot
 }
 
+plotDensitiesVar <- function(n = 10000, nlevels = 2, sd_ratio = 2, alpha = 0.55) {
+  data <- simulate.sd(n, nlevels, effectSize = 0, sd_ratio = sd_ratio) 
+
+  palette <- c("#4681C6", "#FF5E00", "red", "#888888")
+
+  plot <- ggplot(data) + geom_density(aes(x = dv, fill = x1, color = x1), alpha = alpha) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
+  theme_classic() +
+  theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.x  = element_blank(), axis.line.y  = element_blank(), 
+  	axis.title.y = element_blank(), axis.ticks.y  = element_blank(), axis.text.y  = element_blank()) +
+  scale_x_continuous(name =element_blank(), breaks = seq(-8, 8, by=4), limits = c(-10, 10))
+
+  plot
+}
+
+
 plotEffects <- function(){
 	set.seed(200)
 
@@ -118,6 +154,29 @@ plotEffects <- function(){
 } 
 
 
+plotVariances <- function(){
+	set.seed(300)
+	plot1 <- plotDensitiesVar(sd_ratio=1,nlevels=2)
+	set.seed(300)
+	plot2 <- plotDensitiesVar(sd_ratio=1.5,nlevels=2)
+	set.seed(300)
+	plot3 <- plotDensitiesVar(sd_ratio=2,nlevels=2)
+	set.seed(300)
+	plot4 <- plotDensitiesVar(sd_ratio=2.5,nlevels=2)
+	set.seed(300)
+	plot5 <- plotDensitiesVar(sd_ratio=3,nlevels=2)
+
+	centered <- theme(plot.title = element_text(hjust = 0.5, size = 12))
+
+	ggarrange(
+	  plot1 + ggtitle(TeX("$r_{sd} = 1$")) + centered,
+	  plot2 + ggtitle(TeX("$r_{sd} = 1.5$")) + centered,
+	  plot3 + ggtitle(TeX("$r_{sd} = 2$")) + centered,
+	  plot4 + ggtitle(TeX("$r_{sd} = 2.5$")) + centered,
+	  plot5 + ggtitle(TeX("$r_{sd} = 3$")) + centered,
+		 ncol= 5) 
+}
+
 middleY <- function(plot) {
 	layer_scales(plot)$y$range$range[2]/2
 }
@@ -143,6 +202,4 @@ plotThresholds <- function(){
 	  plot4,
 		ncol= 2) 
 } 
-
-
 
