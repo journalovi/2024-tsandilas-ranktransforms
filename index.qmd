@@ -772,7 +772,7 @@ Under normal distributions, positives can be reliably interpreted as Type I erro
 
 The performance of RNK and INT is consistent across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates among the four methods.
 
-We also investigate the influence of unequal variances among the levels of $X_1$ on Type I error rates for $X_2$, as depicted in @fig-unequal-main-2. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions. The observed error rates are comparatively more moderate under the $2 \times 3$ between-subjects design.
+We also investigate the influence of unequal variances among the levels of $X_1$ on Type I error rates for $X_2$, as depicted in @fig-unequal-main-2. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions (see results for the $2 \times 4$ mixed design). The observed error rates are comparatively more moderate under the $2 \times 3$ between-subjects design.
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -801,7 +801,30 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 --> 
 
 ## Case studies {#casestudies}
-The analysis of @Martin:2023 useing ART (see Table 1) is higly problematic. First, ART returns non-zero F values for aligned responses and a warning (probably because the design is unbalanced), so it should not have been used. Second, it is used on binary responses, where ART completely fails! We have additional experimental results on that!  
+
+### Binary reponses
+@Martin:2023 ran two experiment to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
+
+Their design has two particularities. First, the reponse variable is binary (Detected vs. Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART: 
+
+> *"Since we are dealing with **nonparametric, unbalanced data** and multiple factors, we apply the Aligned Rank Transform (ART) for non-parametric factorial ANOVA"* [@Martin:2023]. 
+
+In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis and replicate their results from Table 1 [@Martin:2023]. However, we also run the same analysis with two additional methods: (i) fitting a linear mixed-effects model (LMER function) without any transformation; and (ii) fitting a binomial generalized mixed-effects model (GLMER function with binomial distribution family). The latter method basically performs a logistic regression and is the most appropriate parametric procedure for this type of data. Below, we present the *p*-values returned from each method:
+
+|  | ART | LMER | GLMER (binomial family) |
+|------|-----|-----|-----|
+| Type | $.92$ | $.016$ | $.036$ | 
+| Distance | $.031$ | $.12$ | $.29$ |
+| Complexity | $.023$ | $.0027$ | $.000012$ |
+| Type $\times$ Distance | $.71$ | $.13$ | $.013$ |
+| Type $\times$ Complexity | $.00077$ | $.0039$ | $.000098$ |
+| Distance $\times$ Complexity | $.0011$ | $.0029$ | $.000032$ |
+| Type $\times$ Distance $\times$ Complexity | $.00055$ | $.00016$ | $.00013$ |
+: *p*-values keeping two only significant digits - Type III hypothesis tests {.sm}
+
+As @Martin:2023, we report results of Type III hypothesis tests for all methods. They are considered as more appropriate when experimental designs are unbalanced, while there are strong interactions between factors. 
+
+(To continue...)
 
 ## Recommendations {#recommendations}
 
