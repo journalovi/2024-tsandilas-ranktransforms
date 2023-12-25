@@ -803,13 +803,14 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 ## Case studies {#casestudies}
 
 ### Binary reponses
-@Martin:2023 ran two experiment to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
+
+**Real unbalanced data.** @Martin:2023 ran two experiment to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
 
 Their design has two particularities. First, the reponse variable is binary (Detected vs. Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART: 
 
 > *"Since we are dealing with **nonparametric, unbalanced data** and multiple factors, we apply the Aligned Rank Transform (ART) for non-parametric factorial ANOVA"* [@Martin:2023]. 
 
-In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis and replicate their results from Table 1 [@Martin:2023]. However, we also run the same analysis with two additional methods: (i) fitting a linear mixed-effects model (LMER function) without any transformation; and (ii) fitting a binomial generalized mixed-effects model (GLMER function with binomial distribution family). The latter method basically performs a logistic regression and is the most appropriate parametric procedure for this type of data. Below, we present the *p*-values returned from each method:
+In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis to replicate the results presented in Table 1 [@Martin:2023]. However, we extended the analysis by employing two additional methods: (i) fitting a linear mixed-effects model (LMER function) without any transformation; and (ii) fitting a binomial generalized mixed-effects model (GLMER function with binomial distribution family). The latter method essentially performs a logistic regression and is considered the most appropriate parametric procedure for this type of data. Below, we present the *p*-values obtained from each method:
 
 |  | ART | LMER | GLMER (binomial family) |
 |------|-----|-----|-----|
@@ -822,9 +823,33 @@ In their ART model, the authors treated the participant identifier and the task 
 | Type $\times$ Distance $\times$ Complexity | $.00055$ | $.00016$ | $.00013$ |
 : *p*-values keeping two only significant digits - Type III hypothesis tests {.sm}
 
-As @Martin:2023, we report results of Type III hypothesis tests for all methods. They are considered as more appropriate when experimental designs are unbalanced, while there are strong interactions between factors. 
+There are notable differences among the results obtained from the three methods. Specifically, GLMER provides evidence for a main effect of Type ($p=.036$ compared to $p=.92$ for ART) and an interaction effect Type $\times$ Distance ($p=.013$ compared to $p=.71$ for ART). In contrast, its $p$-value for the main effect of distance is significantly larger ($p=.29$ compared to $p=.031$ for ART). These discrepancies may raise questions regarding the key conclusions of the paper regarding the influence of the above factors.
 
-(To continue...)
+It is important to note, however, that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022]. Some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Additionally, the ARTool issues a warning for the above analysis:
+
+> *F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.*
+
+This warning could be a sufficient reason to refrain from using the method with these data.
+
+**Simulation with balanced data.** What if the exerimental design was balanced and this warning did not appear? What are the risks of using ART with such binary responses? We run a Monte Carlo experiment to understand the problem. 
+
+As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ and then assess the Type I error rate of ART in the absence of any effect. We also assess the the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR.
+
+The results are as follows:
+
+|  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
+|:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| PAR | $.047$ | $.051$ | $.048$ | $.057$ | $.048$ | $.049$ | $.044$ |
+| ART | $.212$ | $.208$ | $.200$ | $.220$ | $.215$ | $.197$ | $.213$ |
+: Type I error rates for $\alpha = .05$ {.sm}
+
+|  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
+|:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| PAR | $.010$ | $.011$ | $.011$ | $.012$ | $.011$ | $.010$ | $.009$ |
+| ART | $.095$ | $.094$ | $.095$ | $.105$ | $.097$ | $.095$ | $.092$ |
+: Type I error rates for $\alpha = .01$ {.sm}
+
+We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher number of Type I errors, ART seems to detect main effects on $X_2$ or $X_3$ with lower power compared to PAR. For example, for an effect of $a_2 = 0.5$, its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). 
 
 ## Recommendations {#recommendations}
 
