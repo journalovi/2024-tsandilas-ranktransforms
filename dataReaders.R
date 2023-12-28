@@ -15,7 +15,12 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 		df <- df[df$effectX2 == 0,]
 	} else if(effectType == 2) {
 		df <- df[df$effectX1 == 0,]
+	} else if(effectType == 3) {
+		df <- df[df$effectX1 > 0,]
+	} else if(effectType == 4) {
+		df <- df[df$effectX1X2 > 0,]
 	}
+
 	return(df[df$alpha == alpha,])
 }
 
@@ -78,3 +83,11 @@ reshapeByDesign <- function(df, dnames = c("Normal", "Log-normal", "Exponential"
 
 	df
 }
+
+#prefix <- "5_test-Power"
+#distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+#dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+#df <- readData(prefix, n = 20, alpha, effectType = 3, distributions)
+#df1 <- df %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
+#df <- as.data.frame(df1) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))

@@ -594,7 +594,7 @@ The same problems appear when we run ART's procedure for contrasts [@elkin:2021]
 
 ::: {#fig-ratio-contrasts}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "5_test_4x3_Contrasts"
+prefix <- "1_test_4x3_Contrasts"
 
 df <- readlyData(prefix, alpha, 1, distributions, dnames)
 plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 52)
@@ -791,8 +791,46 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 :::
 
 
-
 ### Statistical power {#power}
+Our fifth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type I errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, either main or interation effects. We only report results for $n=20$ (see supplementary materials for additional results). 
+
+**Main effects**. We individually vary the magnitude of effect on $X_1$ and $X_2$ and observe the power of each method to detect this effect ($\alpha = .05$). We vary the parameters $a_1$ or $a_2$ from $0.4$ to $1.0$. Depending on the experimentl design, this range  allows us to simulate both low-power experiments (e.g., with less than $30\%$ power) and high-power experiments (e.g., with more than $80\%$ power).
+
+@fig-power-main-1 presents our results for $X_1$. 
+
+::: {#fig-power-main-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "5_test-Power"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 3, distributions)
+
+df <- df %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign3(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to compare their power ($\%$).
+:::
+
+
+**Interaction effects**. 
+
+::: {#fig-power-interaction}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 4, distributions)
+
+df <- df %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign3(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to compare their power ($\%$).
+:::
+
 
 ### Effect sizes {#effect-sizes}
 
@@ -802,7 +840,7 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 
 ## Case studies {#casestudies}
 
-### Binary reponses
+### Binary responses
 
 **Real unbalanced data.** @Martin:2023 ran two experiment to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
 
@@ -825,17 +863,15 @@ In their ART model, the authors treated the participant identifier and the task 
 
 There are notable differences among the results obtained from the three methods. Specifically, GLMER provides evidence for a main effect of Type ($p=.036$ compared to $p=.92$ for ART) and an interaction effect Type $\times$ Distance ($p=.013$ compared to $p=.71$ for ART). In contrast, its $p$-value for the main effect of distance is significantly larger ($p=.29$ compared to $p=.031$ for ART). These discrepancies may raise questions regarding the key conclusions of the paper regarding the influence of the above factors.
 
-It is important to note, however, that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022]. Some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Additionally, the ARTool issues a warning for the above analysis:
+It is important to note, however, that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Additionally, the ARTool issues a warning for the above analysis:
 
 > *F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.*
 
 This warning could be a sufficient reason to refrain from using the method with these data.
 
-**Simulation with balanced data.** What if the exerimental design was balanced and this warning did not appear? What are the risks of using ART with such binary responses? We run a Monte Carlo experiment to understand the problem. 
+**Simulation with balanced data.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
-As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ and then assess the Type I error rate of ART in the absence of any effect. We also assess the the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR.
-
-The results are as follows:
+As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ (average success rate found by @Martin:2023) and then assess the Type I error rate of ART in the absence of any effect. We also assess the the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
 
 |  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
 |:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
@@ -849,7 +885,7 @@ The results are as follows:
 | ART | $.095$ | $.094$ | $.095$ | $.105$ | $.097$ | $.095$ | $.092$ |
 : Type I error rates for $\alpha = .01$ {.sm}
 
-We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher number of Type I errors, ART seems to detect main effects on $X_2$ or $X_3$ with lower power compared to PAR. For example, for an effect of $a_2 = 0.5$, its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). 
+We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher number of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). 
 
 ## Recommendations {#recommendations}
 
