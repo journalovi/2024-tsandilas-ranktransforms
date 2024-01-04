@@ -170,7 +170,7 @@ plotlyErrorByDesign3 <- function(df, xlab = "magnitude of main effects", var = "
 	  layout(
 	    legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5),
 	    xaxis = list(title = NA, showline=T, mirror = F, fixedrange=T, ticks="outside",tickangle=60, tickfont = list(size = 11)),
-	    yaxis = list(title = ytitle, font = list(size = 13), zeroline = F, showline=T, linewidth=1, mirror = F, ticks="inside", tickfont = list(size = 11), range=c(0.7, max), tickvals = list(1,2,3,4), ticktext = list(4,3,2,1))
+	    yaxis = list(title = ytitle, font = list(size = 13), zeroline = F, showline=T, linewidth=1, mirror = F, ticks="inside", tickfont = list(size = 11), range=c(0.7, max), tickvals = list(1,2,3,4), ticktext = list("4th","3rd","2nd","1st"))
 	  ) 
 
 	  p

@@ -18,6 +18,9 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 	} else if(effectType == 3) {
 		df <- df[df$effectX1 > 0,]
 	} else if(effectType == 4) {
+		df <- df[df$effectX2 > 0,]
+	} 
+	else if(effectType == 5) {
 		df <- df[df$effectX1X2 > 0,]
 	}
 

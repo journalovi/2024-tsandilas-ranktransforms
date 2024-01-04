@@ -792,11 +792,13 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 
 
 ### Statistical power {#power}
-Our fifth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type I errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, either main or interation effects. We only report results for $n=20$ (see supplementary materials for additional results). 
+Our fifth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type II errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, both main or interation effects. We only report results for $n=20$ (see supplementary materials for additional results). 
 
-**Main effects**. We individually vary the magnitude of effect on $X_1$ and $X_2$ and observe the power of each method to detect this effect ($\alpha = .05$). We vary the parameters $a_1$ or $a_2$ from $0.4$ to $1.0$. Depending on the experimentl design, this range  allows us to simulate both low-power experiments (e.g., with less than $30\%$ power) and high-power experiments (e.g., with more than $80\%$ power).
+**Main effects**. We individually vary the magnitude of effect on $X_1$ and $X_2$ and observe the power of each method to detect this effect ($\alpha = .05$). Specifically, we manipulate the parameters $a_1$ or $a_2$ within the range of $0.4$ to $1.0$. Depending on the experimentl design, this range allows us to simulate both low-power experiments (e.g., with less than $30\%$ power) and high-power experiments (e.g., with more than $80\%$ power). 
 
-@fig-power-main-1 presents our results for $X_1$. 
+@fig-power-main-1 presents our results for $X_1$. In several configurations, the differences in power among the methods are marginal. To enhance clarity in our comparisons, we present the method rankings. Readers are encouraged to interact with the graphs for precise power values. PAR exhibits the highest power under the normal distribution, closely followed by INT. INT is also consistently the winning method across all non-normal distributions. PAR's power is notably low under the log-normal and exponential distribution.
+
+ART initially appears advantageous under the three discrete distributions for small effects, likely due to inflated Type I errors even without an effect on $X_2$ (as observed in @fig-2x3-main). However, as effects grow larger, its relative power diminishes, and ART eventually becomes the least effective method.
 
 ::: {#fig-power-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -812,15 +814,29 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign3(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking')
 ```
-Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to compare their power ($\%$).
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to inspect their power ($\%$).
 :::
 
+@fig-power-main-2 presents results for $X_2$. Given the different number of levels for this factor, we now assess a different range of power for each design. Nevertheless, we obseve simmilar patterns. INT emerges as the most powerful method. Although ART surpasses PAR under the log-normal and exponential distributions, it does not demonstrate any other notable advantages compared to the other methods.  
 
-**Interaction effects**. 
+::: {#fig-power-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 4, distributions) # CHANGE n TO 20
+
+df <- df %>% arrange(design,distr,effectX2,rateX2)  %>% group_by(design,distr,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign3(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$). Hover over the charts to inspect their power ($\%$).
+:::
+
+**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ across the range of $0.5$ to $2.0$. We then measure the power to detect this interaction effect. Our results are summarized in @fig-power-interaction, aligning with findings for main effects. ART's relative advantage diminishes later under the binomial and ordinal distributions. Once again, the method's inflated Type I error rates could account for this observed trend.
 
 ::: {#fig-power-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readData(prefix, n = 20, alpha, effectType = 4, distributions)
+df <- readData(prefix, n = 20, alpha, effectType = 5, distributions)
 
 df <- df %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
@@ -828,7 +844,7 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign3(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power (%) - ranking')
 ```
-Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to compare their power ($\%$).
+Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to inspect their power ($\%$).
 :::
 
 
@@ -885,7 +901,7 @@ As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design
 | ART | $.095$ | $.094$ | $.095$ | $.105$ | $.097$ | $.095$ | $.092$ |
 : Type I error rates for $\alpha = .01$ {.sm}
 
-We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher number of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). 
+We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher rate of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). 
 
 ## Recommendations {#recommendations}
 
