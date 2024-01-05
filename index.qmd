@@ -849,10 +849,61 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 
 
 ### Effect sizes {#effect-sizes}
+TODO
 
-<!--
-# Understanding ART's breakdown
---> 
+::: {#fig-effect-main-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "6_test-Effect-Size"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions)
+
+df <- df %>% arrange(design,distr,effectX1,etaX1)  %>% group_by(design,distr,effectX1)
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "max magnitude of effects", var = "etaX1", xvar = "effectX1", min = 34, max = 103, ytitle = 'cor (%)')
+```
+Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for main effect on $X_1$, as a function of $\gamma$.
+:::
+
+
+::: {#fig-effect-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "6_test-Effect-Size"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions)
+
+df <- df %>% arrange(design,distr,effectX2,etaX2)  %>% group_by(design,distr,effectX2)
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "max magnitude of effects", var = "etaX2", xvar = "effectX2", min = 34, max = 103, ytitle = 'cor (%)')
+```
+Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for main effect on $X_2$, as a function of $\gamma$.
+:::
+
+
+::: {#fig-effect-interaction}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "6_test-Effect-Size"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions)
+
+df <- df %>% arrange(design,distr,effectX1X2,etaX1X2)  %>% group_by(design,distr,effectX1X2)
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "max magnitude of effects", var = "etaX1X2", xvar = "effectX1X2", min = 25, max = 103, ytitle = 'cor (%)')
+```
+Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for interaction effect, as a function of $\gamma$.
+:::
+
 
 ## Case studies {#casestudies}
 
@@ -887,7 +938,7 @@ This warning could be a sufficient reason to refrain from using the method with 
 
 **Simulation with balanced data.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
-As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ (average success rate found by @Martin:2023) and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
+As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ -- average success rate found by @Martin:2023 -- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
 
 |  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
 |:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|

@@ -24,7 +24,8 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 		df <- df[df$effectX1X2 > 0,]
 	}
 
-	return(df[df$alpha == alpha,])
+	if(is.na(alpha)) return(df)
+	else return(df[df$alpha == alpha,])
 }
 
 # the effectType parameter determines if I'm interested in results where there are effects on both factors (effectType = 0) 
@@ -77,10 +78,10 @@ readlyData2 <- function(prefix, alpha = .05, effectType = 0,
 }
 
 reshapeByDesign <- function(df, dnames = c("Normal", "Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial"),
-		effectvars = c("effectX1","effectX2","effectX1X2", "effectX3")) {
+		effectvars = c("effectX1","effectX2","effectX1X2", "effectX3"), groupvars = c("distr","method","alpha", "n")) {
 
 	# Different column for each design
-	df <- reshape(df, idvar=c("distr","method","alpha", "n", effectvars), timevar = "design", direction = "wide")
+	df <- reshape(df, idvar=c(groupvars, effectvars), timevar = "design", direction = "wide")
 	df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
 	df$distr <- factor(df$distr, levels = dnames)
 
