@@ -817,7 +817,7 @@ plotlyErrorByDesign3(df, xlab = "magnitude of main effect", var = "rank", hoverv
 Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to inspect their power ($\%$).
 :::
 
-@fig-power-main-2 presents results for $X_2$. Given the different number of levels for this factor, we now assess a different range of power for each design. Nevertheless, we obseve simmilar patterns. INT emerges as the most powerful method. Although ART surpasses PAR under the log-normal and exponential distributions, it does not demonstrate any other notable advantages compared to the other methods.  
+@fig-power-main-2 presents results for $X_2$. Given the different number of levels for this factor, we now assess a different range of power for each design. Nevertheless, we obseve similar patterns. INT stands out as the most powerful method. Although ART surpasses PAR under the log-normal and exponential distributions, it does not demonstrate any other notable advantages compared to the other methods.  
 
 ::: {#fig-power-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -848,8 +848,12 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 :::
 
 
-### Effect sizes {#effect-sizes}
-TODO
+### Effect size estimates {#effect-sizes}
+In our final experiment, we assess the accuracy of each method in estimating standardized effect sizes across the three 2-factor designs. We employ a parametric ANOVA on the latent variable $Y$ and calculate partial $\eta^2$ for the effects of $X_1$, $X_2$, and $X_1 \times X_2$, treating these values as ground truth estimates. Subsequently, we evaluate the corresponding partial $\eta^2$ using each of the four methods (PAR, RNK, ART, and INT) on the observed variable $Y'$.
+
+Then, we compute the correlation ($cor$) between the method estimates and the ground truth over 1000 iterations. In each iteration, we randomly draw the magnitude of all three effects ($a_1$, $a_2$, and $a_{12}$) from a range $[-g, g]$, where $g$ varies in $\{0, 0.5, 1, 2, 4, 8\}$. These correlation values serve as measures of the quality of effect size estimates. We present the results for a sample size of $n=20$.
+
+**Main effects**. @fig-effect-main-1 depicts correlation trends for the first factor $X_1$. All methods demonstrate high correlation levels under the normal distribution. INT performs exceptionally well across all continuous distributions but experiences a performance decline in overpowered studies, when the magnitude of effects is high. PAR is ranked as the least effective method under the log-normal and exponential distributions, followed by ART. ART's performance is particularly low under the binomial and ordinal distribution. 
 
 ::: {#fig-effect-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -863,9 +867,23 @@ df <- df %>% arrange(design,distr,effectX1,etaX1)  %>% group_by(design,distr,eff
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "max magnitude of effects", var = "etaX1", xvar = "effectX1", min = 34, max = 103, ytitle = 'cor (%)')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = 34, max = 103, ytitle = 'cor (%)')
 ```
-Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for main effect on $X_1$, as a function of $\gamma$.
+Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for main effect on $X_1$, as a function of $g$.
+:::
+
+
+::: {#fig-effect-main-scatterplots}
+```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
+source("effect_sizes_scatterplots.R")
+prefix <- "6_scatter-Effect_Size"
+
+df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
+fig <- plotlyScatter(df)
+
+fig
+```
+Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for main effect on $X_1$ ($g = 2$). We show results for the normal, log-normal, and ordinal data.  
 :::
 
 
@@ -881,9 +899,9 @@ df <- df %>% arrange(design,distr,effectX2,etaX2)  %>% group_by(design,distr,eff
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "max magnitude of effects", var = "etaX2", xvar = "effectX2", min = 34, max = 103, ytitle = 'cor (%)')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX2", xvar = "effectX2", min = 34, max = 103, ytitle = 'cor (%)')
 ```
-Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for main effect on $X_2$, as a function of $\gamma$.
+Correlation (%) between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for main effect on $X_2$
 :::
 
 
@@ -899,9 +917,9 @@ df <- df %>% arrange(design,distr,effectX1X2,etaX1X2)  %>% group_by(design,distr
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "max magnitude of effects", var = "etaX1X2", xvar = "effectX1X2", min = 25, max = 103, ytitle = 'cor (%)')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1X2", xvar = "effectX1X2", min = 25, max = 103, ytitle = 'cor (%)')
 ```
-Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for interaction effect, as a function of $\gamma$.
+Correlation (%) between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for interaction effect, as a function of $g$.
 :::
 
 
@@ -938,7 +956,7 @@ This warning could be a sufficient reason to refrain from using the method with 
 
 **Simulation with balanced data.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
-As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ -- average success rate found by @Martin:2023 -- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
+As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ ---average success rate found by @Martin:2023--- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
 
 |  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
 |:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
