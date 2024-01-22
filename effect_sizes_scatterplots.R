@@ -5,7 +5,7 @@
 
 library(reshape2)
 
-plotlyScatter <- function(df, xlab = "eta squared (groundtruth)", ylab= 'eta squared', xvar = "etaX1", yvar = paste(xvar, "_", sep ="")) {
+plotlyScatter <- function(df, xlab = "eta squared (ground truth)", ylab= 'eta squared', xvar = "etaX1", yvar = paste(xvar, "_", sep ="")) {
   # aesthetics
 
   symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")

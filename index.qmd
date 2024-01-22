@@ -725,7 +725,7 @@ plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX1X2", xva
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$) 
 :::
 
-Our results in @fig-designs-interaction-2 confirm that all methods exhibit varying degrees of difficulty in accurately inferring interaction effects when main effects are present on all interacting factors. While PAR and ART perform well for normal distributions, their error rates escalate more rapidly across all other distributions. INT performs adequately when main effects are small. For specific designs (e.g., $2 \times 3$ and $2 \times 2 \times 2$), its error rates become exceptionally low, suggesting a challenge in detecting small interaction effects when main effects are relatively large. RNK exhibits a similar pattern for the $2 \times 2 \times 2$ design. Notably, both methods display high error rates under ordinal and binomial scales, although these rates are lower compared to those of PAR and ART.
+Our results in @fig-designs-interaction-2 confirm that all methods exhibit varying degrees of difficulty in accurately inferring interaction effects when main effects are present on all interacting factors. While PAR and ART perform well for normal distributions, their error rates escalate more rapidly across all other distributions. ART's error rates become exceptionally low for certain designs (e.g., $2 \times 3$ and $2 \times 2 \times 2$), suggesting a challenge in detecting small interaction effects when main effects are large. RNK exhibits a similar pattern for the $2 \times 2 \times 2$ design. Notably, both methods display high error rates under ordinal and binomial scales, although these rates are lower compared to those of PAR and ART.
 
 ::: {#fig-designs-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -772,7 +772,7 @@ Under normal distributions, positives can be reliably interpreted as Type I erro
 
 The performance of RNK and INT is consistent across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates among the four methods.
 
-We also investigate the influence of unequal variances among the levels of $X_1$ on Type I error rates for $X_2$, as depicted in @fig-unequal-main-2. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions (see results for the $2 \times 4$ mixed design). The observed error rates are comparatively more moderate under the $2 \times 3$ between-subjects design.
+We also investigate the influence of unequal variances among the levels of $X_1$ on Type I error rates for $X_2$, as depicted in @fig-unequal-main-2. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions. The observed error rates are comparatively more moderate under the $2 \times 3$ between-subjects design.
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -851,9 +851,9 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 ### Effect size estimates {#effect-sizes}
 In our final experiment, we assess the accuracy of each method in estimating standardized effect sizes across the three 2-factor designs. We employ a parametric ANOVA on the latent variable $Y$ and calculate partial $\eta^2$ for the effects of $X_1$, $X_2$, and $X_1 \times X_2$, treating these values as ground truth estimates. Subsequently, we evaluate the corresponding partial $\eta^2$ using each of the four methods (PAR, RNK, ART, and INT) on the observed variable $Y'$.
 
-Then, we compute the correlation ($cor$) between the method estimates and the ground truth over 1000 iterations. In each iteration, we randomly draw the magnitude of all three effects ($a_1$, $a_2$, and $a_{12}$) from a range $[-g, g]$, where $g$ varies in $\{0, 0.5, 1, 2, 4, 8\}$. These correlation values serve as measures of the quality of effect size estimates. We present the results for a sample size of $n=20$.
+Then, we compute the coefficient of determination $R^2$ ($R$ squared) over 1000 iterations, that is, the proportion of variation in the $\eta^2$ estimates of each method that is predictable from the estimate of the grand truth method. In each iteration, we randomly draw the magnitude of all three effects ($a_1$, $a_2$, and $a_{12}$) from a range $[-g, g]$, where $g$ varies in $\{0, 0.5, 1, 2, 4, 8\}$. This $R^2$ measure allows us to assess how close the estimates of each method are to estimates of the theoretically most appropriate method. We present the results for a sample size of $n=20$. 
 
-**Main effects**. @fig-effect-main-1 depicts correlation trends for the first factor $X_1$. All methods demonstrate high correlation levels under the normal distribution. INT performs exceptionally well across all continuous distributions but experiences a performance decline in overpowered studies, when the magnitude of effects is high. PAR is ranked as the least effective method under the log-normal and exponential distributions, followed by ART. ART's performance is particularly low under the binomial and ordinal distribution. 
+**Main effects**. @fig-effect-main-1 depicts trends for the first factor $X_1$. All methods demonstrate high $R^2$ levels under the normal distribution. INT performs exceptionally well across all continuous distributions. However, its performance declines when the range of effects becomes large ($g \ge 4$). PAR's performance is strikingly low under the log-normal distribution and, to a lesser degree, under the exponential distribution. ART emerges as the second-worse method for these specific distributions. Finally, we observe low $R^2$ values for all methods under the binomial and ordinal distributions, where ART's performance is particularly problematic under low effect ranges.  
 
 ::: {#fig-effect-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -867,11 +867,12 @@ df <- df %>% arrange(design,distr,effectX1,etaX1)  %>% group_by(design,distr,eff
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = 34, max = 103, ytitle = 'cor (%)')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = -5, max = 103, ytitle = 'R squared')
 ```
-Correlation (%) between effect size estimate (partial $\eta^2$) of each method and estimate of the ground-truth method for main effect on $X_1$, as a function of $g$.
+$R^2$ scores assessing the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
+@fig-effect-main-scatterplots illustrates the relationship between the $\eta^2$ estimated by each method and the $\eta^2$ of the ground truth method for $g = 2$. For clarity, we focus on the normal, log-normal, and ordinal distributions. For each method, we present 100 data points. Proximity of data points to the black diagonal indicates closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while point under the line are likely to underestimate the effect size. PAR tends to underestimate effect sizes under the log-normal distribution. This result is consistent with the observed low power of the method. In contrast, ART's estimates are spread across both sides, so the method often exaggerates effect sizes. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
 
 ::: {#fig-effect-main-scatterplots}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -883,9 +884,11 @@ fig <- plotlyScatter(df)
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for main effect on $X_1$ ($g = 2$). We show results for the normal, log-normal, and ordinal data.  
+Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for main effect on $X_1$ (for $g = 2$). We show results for normal, log-normal, and ordinal data. We invite readers to interact with the plots to filter the scatterplots or zoom into smaller ranges.  
 :::
 
+@fig-effect-main-2 presents $R^2$ trends for the second factor $X_2$. 
+ These trends mirror the observed patterns for $X_1$ in @fig-effect-main-1. However, upon closer inspection of the results for the $2 \times 3$ between-subjects and the $2 \times 4$ mixed designs  across the three discrete distributions, the differences between the four methods are less pronounced.
 
 ::: {#fig-effect-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -899,11 +902,12 @@ df <- df %>% arrange(design,distr,effectX2,etaX2)  %>% group_by(design,distr,eff
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX2", xvar = "effectX2", min = 34, max = 103, ytitle = 'cor (%)')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX2", xvar = "effectX2", min = -5, max = 103, ytitle = 'R squared')
 ```
-Correlation (%) between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for main effect on $X_2$
+$R^2$ scores assessing the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
+Finally, we show results for the interaction effect in @fig-effect-interaction. $R^2$ can approach zero or even become negative under certain conditions, implying that effect size estimates are unreliable. Both RNK and INT start failing when the range of effets becomes large. Additionally, we observe low $R^2$ values for all methods when using the ordinal scale. 
 
 ::: {#fig-effect-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -917,17 +921,16 @@ df <- df %>% arrange(design,distr,effectX1X2,etaX1X2)  %>% group_by(design,distr
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1X2", xvar = "effectX1X2", min = 25, max = 103, ytitle = 'cor (%)')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1X2", xvar = "effectX1X2", min = -51, max = 105, ytitle = 'R squared')
 ```
-Correlation (%) between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for interaction effect, as a function of $g$.
+$R^2$ scores assessing the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 
 ## Case studies {#casestudies}
 
-### Binary responses
-
-**Real unbalanced data.** @Martin:2023 ran two experiments to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
+### Binary responses: Object-manipulation detection [@Martin:2023]
+@Martin:2023 ran two experiments to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
 
 Their design has two particularities. First, the response variable is binary (Detected vs. Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART: 
 
@@ -948,11 +951,11 @@ In their ART model, the authors treated the participant identifier and the task 
 
 There are notable differences among the results obtained from the three methods. Specifically, GLMER provides evidence for a main effect of Type ($p=.036$ compared to $p=.92$ for ART) and an interaction effect Type $\times$ Distance ($p=.013$ compared to $p=.71$ for ART). In contrast, its $p$-value for the main effect of distance is significantly larger ($p=.29$ compared to $p=.031$ for ART). These discrepancies may raise questions regarding the key conclusions of the paper regarding the influence of the above factors.
 
-It is important to note, however, that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Additionally, the ARTool issues a warning for the above analysis:
+It is important to note, however, that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. The ARTool raises a warning for such unbalanced designs:
 
 > *F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.*
 
-This warning could be a sufficient reason to refrain from using the method with these data.
+We have not examined how design imbalance affects the accuracy of ART and the other rank-based methods. 
 
 **Simulation with balanced data.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
@@ -970,7 +973,57 @@ As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design
 | ART | $.095$ | $.094$ | $.095$ | $.105$ | $.097$ | $.095$ | $.092$ |
 : Type I error rates for $\alpha = .01$ {.sm}
 
-We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher rate of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). 
+We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher rate of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). In conclusion, ART is completely inappropriate when responses are binary, even when the average rate of each binary outcome is close to $50\%$. 
+
+### Likert items: Sense of ownership [@Rosso:2023]
+@Rosso:2023 conducted a body-swap experiment, where pairs participants ("dyads") performed a joint-finger tapping task under four different conditions, structured under two different factors:
+
+- Coupling. Participants saw either their own hand (Coupled) or their partner's hand (Uncoupled).
+
+- Perspective. Participants saw the hand from a first person (1P) perspective or from a second person perspective (2P). 
+
+Overall, the experiment was structured as a $2 \times 2$ within-participants design with 38 participants (19 dyads). The authors investigated numerous measures. Here, we only revist their analysis of the sense of ownership of the visually perceived hand, for which they used ART (Page 10). The variable was measured through a self-reported scale with five levels (1 to 5). The authors report:
+
+> *Aligned rank transform (ART) ANOVA revealed significant main effects of Coupling (Df residual = 147, F = 104.353, p < 0.001) and Perspective (Df residual = 147, F = 8.983, p < 0.01) on the self-reported ownership ratings. The former indicates that participants were capable of telling apart their own hand from the partner’s regardless of the visual perspective, whilst the latter indicates that perceiving a hand in 1st person generally resulted in a stronger sense of ownership. Crucially, the interaction
+effect between Coupling and Perspective (Df residual = 147, F = 5.232, p < 0.05) revealed that the increase in ownership relative to the 2nd person perspective was significantly stronger when participants were coupled.* [@Rosso:2023]
+
+Thus, the authors found supportive statistical evidence for both main effects and the interaction of the two factors. We replicated their analysis and found that the author did not conduct a repeated-measures ANOVA. We analysed the data with a mixed-effects *lmer* model, treating the participant identifier as a random effect nested under the identifier of participant pairs (dyads). Conclusions do not change since our model is more powerful --- $p$-values are now even smaller for all three effects. However, we also conducted the analysis using the three other methods (PAR, RNK, INT), and unfortunately, results are very different:
+
+|  | ART | PAR | RNK | INT |
+|------|-----|-----|-----|-----|
+| Coupling | $3.2 \times 10^{-19}$ | $4.9 \times 10^{-18}$ | $9.5 \times 10^{-20}$ | $5.4 \times 10^{-19}$ |
+| Perspective | $.0016$ | $.20$ | $.25$ | $.29$ |
+| Coupling $\times$ Perspective | $.015$ | $.78$ | $.90$  | $.95$ |
+: *p*-values keeping two only significant digits {.sm}
+
+All four methods agree that there is strong evidence about the effect of Coupling. Nevertheless, the results of PAR, RNK, and INT for the effects of Perspective and and Coupling $\times$ Perspective do not support the authors' conclusions. The discripency between the $p$-values returned by these methods and the $p$-values of ART are striking.   
+
+We also conducted an analysis with a cumulative probit model, using a Bayesian statistics framework [@Burkner:2019], without informative priors:
+
+```{r, eval=FALSE}
+library(brms)
+fit_ownership <- brm(
+  formula = ownership ~ Coupling + Perspective + Coupling:Perspective 
+    + (1|Dyad/Subject),
+  data = ownership_data,
+  family = cumulative("probit")
+)
+```
+
+ For an extensive discussion about why using a Bayesian framework for this type of models, we refer interested readers to @Liddell:2018. This method has not been common in the HCI literature, but we have previously used for the analysis of ordinal responses in two user studies [@fages:2022].
+
+Below, we present estimates of the regression coefficients of the model together with their $95\%$ credible intervals: 
+
+| Coupling (Coupled $-$ Uncoupled) | Perspective (1P $-$ 2P) | Coupling $\times$ Perspective |
+|------|-----|-----|
+| $-1.95$ $[-2.58, -1.35]$ | $0.28$ $[-0.39, 0.95]$ | $-0.09$ $[-0.89, 0.75]$ |
+: Regression coefficients and their $95\%$ credible intervals, expressed as standard deviations of the latent variable {.sm}
+
+The above results suggest that participants' sense of ownership was $1.95$ standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. The whole $95\%$  is far below zero, which means that there is overwhelming evidence that this effect is strong. Note that credible intervals are analogous to the confidence intervals of frequential statistics. However, unlike confidence intervals, they allow for a probabilistic interpretation. For example, we can conclude that the above credile interval contains the true difference in people's sense of ownership with a $95\%$ probability.   
+
+In contrast, we observe that the credible intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. These results are consistent with the results of our *lmer* models using PAR, RNK, and INT. In conclusion, using ART to analyse these data is problematic. Here, the presense of a strong effect on the first factor seems to make ART sensitive in detecting other non-existent effects. 
+
+One may notice that a single entry (out of 152 entries) in the above dataset is missing, so the design is slightly unbalanced and the ARTool again outputs a warning. Could this imbalance explain ART's failure? The answer is negative. If we complete the missing row with a neutral value (e.g., a 3 in the 5-level ordinal scale) to dismiss the warning, the resulting *p*-values will still be very similar to the ones reported above. 
 
 ## Recommendations {#recommendations}
 
