@@ -225,9 +225,9 @@ We also examine effect size measures, which are commonly reported in scientific 
 
 |        | PAR  | LOG  | ART | RNK | INT |
 |--------|------|------|-----|-----|-----|
-| Difficulty  | $.64\ [.55, 1.00]$  | $.83\ [.79, 1.00]$  |  $.80\ [.76, 1.00]$ | $.83\ [.79, 1.00]$ | $.81\ [.77, 1.00]$  |
-| Technique   | $.04\ [.00, 1.00]$ | $.03\ [.00, 1.00]$  | $.11\ [.03, 1.00]$ | $.02\ [.00, 1.00]$ | $.03\ [.00, 1.00]$ |
-| Difficulty $\times$ Technique | $.10\ [.00, 1.00]$ | $.08\ [.00, 1.00]$  | $.16\ [.04, 1.00]$| $.06\ [.00, 1.00]$| $.06\ [.00, 1.00]$ |
+| Difficulty  | $.64\ [.55, 1.0]$  | $.83\ [.79, 1.0]$  |  $.80\ [.76, 1.0]$ | $.83\ [.79, 1.0]$ | $.81\ [.77, 1.0]$  |
+| Technique   | $.04\ [.00, 1.0]$ | $.03\ [.00, 1.0]$  | $.11\ [.03, 1.0]$ | $.02\ [.00, 1.0]$ | $.03\ [.00, 1.0]$ |
+| Difficulty $\times$ Technique | $.10\ [.00, 1.0]$ | $.08\ [.00, 1.0]$  | $.16\ [.04, 1.0]$| $.06\ [.00, 1.0]$| $.06\ [.00, 1.0]$ |
 : partial $\eta^2$ and its 95\% confidence interval {.sm}
 
 
@@ -397,7 +397,7 @@ But how meaningful is this interpretation of interaction? Time measurements are 
 
 In our example in @fig-interactions, each task (typing a piece of text) is a sequence of elementary tasks (typing a word). We thus expect both means and standard deviations to grow as a function of the number of words in the text. In this case, meaningful interaction effects (e.g., Tech B suffers from more intense fatigue effects in longer texts) will be manifested as growing *time ratios* (i.e., as proportional differences) -- not as growing absolute time differences. An easy way to visually assess the presence of such interactions is to show time on a logarithmic scale, as shown in @fig-interactions (middle). Notice that the lines in the plot are now almost parallel, suggesting no interaction effect.
 
-**Removable interactions.** The concept of *removable interactions*, that is, interactions that disappear after applying a monotonic non-linear transformation, was introduced by @Loftus:1978.  Over three decades later, @Wagenmakers:2012 revisited this work and found that psychology researchers are largely unaware of the concept, drawing incorrect conclusions about psychological effects on the basis of meaningless interactions. This issue also extends to data collected from questionnaires [You don't apply applying a monotonic non-linear transformation in the following example.]{.g}. The right plot in @fig-interactions shows experimental results for perceived performance. The line trends suggest an interaction effect, [in the inverse now direction]{.f} [really?]{.g}. Unfortunately, the scale is ordinal, which means that distances between the five levels of the scale may not be perceived as equal by people. Furthermore, the scale is bounded, so the reason that the two lines are not parallel might be simply due to the absence of additional levels beyond the extreme "very slow" ranking. Concluding that there is a meaningful interaction here is [likely to be incorrect]{.f}[may be incorrect]{.g}. 
+**Removable interactions.** The concept of *removable interactions*, that is, interactions that disappear after applying a monotonic non-linear transformation, was introduced by @Loftus:1978.  Over three decades later, @Wagenmakers:2012 revisited this work and found that psychology researchers are largely unaware of the concept, drawing incorrect conclusions about psychological effects on the basis of meaningless interactions. This issue also extends to data collected from questionnaires [You don't apply applying a monotonic non-linear transformation in the following example.]{.g}. The right plot in @fig-interactions shows results for perceived performance. The line trends suggest an interaction effect, [in the inverse now direction]{.f} [really?]{.g}. Unfortunately, the scale is ordinal, which means that distances between the five levels of the scale may not be perceived as equal by people. Furthermore, the scale is bounded, so the reason that the two lines are not parallel might be simply due to the absence of additional levels beyond the extreme "very slow" ranking. Concluding that there is a meaningful interaction here could be incorrect. @Liddell:2018 extensively discuss how ordinal scales deform interactions.
 
 **Formal testing.** We now formally test the above interactions by using ANOVA with different transformation methods. Below, we present the *p*-value returned by each method for task-completion time: 
 
@@ -415,7 +415,7 @@ We also test the interaction effect on the ordinal dependent variable:
 | $.0020$ | $.00075$ | $.0067$ | $.0037$ |
 : *p*-values for interaction effect on perceived performance {.sm}
 
-Notice that we omit the log-transformation method (*LOG*), as it is not relevant here. All *p*-values are low, suggesting that an interaction effect exists. However, if we conduct a more appropriate analysis using an ordered probit model [@Liddell:2018; @Burkner:2019], we will reach the conclusion that there is no supportive evidence for such an effect (check our analysis in the supplementary material). We return to these models in the following sections. 
+Notice that we omit the log-transformation method (*LOG*), as it is not relevant here. All *p*-values are low, suggesting that an interaction effect exists. However, if we conduct a more appropriate analysis using an ordered probit model [@Liddell:2018; @Burkner:2019], we will reach the conclusion that there is no supportive evidence for such an effect (check our analysis in the supplementary material). We return to these models in later sections. 
 
 ### Approach {#approach}
 Our analysis shows that inference errors are not simply due to the lack of robustness of a statistical procedure. In the case of interaction effects, errors will also emerge when the procedure makes inference on the wrong scale. As @Wagenmakers:2012 explain, *"the dependent variable reflects merely the output of a latent psychological process",* and unfortunately, *"in most experimental paradigms the exact relationship between unobserved process and observed behavior is unknown ..."* 
@@ -755,7 +755,7 @@ Varying the ratio $r_{sd}$ of standard deviations between the levels of $X_1$. T
 
 **Main effects**. We begin by investigating how the four methods detect main effects on $X_1$. The interpretation of results in this scenario is challenging due to differences in the original populations — although they share the same means (and medians), their variances differ. Depending on the null hypothesis of interest, conclusions may vary. Complicating matters further, non-linear transformations can result in distributions with differing means and medians. Consequently, the choice of statistical method may lead to different outcomes; one method may be sensitive to mean differences while others to median differences.
 
-In @fig-unequal-main-1, we present the percentage of times each method rejects the null hypothesis ($\%$ positives) at a significance level of $\alpha = .05$. If the null hypothesis of interest posits that "$X_1$ has no effect on the mean of the latent variable $Y$," then these instances should be considered Type I errors.
+@fig-unequal-main-1 presents the percentage of times each method rejects the null hypothesis ($\%$ positives) at a significance level of $\alpha = .05$. If the null hypothesis of interest posits that "$X_1$ has no effect on the mean of the latent variable $Y$," then these instances should be considered as Type I errors. Under normal distributions, all methods either moderately inflate or deflate error rates as $r_{sd}$ increases. For the $4 \times 3$ within-subjects design ($r_{sd} \ge 2.5$), error rates for PAR, RNK, and ART reach levels of around $7-8\%$, while error rates for INT drop below $3\%$ for the $2 \times 4$ mixed design ($r_{sd} \ge 2.5$).
 
 ::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -770,11 +770,9 @@ plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", v
 The percentage of positives (i.e., rejecting the null hypothesis) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$). Depending on the hypothesis of interest, these percentages can be interpreted as Type I error rates ($\alpha = .05$).
 :::
 
-Under normal distributions, positives can be reliably interpreted as Type I errors. We observe that as $r_{sd}$ increases, all methods either moderately inflate or deflate error rates. Notably, for the $4 \times 3$ within-subjects design ($r_{sd} \ge 2.5$), error rates for PAR, RNK, and ART reach levels of around $7-8\%$, while error rates for INT drop below $3\%$ for the $2 \times 4$ mixed design ($r_{sd} \ge 2.5$).
+The performance of RNK and INT remains unchanged across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates. 
 
-The performance of RNK and INT is consistent across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates among the four methods.
-
-We also investigate the influence of unequal variances among the levels of $X_1$ on Type I error rates for $X_2$, as depicted in @fig-unequal-main-2. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions. The observed error rates are comparatively more moderate under the $2 \times 3$ between-subjects design.
+We also investigate the influence of unequal variances among the levels of $X_1$ on positive rates for $X_2$, as depicted in @fig-unequal-main-2. Those can be reliably considered as Type I errors because source populations defined by $X_2$ are identical. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions. The observed error rates are comparatively low for the $2 \times 3$ between-subjects design.
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -871,7 +869,7 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = -5, max = 103, ytitle = 'R squared')
 ```
-$R^2$ scores assessing the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
+$R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 @fig-effect-main-scatterplots illustrates the relationship between the $\eta^2$ estimated by each method and the $\eta^2$ of the ground truth method for $g = 2$. For clarity, we focus on the normal, log-normal, and ordinal distributions. For each method, we present 100 data points. Proximity of data points to the black diagonal indicates closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while point under the line are likely to underestimate the effect size. PAR tends to underestimate effect sizes under the log-normal distribution. This result is consistent with the observed low power of the method. In contrast, ART's estimates are spread across both sides, so the method often exaggerates effect sizes. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
@@ -906,7 +904,7 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX2", xvar = "effectX2", min = -5, max = 103, ytitle = 'R squared')
 ```
-$R^2$ scores assessing the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
+$R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 Finally, we show results for the interaction effect in @fig-effect-interaction. $R^2$ can approach zero or even become negative under certain conditions, implying that effect size estimates are unreliable. Both RNK and INT start failing when the range of effets becomes large. Additionally, we observe low $R^2$ values for all methods when using the ordinal scale. 
@@ -925,13 +923,14 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1X2", xvar = "effectX1X2", min = -51, max = 105, ytitle = 'R squared')
 ```
-$R^2$ scores assessing the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
+$R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 
 ## Case studies {#casestudies}
 
-### Binary responses: Object-manipulation detection [@Martin:2023]
+### Binary responses
+
 @Martin:2023 ran two experiments to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. They ran two experiments, but we focus here on their first experiment that evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of a manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
 
 Their design has two particularities. First, the response variable is binary (Detected vs. Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART: 
@@ -951,15 +950,15 @@ In their ART model, the authors treated the participant identifier and the task 
 | Type $\times$ Distance $\times$ Complexity | $.00055$ | $.00016$ | $.00013$ |
 : *p*-values keeping two significant digits - Type III hypothesis tests {.sm}
 
-There are notable differences among the results obtained from the three methods. Specifically, GLMER provides evidence for a main effect of Type ($p=.036$ compared to $p=.92$ for ART) and an interaction effect Type $\times$ Distance ($p=.013$ compared to $p=.71$ for ART). In contrast, its $p$-value for the main effect of distance is significantly larger ($p=.29$ compared to $p=.031$ for ART). These discrepancies may raise questions regarding the key conclusions of the paper regarding the influence of the above factors.
+There are notable differences among the results obtained from the three methods. Specifically, GLMER provides evidence for a main effect of Type ($p=.036$ compared to $p=.92$ for ART) and an interaction effect Type $\times$ Distance ($p=.013$ compared to $p=.71$ for ART). In contrast, its $p$-value for the main effect of distance is significantly larger ($p=.29$ compared to $p=.031$ for ART). These discrepancies may raise questions regarding conclusions of the paper on the influence of the above factors.
 
 It is important to note, however, that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. The ARTool raises a warning for such unbalanced designs:
 
 > *F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.*
 
-We have not examined how design imbalance affects the accuracy of ART and the other rank-based methods. 
+We have not examined how design imbalance affects ART's accuracy. 
 
-**Simulation with balanced data.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
+**Monte Carlo simulation.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
 As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ ---average success rate found by @Martin:2023--- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
 
@@ -977,7 +976,8 @@ As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design
 
 We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher rate of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). In conclusion, ART is completely inappropriate when responses are binary, even when the average rate of each binary outcome is close to $50\%$. 
 
-### Likert items: Sense of ownership [@Rosso:2023]
+### Likert items 
+
 @Rosso:2023 conducted a body-swap experiment, where pairs participants ("dyads") performed a joint-finger tapping task under four different conditions, structured under two different factors:
 
 - *Coupling*. Participants saw either their own hand (*Coupled*) or their partner's hand (*Uncoupled*).
@@ -997,7 +997,9 @@ Thus, the authors found supportive statistical evidence for both main effects an
 | Coupling $\times$ Perspective | $.015$ | $.78$ | $.90$  | $.95$ |
 : *p*-values keeping two significant digits {.sm}
 
-All four methods agree that there is strong evidence about the effect of Coupling. Nevertheless, the results of PAR, RNK, and INT for the effects of Perspective and and Coupling $\times$ Perspective do not support the authors' conclusions. The discripency between the $p$-values returned by these methods and the $p$-values of ART are striking.   
+All four methods agree that there is strong evidence about the effect of Coupling. Nevertheless, the results of PAR, RNK, and INT for the effects of Perspective and and Coupling $\times$ Perspective do not support the authors' conclusions. The discripency between the $p$-values returned by these methods and the $p$-values of ART are striking. 
+
+One may notice that a single entry (out of 152 entries) in the above dataset is missing, so the design is slightly unbalanced, and the ARTool again outputs a warning. Could this imbalance explain the above differences? The answer is negative. If we complete the missing row with a neutral value (e.g., a 3 in the 5-level ordinal scale) to dismiss the warning, the resulting *p*-values will still be very similar to the ones reported above.  
 
 We also conducted an analysis with a cumulative probit model, using a Bayesian statistics framework [@Burkner:2019], without informative priors:
 
@@ -1005,7 +1007,7 @@ We also conducted an analysis with a cumulative probit model, using a Bayesian s
 library(brms)
 fit_ownership <- brm(
   formula = ownership ~ Coupling + Perspective + Coupling:Perspective 
-    + (1|Dyad/Subject),
+    + (1|Dyad/Participant),
   data = ownership_data,
   family = cumulative("probit")
 )
@@ -1024,9 +1026,70 @@ The above results suggest that participants' sense of ownership was $1.95$ stand
 
 In contrast, we observe that the credible intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. These results are consistent with the results of our *lmer* models using PAR, RNK, and INT. In conclusion, using ART to analyse these data is problematic. Here, the presense of a strong effect on the first factor seems to make ART sensitive in detecting other non-existent effects. 
 
-One may notice that a single entry (out of 152 entries) in the above dataset is missing, so the design is slightly unbalanced, and the ARTool again outputs a warning. Could this imbalance explain ART's failure? The answer is negative. If we complete the missing row with a neutral value (e.g., a 3 in the 5-level ordinal scale) to dismiss the warning, the resulting *p*-values will still be very similar to the ones reported above. 
+### Likert scales
 
-### Proportions: AUC and false alarm rate [@Siestrup:2023]
+Other authors have used ART to analyze Likert scales that group several items together. For example, @Karolus:2023 investigate different methods (refer to as "gamification types") for communicating feedback on users' task proficiency, such as during a writing task. The authors used a $3 \times 2$ between-participants design to structure the study, testing the following two factors:
+
+- *Gamification type*. Each participants was presented one of the following elements providing feedback: (i) a *progress bar* (ii) an *Emoji*, or (iii) *none*. 
+
+- *Feedback type*. Feedback was either *continuous* or *revision*-based (provided at the end of the task to help participants revise). 
+
+The authors collected responses from 147 participants through the Amazon Mechanical Turk Service. They analyzed a range of measures, but here we focus on their analysis of participants' responses to the Situational Motivation Scale (SIMS) [@Blanchard_SIMS:2000]. The scale consists of four subscales (intrinsic motivation, identified regulation, external regulation, and amotivation), where each contains four 7-level Likert items. For each subscale, the authors conducted an ANOVA using ART on the average score. Below, we present the results of the same analysis with all four methods for intrinsic motivation and identified regulation:
+
+|  | ART | PAR | RNK | INT |
+|------|-----|-----|-----|-----|
+| Gamification | $.0057$ $(0.07)$| $.010$ $(0.06)$| $.0058$ $(0.07)$| $.0062$ $(0.07)$|
+| Feedback | $.77$ | $.59$ | $.56$ | $.55$ |
+| Gamification $\times$ Feedback | $.94$ | $.69$ | $.94$  | $.86$ |
+: Intrinsic motivation: *p*-values keeping two significant digits (partial $\eta^2$ in parentheses when $p < .05$) {.sm}
+
+|  | ART | PAR | RNK | INT |
+|------|-----|-----|-----|-----|
+| Gamification | $.019$ $(0.05)$ | $.011$ $(0.06)$ | $.013$ $(0.06)$ | $.0085$ $(0.07)$|
+| Feedback | $.55$ | $.74$ | $.42$ | $.55$ |
+| Gamification $\times$ Feedback | $.99$ | $.86$ | $.98$  | $.93$ |
+: Identified regulation: *p*-values keeping two significant digits (partial $\eta^2$ in parentheses when $p < .05$) {.sm}
+
+Overall, differences among the results of the four methods are reasonably small and support the authors' conclusions. We omit results for external regulation and amotivation for which all *p*-values are greater than $.05$ --- again, results are consistent among the four methods. There are many situations in which the above methods will behave correctly and produce similar results. However, it is difficult to know in advance when problems arise. For example, @Siestrup:2023 ran an experiment to investigate how different types of modifications in video sequences describing a story affect people's episodic memory. The investigators included a rating task, asking participants to rate how much the storyline of modified episodes deviated from an original version (from $1 = 0\%$ different to $6 = 100\%$ different). They then used ART to analyze aggregated scores from multiple ratings per condition. Below, we present the results of our re-analysis with the four different methods:
+
+|  | ART | PAR | RNK | INT |
+|------|-----|-----|-----|-----|
+| Version | $4.5 \times 10^{-20}$ | $2.7 \times 10^{-30}$ | $4.7 \times 10^{-20}$ | $2.0 \times 10^{-17}$ |
+| Modification | $.034$ | $.11$ | $.23$ | $.40$ |
+| Version $\times$ Modification | $.19$ | $.17$ | $.18$  | $.058$ |
+: *p*-values keeping two significant digits {.sm}
+
+We see now that results from different methods can lead to different conclusions. In particular, the authors' conclusion that *"modified videos that had already been presented during the fMRI session received lower story-change ratings than those that had been presented in the original version before"* [@Siestrup:2023], based on the observed effect of the second factor (Modification) is only supported by ART. Similarly, effect estimates for this factor vary greatly among methods, although their wide confidence intervals indicate that those estimates are highly uncertain: 
+
+|  | ART | PAR | RNK | INT |
+|------|-----|-----|-----|-----|
+| partial $\eta^2$| $0.12$ $[.01, 1.0]$ | $0.07$ $[.00, 1.0]$| $0.04$ $[.00, 1.0]$| $0.02$ $[.00, 1.0]$|
+: effect size estimates for Modification and their $95\%$ confidence intervals {.sm}
+
+Several authors have argued that parametric statistics are robust enough to be used with Likert scales that group multiple items together [@Carifio:2008], or with individual Likert items with at least five levels [@Harper:2015]. However, @Liddell:2018 identified several situations in which parametric tests may fail, even when they are applied to averages of multiple ordinal items. For example, they can inflate errors when the the variance is not constant among conditions and can deform interactions. Unfortunately, rank transformations suffer from similar problems. For example, we observed that all methods can detect non-existent interactions in the presence of strong main effects (see @fig-interactions). We can easily show that such problems persist even when we take averages of multiple correlated items.
+
+@Liddell:2018 recommend using ordered-probit models for the analysis of Likert scales. @Burkner:2019 demonstrate how to fit such models through specific examples. Here, we apply their approach to analyze participants' responses for intrinsic motivation [@Karolus:2023]. We do not average the individual Likert items of the scale. We treat instead items and participants as a random effects through the following mixed-effects model:  
+
+```{r, eval=FALSE}
+library(brms)
+fit_intrinsic_motivation <- brm(
+  formula = intrinsic_motivation ~ 1 + Gamification:Feedback  
+    + (1|Item) + (1|Participant),
+  data = sims_data,
+  family = cumulative("probit")
+)
+```
+Fitting this model allows us to estimate the difference between the progresive bar and the Emoji representation to be $1.12$, $95\%$ Credible Interval $= [0.13, 2.05]$, where the units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
+
+<!-- **Simulated data.** Do rank-transformation methods address the issues raised by @Liddell:2018?  
+
+
+We run a Monte Carlo experiment the simulates the study of @Karolus:2023, but we focus instead on a fully-balanced $3 \times 2$ design with a cell size of $n=25$. Since we   
+
+
+To this end, we consider a $3 \times 2$ between-participants design and fix the cell size to $n = 25$. This    -->  
+
+<!-- ### Proportions: AUC and false alarm rate [@Siestrup:2023]
 @Siestrup:2023 ran an experiment to study how different types of modifications in video sequences describing a story affect people's episodic memory. On the first day, 37 participants encoded videos (i.e., they watched them several times) of short toy stories. On the next day, the participants returned for an fMRI session and were presented either the originally encoded videos or modified versions of them. On the third day, the participants completed a post-fMRI memory test. They rewatched original and modified versions of the videos and had to decide whether the stories in the videos had been encoded during the first day. We focus on two response variables that measure participants' memory accuracy in the post-fMRI memory test: false alarm rate (FAR) and area under the curve (AUC).
 
 The experiment studied the effect of two factors:
@@ -1050,7 +1113,7 @@ The authors ran a $2 \times 2$ repeated-measures ANOVA using ART to test their e
 | Version | $1.7 \times 10^{-17}$ ($0.87$)| $1.3 \times 10^{-10}$ ($0.69$) | $8.3 \times 10^{-14}$ ($0.79$) | $3.1 \times 10^{-12}$ ($0.75$)|
 | Modification $\times$ Version | $.0012$ ($0.26$)| $.016$ ($0.15$) | $.036$ ($0.12$) | $.026$ ($0.13$) |
 : AUC: *p*-values keeping two significant digits and partial $\eta^2$ (in parentheses) {.sm}
-
+ -->
 
 
 ## Recommendations {#recommendations}
