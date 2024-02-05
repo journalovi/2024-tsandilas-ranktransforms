@@ -874,21 +874,36 @@ plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "e
 $R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
-@fig-effect-main-scatterplots illustrates the relationship between the $\eta^2$ estimated by each method and the $\eta^2$ of the ground truth method for $g = 2$. For clarity, we focus on the normal, log-normal, and ordinal distributions. For each method, we present 100 data points. Proximity of data points to the black diagonal indicates closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while point under the line are likely to underestimate the effect size. PAR tends to underestimate effect sizes under the log-normal distribution. This result is consistent with the observed low power of the method. In contrast, ART's estimates are spread across both sides, so the method often exaggerates effect sizes. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
+@fig-effect-main-scatterplots illustrates the relationship between the $\eta^2$ estimated by each method and the $\eta^2$ of the ground truth method, when $g = 2$. For clarity, we focus on the normal, log-normal, and ordinal distributions. Proximity of data points to the black diagonal indicates closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line ae likely to underestimate it. We observe that PAR tends to underestimate effect sizes under the log-normal distribution, which is consistent with the low power of the method for this distribution (see @fig-power-main-1). In contrast, ART's estimates are spread across both sides. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
 
 ::: {#fig-effect-main-scatterplots}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
 source("effect_sizes_scatterplots.R")
 prefix <- "6_scatter-Effect_Size"
-
 df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
-fig <- plotlyScatter(df)
+fig <- plotlyScatter(df, max = 0.51)
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for main effect on $X_1$ (for $g = 2$). We show results for normal, log-normal, and ordinal data. We invite readers to interact with the plots to filter the scatterplots or zoom into smaller ranges.  
+Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-2, 2]$. 
 :::
 
+@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects ($g=8$). Notice that effects sizes are severely distorted by all four methods. We invite the reader to zoom in on the lower range of values ($\eta^2 < 0.6$), where ART's estimates for the two non-normal distributions appear quasi-random.
+
+::: {#fig-effect-main-scatterplots-2}
+```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
+source("effect_sizes_scatterplots.R")
+prefix <- "6_scatter-Effect_Size-g8"
+
+df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
+fig <- plotlyScatter(df, max = 1.1)
+
+fig
+```
+Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-8, 8]$. 
+:::
+
+<!-- 
 @fig-effect-main-2 presents $R^2$ trends for the second factor $X_2$. 
  These trends mirror the observed patterns for $X_1$ in @fig-effect-main-1. However, upon closer inspection of the results for the $2 \times 3$ between-subjects and the $2 \times 4$ mixed designs  across the three discrete distributions, the differences between the four methods are less pronounced.
 
@@ -908,8 +923,9 @@ plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX2", xvar = "e
 ```
 $R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
+ -->
 
-Finally, we show results for the interaction effect in @fig-effect-interaction. $R^2$ can approach zero or even become negative under certain conditions, implying that effect size estimates are unreliable. Both RNK and INT start failing when the range of effets becomes large. Additionally, we observe low $R^2$ values for all methods when using the ordinal scale. 
+We also show results for the interaction effect in @fig-effect-interaction. $R^2$ can approach zero or even become negative under certain conditions, implying that effect size estimates cannot be trusted. Both RNK and INT start failing when the range of effets becomes large. Additionally, we observe low $R^2$ values for all methods under binomial and ordinal scale. 
 
 ::: {#fig-effect-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}

@@ -5,7 +5,7 @@
 
 library(reshape2)
 
-plotlyScatter <- function(df, xlab = "eta squared (ground truth)", ylab= 'eta squared', xvar = "etaX1", yvar = paste(xvar, "_", sep ="")) {
+plotlyScatter <- function(df, xlab = "eta squared (ground truth)", ylab= 'eta squared', xvar = "etaX1", yvar = paste(xvar, "_", sep =""), max = 0.4) {
   # aesthetics
 
   symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")
@@ -21,8 +21,6 @@ plotlyScatter <- function(df, xlab = "eta squared (ground truth)", ylab= 'eta sq
   menuItems <- c("4x3 within", "2x3 between", "2x4 mixed")
   xvarnames <- c(paste(xvar,"4x3",sep="."), paste(xvar,"2x3",sep="."), paste(xvar,"2x4",sep="."))
   yvarnames <- c(paste(yvar,"4x3",sep="."), paste(yvar,"2x3",sep="."), paste(yvar,"2x4",sep="."))
-
-  max <- max(0.4, 0.4)
 
   createPlot <- function(data, dnames, symbols) {
     p <- plot_ly(colors = palette, symbols = symbols) %>%  add_trace(data=ldata, x = ~x, y = ~y, type = 'scatter', mode ="lines", line = list(color = "black"), showlegend = FALSE)
