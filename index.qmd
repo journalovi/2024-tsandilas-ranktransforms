@@ -483,7 +483,7 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 6. We assess the above measures for both main and interaction effects and examine how growing effects on one or two factors affect the Type I error rate on other factors and their interactions. 
 
-Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also tested unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. However, since unbalanced designs are not common in HCI experimental research, we do not consider them here. 
+Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also tested unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. However, to simplify our analysis, we do not consider them here.
 
 ### Statistical modeling
 To model the latent variable $Y$, we use a two-way (two factors) or a three-way (three factors) mixed-effects model. For simplicity, we explain here the model for two factors. Its extension to three factors is straightforward. The model has the following form:
