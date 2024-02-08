@@ -2,7 +2,7 @@ rm(list=ls())
 library(lmerTest)
 library(ARTool)
 library(effectsize) 
-library(brms)
+
 
 inverseNormalTransform = function(x){
    qnorm((rank(x) - 0.5)/length(x))
@@ -28,9 +28,16 @@ mp_rnk <- lmer(rank(PerceivedPerformance) ~ Difficulty*Technique + (1|SID), data
 mp_int <- lmer(inverseNormalTransform(PerceivedPerformance) ~ Difficulty*Technique + (1|SID), data = df)
 mp_art <- art(PerceivedPerformance ~ Difficulty*Technique + (1|SID), data = df)
 
-mp_brm <- brm(
-  formula = PerceivedPerformance ~ mo(Difficulty)*Technique + (1|SID),
-  data = df,
-  family = cumulative("probit")
-)
+# Also try the ANOVA-type statistic (ATS)
+# https://www.quantargo.com/help/r/latest/packages/nparLD/2.1/nparLD
+library(nparLD)
+mp_ats <- nparLD(PerceivedPerformance ~ Difficulty*Technique, data=df, subject="SID", description=FALSE)
+
+# And finally, we comnduct an analysis with a probit model -- This is the recommended one
+library(brms)
+ mp_brm <- brm(
+   formula = PerceivedPerformance ~ mo(Difficulty)*Technique + (1|SID),
+   data = df,
+   family = cumulative("probit")
+ )
 

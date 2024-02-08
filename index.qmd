@@ -235,22 +235,29 @@ We observe that ART exaggerates both the effect of *Technique* and its interacti
 
 
 ### Overview
-The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. Even worse, while the rank transformation has been criticized for inflating errors for interaction only effects, ART inflates errors for both interaction and main effects, as we observed in our example. 
+The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. Even worse, while the rank transformation can inflate Type I and Type II errors on interactions, ART struggles to correctly infer both main and interaction effects. 
 
 ## Background {#background}
 
-### Non-parametric statistics
-Parametric statistical procedures, such as ANOVA, are known to be fairly robust to deviations from normality assumptions, and this is especially the case when sample sizes are large. However, in many situations [...]
-(Continue with an overview of assumption violations and non-parametric statistical methods and common tests.)
+### Nonparametric statistics
+Traditional analysis of variance (ANOVA) and t-tests are commonly known as *parametric* statistical procedures because they make assumptions about the underlying data distributions and their parameters, such their means and standard deviations. In contrast, *nonparametric* statistical procedures make fewer or minimal assumptions about the underlying distributions. Representative examples of nonparametric methods are the Mann-Whitney U test [@Mann–Whitney-U] and Kruskal–Wallis test [@Kruskal-Wallis] for independent samples, and the Wilcoxon sign-rank test [@Wilcoxon] and Friedman test [@Friedman] for paired samples or repeated measures. These methods are widely used in research as they allow to work with distributions of arbitrary shapes, while real data often deviate from the gaussian model (normal distribution) or violate other assumptions, such as the homogeneity of variance or the sphericity assumption. 
 
-### Rank transformations
-Unfortunately, each non-parametric statistical test addresses a specific experimental design. There is no handy test for more complex models such as ones that contain multiple independent variables. Rank transformations [@conover:1981] 
+### Rank transformations and nonparametric tests for designs with multiple factors
+Despite their merits, common nonparametric methods pose several constraints, such as they support simple experimental designs with one only factor. This is a major limitation compared to ANOVAs or the more versatile mixed-effect models [@Kaptein:2016]. 
+
+Rank transformations [@conover:1981] aim to close the gap between nonparametric statistics and ANOVAs, and other linear models. The simple rank transform consists in sorting the raw observations and replacing them by their ranks. In case of ties, tied observations are assigned their average rank. This simple process creates a uniform distribution, which allows to directly apply an ANOVA. The reason is that the normality assumption of ANOVA concerns the sampling distribution of the mean, not the distribution of individual population values. And fortunately, for uniform distributions, the sampling distribution of the mean is close to normal even very small samples.
+
+@conover:1981 has shown that ... 
+
+Rank transformations  
 [@higgins:1990]
 [@Salter:1993]
 [@Mansouri:1995]
 [@Beasley:2009]
 
 [@Payton:2006] To check: This paper tests Poisson data and surprisingly, it shows that PAR and ART work well for interaction effects.
+
+Alternative nonparametric approaches such as ATS [@Brunner_ATS:2021], which was proposed for Likert scales in HCI by @Kaptein:2010. 
 
 ### The use of ART in experimental research 
 [F: Pesent the survey of papers using ART here?]{.f}
@@ -301,7 +308,7 @@ ART aims to correct this problem. However, non-linear transformations come into 
 ### What is the null hypothesis of interest?
 To compare different statistical methods, we first need to assess whether these methods are comparable. If two methods are not designed to test the same null hypothesis, then making direct comparisons between them could be misleading. Let us elucidate this problem.  
 
-**ANOVA and non-parametric tests.** The traditional ANOVA is used to test differences between two or more means. However, non-parametric tests often target other population parameters. For example, the Wilcoxon sign-rank test is commonly described as a test of medians for paired samples [@McDonald:2014] and is used when population means are not of interest, e.g., when population distributions are skewed. The Mann-Whitney U and the Kruskal–Wallis tests are used, instead, to assess whether two or more independent samples come from the same population, or more technically, whether the mean ranks of the groups are the same. They can be only interpreted as tests of medians under the strict assumption that the population distributions of all groups have identical shapes and scales [@Divine:2018]. 
+**ANOVA and nonparametric tests.** The traditional ANOVA is used to test differences between two or more means. However, nonparametric tests often target other population parameters. For example, the Wilcoxon sign-rank test is commonly described as a test of medians for paired samples [@McDonald:2014] and is used when population means are not of interest, e.g., when population distributions are skewed. The Mann-Whitney U and the Kruskal–Wallis tests are used, instead, to assess whether two or more independent samples come from the same population, or more technically, whether the mean ranks of the groups are the same. They can be only interpreted as tests of medians under the strict assumption that the population distributions of all groups have identical shapes and scales [@Divine:2018]. 
 
 **Rank transformations.** Interpreting the null hypothesis of interest of a rank transformation is more challenging. @conover:1981 show that the simple rank transformation procedure *RNK* is equivalent to the Mann-Whitney U and Kruskal–Wallis tests for independent samples. For paired samples, however, it results in a new test, which is different than the Wilcoxon sign-rank test. Defining the null hypothesis of interest of ART is even more challenging because of the hybrid nature of the method. In particular, while ART is a rank-based transformation procedure, it aligns data with respect to means, where alignment is performed independently for each group.
 
@@ -412,12 +419,12 @@ We observe that *RNK* and *INT* lead to *p*-values very close to the *p*-value o
 
 We also test the interaction effect on the ordinal dependent variable:
 
-| PAR  | ART | RNK | INT |
-|------|-----|-----|-----|
-| $.0020$ | $.00075$ | $.0067$ | $.0037$ |
+| PAR  | ART | RNK | INT | ATS |
+|------|-----|-----|-----|-----|
+| $.0020$ | $.00075$ | $.0067$ | $.0037$ | $.0081$ |
 : *p*-values for interaction effect on perceived performance {.sm}
 
-Notice that we omit the log-transformation method (*LOG*), as it is not relevant here. All *p*-values are low, suggesting that an interaction effect exists. However, if we conduct a more appropriate analysis using an ordered probit model [@Liddell:2018; @Burkner:2019], we will reach the conclusion that there is no supportive evidence for such an effect (check our analysis in the supplementary material). We return to these models in later sections. 
+Notice that we omit the log-transformation method (*LOG*), as it is not relevant here. We conduct instead an analysis with the nonparametric ATS method [@Brunner_ATS:2021] as implemented in the R package *nparLD* [@nparLD]. All *p*-values are low, suggesting that an interaction effect exists. However, if we conduct a more appropriate analysis using an ordered probit model [@Liddell:2018; @Burkner:2019], we will reach the conclusion that there is no supportive evidence for such an effect (check our analysis in the supplementary material). We return to these models in later sections. An important observation here is that nonparametric procedures are not the answer to such problems.  
 
 ### Approach {#approach}
 Our analysis shows that inference errors are not simply due to the lack of robustness of a statistical procedure. In the case of interaction effects, errors will also emerge when the procedure makes inference on the wrong scale. As @Wagenmakers:2012 explain, *"the dependent variable reflects merely the output of a latent psychological process",* and unfortunately, *"in most experimental paradigms the exact relationship between unobserved process and observed behavior is unknown ..."* 
@@ -744,7 +751,7 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 :::
 
 ### Type I errors under unequal variances
-Many statistical procedures assume equal variances among all levels of each independent variable, or more strictly, among all possible pairs of independent variable levels (known as sphericity assumption in repeated-measures ANOVA). Non-parametric tests are often mistakenly considered to be free of such as assumptions, but as we discussed earlier, this is generally incorrect.
+Many statistical procedures assume equal variances among all levels of each independent variable, or more strictly, among all possible pairs of independent variable levels (known as sphericity assumption in repeated-measures ANOVA). nonparametric tests are often mistakenly considered to be free of such as assumptions, but as we discussed earlier, this is generally incorrect.
 
 Our fourth experiment evaluates the behavior of the four methods when populations on the latent variable $Y$ have unequal variances. We examine three 2-factor designs: (i) a $4 \times 3$ within-subjects design; (ii) a $2 \times 3$ between-subjects design; and (iii) a $2 \times 4$ mixed design. We set all effects to zero and then vary the ratio $r_{sd}$ of standard deviations between the levels of the first factor $X_1$. @fig-unequal shows the five ratios that we test when $X_1$ has two levels. When $X_1$ has additional levels ($4 \times 3$ design), their standard deviation is randomly drawn in a range between the standard deviations of the first two levels. 
 
@@ -855,6 +862,8 @@ In our final experiment, we assess the accuracy of each method in estimating sta
 
 Then, we compute the coefficient of determination $R^2$ ($R$ squared) over 1000 iterations, that is, the proportion of variation in the $\eta^2$ estimates of each method that is predictable from the estimate of the grand truth method. In each iteration, we randomly draw the magnitude of all three effects ($a_1$, $a_2$, and $a_{12}$) from a range $[-g, g]$, where $g$ varies in $\{0, 0.5, 1, 2, 4, 8\}$. This $R^2$ measure allows us to assess how close the estimates of each method are to estimates of the theoretically most appropriate method. We present the results for a sample size of $n=20$. 
 
+Notice that this experiments studies a wider range of scenarios, where main and interaction effects are present at the same time.
+
 **Main effects**. @fig-effect-main-1 depicts trends for the first factor $X_1$. All methods demonstrate high $R^2$ levels under the normal distribution. INT performs exceptionally well across all continuous distributions. However, its performance declines when the range of effects becomes large ($g \ge 4$). PAR's performance is strikingly low under the log-normal distribution and, to a lesser degree, under the exponential distribution. ART emerges as the second-worse method for these specific distributions. Finally, we observe low $R^2$ values for all methods under the binomial and ordinal distributions, where ART's performance is particularly problematic under low effect size ranges.  
 
 ::: {#fig-effect-main-1}
@@ -954,7 +963,7 @@ In this section, we examine some specific types of data through concrete example
 
 Their design has two particularities. First, the response variable is binary (Detected vs. Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART: 
 
-> *"Since we are dealing with **nonparametric, unbalanced data** and multiple factors, we apply the Aligned Rank Transform (ART) for non-parametric factorial ANOVA"* [@Martin:2023]. 
+> *"Since we are dealing with **nonparametric, unbalanced data** and multiple factors, we apply the Aligned Rank Transform (ART) for nonparametric factorial ANOVA"* [@Martin:2023]. 
 
 In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis to replicate the results presented in Table 1 [@Martin:2023]. However, we extended the analysis by employing two additional methods: (i) fitting a linear mixed-effects model (LMER function) without any transformation; and (ii) fitting a binomial generalized mixed-effects model (GLMER function with binomial distribution family). The latter method essentially performs a logistic regression and is considered the most appropriate parametric procedure for this type of data. Below, we present the *p*-values obtained from each method:
 
