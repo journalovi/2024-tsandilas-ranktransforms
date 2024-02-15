@@ -22,7 +22,10 @@ readData <- function(prefix, n = 20, alpha = .05, effectType = 0,
 	} 
 	else if(effectType == 5) {
 		df <- df[df$effectX1X2 > 0,]
+	} else if(effectType == 6) {
+		df <- df[(df$effectX1X2 > 0 & df$effectX1 > 0) | (df$effectX1X2 == 0 & df$effectX1 == 0),]
 	}
+
 
 	if(is.na(alpha)) return(df)
 	else return(df[df$alpha == alpha,])
@@ -87,6 +90,9 @@ reshapeByDesign <- function(df, dnames = c("Normal", "Log-normal", "Exponential"
 
 	df
 }
+
+
+
 
 #prefix <- "5_test-Power"
 #distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")

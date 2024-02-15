@@ -235,29 +235,35 @@ We observe that ART exaggerates both the effect of *Technique* and its interacti
 
 
 ### Overview
-The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. Even worse, while the rank transformation can inflate Type I and Type II errors on interactions, ART struggles to correctly infer both main and interaction effects. 
+The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. 
+
+<!-- Even worse, while the rank transformation can inflate Type I and Type II errors on interactions, ART struggles to correctly infer both main and interaction effects.  -->
 
 ## Background {#background}
 
 ### Nonparametric statistics
-Traditional analysis of variance (ANOVA) and t-tests are commonly known as *parametric* statistical procedures because they make assumptions about the underlying data distributions and their parameters, such their means and standard deviations. In contrast, *nonparametric* statistical procedures make fewer or minimal assumptions about the underlying distributions. Representative examples of nonparametric methods are the Mann-Whitney U test [@Mann–Whitney-U] and Kruskal–Wallis test [@Kruskal-Wallis] for independent samples, and the Wilcoxon sign-rank test [@Wilcoxon] and Friedman test [@Friedman] for paired samples or repeated measures. These methods are widely used in research as they allow to work with distributions of arbitrary shapes, while real data often deviate from the gaussian model (normal distribution) or violate other assumptions, such as the homogeneity of variance or the sphericity assumption. 
+Traditional analysis of variance (ANOVA) and t-tests are commonly known as *parametric* statistical procedures because they make assumptions about the underlying data distributions and their parameters, such their means and standard deviations. In contrast, *nonparametric* statistical procedures make fewer or minimal assumptions about the underlying distributions. Representative examples of nonparametric methods are the Mann-Whitney U test [@Mann-Whitney-U] and Kruskal–Wallis test [@Kruskal-Wallis] for independent samples, and the Wilcoxon sign-rank test [@Wilcoxon] and Friedman test [@Friedman] for paired samples or repeated measures. These methods are widely used in research as they allow to work with distributions of arbitrary shapes, while real data often deviate from the gaussian model (normal distribution) or violate other assumptions, such as the homogeneity of variance (dependant groups) or the sphericity assumption (repeated measures). All these nonparametric tests are based on ranks, i.e., the rank order of observations. 
 
-### Rank transformations and nonparametric tests for designs with multiple factors
-Despite their merits, common nonparametric methods pose several constraints, such as they support simple experimental designs with one only factor. This is a major limitation compared to ANOVAs or the more versatile mixed-effect models [@Kaptein:2016]. 
+### Rank transformations
+Common nonparametric methods pose significant analysis constraints compared to general linear models like ANOVA, as they only support simple experimental designs, e.g., containing a single independent variable (factor). Rank transformations aim to close the gap between nonparametric statistics and ANOVA.
 
-Rank transformations [@conover:1981] aim to close the gap between nonparametric statistics and ANOVAs, and other linear models. The simple rank transform consists in sorting the raw observations and replacing them by their ranks. In case of ties, tied observations are assigned their average rank. This simple process creates a uniform distribution, which allows to directly apply an ANOVA. The reason is that the normality assumption of ANOVA concerns the sampling distribution of the mean, not the distribution of individual population values. And fortunately, for uniform distributions, the sampling distribution of the mean is close to normal even very small samples.
+**The rank transform.** The simple rank transform consists in sorting the raw observations and replacing them by their ranks. In case of ties, tied observations are assigned their average rank. @conover:1981 showed that for one-factor designs, using ANOVAs on these ranks produces tests that are equivalent or good replacements of traditional nonparametric tests (see [Section 3](#interpretation)). However, a series of studies in the 80s raised caution flags on the use of the method, showing that it may confound main and interaction effects in two-factor and three-fractor experimental designs. For an extensive review of these studies, we refer readers to @Sawilowsky:1990.
 
-@conover:1981 has shown that ... 
+**Aligned rank transforms.** Given these negative results, many researchers turned to aligned (or adjusted) rank transformations. @Sawilowsky:1990 discusses a range of aligned rank-based transformation tests, where most focused on interactions. The intuition behind the the align rank transform is that the influence of main effects can removed from the interaction by subtracting their observed means. @higgins:1990 detail the method for two-way designs, while @wobbrock:2011 explain its generalization to more than two factors. We briefly present the key steps of the alignment technique, as it is necessary for understanding its main shortcomings.  
 
-Rank transformations  
-[@higgins:1990]
+
+
+
 [@Salter:1993]
 [@Mansouri:1995]
-[@Beasley:2009]
+
 
 [@Payton:2006] To check: This paper tests Poisson data and surprisingly, it shows that PAR and ART work well for interaction effects.
 
-Alternative nonparametric approaches such as ATS [@Brunner_ATS:2021], which was proposed for Likert scales in HCI by @Kaptein:2010. 
+**Inverse normal transform.** 
+[@Beasley:2009]
+
+**Other rank-based tests.** Alternative nonparametric approaches such as ATS [@Brunner_ATS:2021], which was proposed for Likert scales in HCI by @Kaptein:2010. 
 
 ### The use of ART in experimental research 
 [F: Pesent the survey of papers using ART here?]{.f}
@@ -267,6 +273,7 @@ To analyze how the ART is used in experimental research, we collected in Novembe
 ### Past warnings
 Include here all the background related to the 
 
+[@Toothaker:1994]
 [@casiez:2022] [@luepsen:2017; @luepsen:2018]
 
 Also, check those for heteroscedacity issues: [@Carletti:2005; @Leys:2010]
@@ -310,7 +317,7 @@ To compare different statistical methods, we first need to assess whether these 
 
 **ANOVA and nonparametric tests.** The traditional ANOVA is used to test differences between two or more means. However, nonparametric tests often target other population parameters. For example, the Wilcoxon sign-rank test is commonly described as a test of medians for paired samples [@McDonald:2014] and is used when population means are not of interest, e.g., when population distributions are skewed. The Mann-Whitney U and the Kruskal–Wallis tests are used, instead, to assess whether two or more independent samples come from the same population, or more technically, whether the mean ranks of the groups are the same. They can be only interpreted as tests of medians under the strict assumption that the population distributions of all groups have identical shapes and scales [@Divine:2018]. 
 
-**Rank transformations.** Interpreting the null hypothesis of interest of a rank transformation is more challenging. @conover:1981 show that the simple rank transformation procedure *RNK* is equivalent to the Mann-Whitney U and Kruskal–Wallis tests for independent samples. For paired samples, however, it results in a new test, which is different than the Wilcoxon sign-rank test. Defining the null hypothesis of interest of ART is even more challenging because of the hybrid nature of the method. In particular, while ART is a rank-based transformation procedure, it aligns data with respect to means, where alignment is performed independently for each group.
+**Rank transformations.** Interpreting the null hypothesis of interest of a rank transformation is more challenging. @conover:1981 show that the simple rank transformation procedure *RNK* is equivalent to the Mann-Whitney U and Kruskal–Wallis tests for independent samples. For paired samples, however, it results in a new test, which is different than the Wilcoxon sign-rank test and different than Friedman's test. Defining the null hypothesis of interest of ART is even more challenging because of the hybrid nature of the method. In particular, while ART is a rank-based transformation procedure, it aligns data with respect to means, where alignment is performed independently for each group.
 
 **Dealing with the interpretation of main effects.** To partly avoid these interpretation issues, we focus on effects that apply monotonic transformations to population distributions. This also ensures a monotonic relationship between different measures of central tendency such as medians and means (with the exception of the Cauchy distribution, where the mean is undefined). In other words, if a treatment increases the population mean, it will also increase the population median. We present an example in @fig-distributions. The figure shows two population distributions corresponding to the two intermediate levels of difficulty of our illustrative example (see @fig-example). We observe that the increased difficulty of the task translates both the population mean and the median to the right. In this case, we expect a statistical test to reject the null hypothesis, no matter whether it tests the population mean, the median, or the overall distribution shape.   
 
@@ -488,7 +495,7 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 5. In addition to Type I error rates, we compare the statistical power of the methods and also evaluate the quality of their effect size estimates.  
 
-6. We assess the above measures for both main and interaction effects and examine how growing effects on one or two factors affect the Type I error rate on other factors and their interactions. 
+6. We assess the above measures for both main and interaction effects and examine how growing effects on one or two factors affect the Type I error rate on other factors and their interactions. Furthermore, we assess how a growing interaction effect, either in isolation or in combination with a main effect, can affect the inference of main effects.
 
 Previous evaluations of rank transformation methods [@Beasley:2009; @luepsen:2018] have also tested unbalanced designs, where the cell size is not constant across all levels of a factor. When combined with unequal variances, unbalanced designs are often problematic for both parametric procedures [@blanca:2018] and rank transformation methods [@Beasley:2009; @luepsen:2018]. However, to simplify our analysis, we do not consider them here.
 
@@ -781,7 +788,7 @@ The percentage of positives (i.e., rejecting the null hypothesis) for the **main
 
 The performance of RNK and INT remains unchanged across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates. 
 
-We also investigate the influence of unequal variances among the levels of $X_1$ on positive rates for $X_2$, as depicted in @fig-unequal-main-2. Those can be reliably considered as Type I errors because source populations defined by $X_2$ are identical. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions. The observed error rates are comparatively low for the $2 \times 3$ between-subjects design.
+We also investigate the influence of unequal variances among the levels of $X_1$ on positive rates for $X_2$, as depicted in @fig-unequal-main-2. Those can be reliably considered as Type I errors because source populations defined by $X_2$ are identical. The error rates of PAR, RNK, and INT does not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions (check results for the $2 \times 4$ mixed design). The observed error rates are comparatively low for the $2 \times 3$ between-subjects design.
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -800,8 +807,46 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 :::
 
 
+### Main effects in the presence of interactions {#effect-sizes}
+In all previous experiments, we assumed zero interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. Our fifth experiment evaluates the Type I error rate of the methods in the presence of an interaction effect alone, or alternatively, in the presence of a simultanuous main effect. We focus again on the three 2-factor experimental designs that we evaluated for our previous experiment and set the sample size to $n = 20$.
+
+To simulate populations in which interactions emerge in the absence of main effects, we examine perfectly symmetric cross-interactions. To this end, we slighly change the method we use to encode the levels of each factor, such that levels are uniformly positioned around 0. For example, for a factor with three levels, we numerically encode the levels as $\{-0.5, 0, 0.5\}$, For a factor with four levels, we encode them as $\{-0.5, -0.1667, 0.1667, 0.5\}$. 
+
+**Interaction effect only**. We first test how the interaction effect alone influences the Type I error rate on $X_2$. @fig-interactions-main-2 presents our results. We observe that both PAR and ART fail for many configurations. Error rates are especially high in the case of the $4 \times 3$ within-subjects design and the $2\times 4$ mixed design under the log-normal and exponential distribution. ART exhibits the worst performance. In constrast, RNK and INT keep error rates close to nominal levels. When interaction effects become large ($a_{12} > 4$), they only start inflating errors under the binomial and ordinal scale. 
+
+::: {#fig-interactions-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "7_test_Interactions"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1X2", max = 104)
+
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{12}$ of the interaction effect $X_1 \times X_2$ ($n=20$)
+:::
+
+**Interaction effect combined with main effect**. We also evaluate the Type I error rate on $X_2$ when the interaction effect is combined with a main effect on $X_1$. @fig-interactions-main-3 presents our results. The error rates of ART and PAR now explode for all non-normal distributions and all three designs. But the performance of RNK and INT is also affected. Their error rates become extremely low under continuous distributions, which suggests a lack of power in detecting small main effects when strong effects of other factors are combined with strong interactions. In contrast, the Type I error of the two methods explodes under the binomial and ordinal scale. Interestingly, RNK exhibits the best performance in these tests.    
+
+::: {#fig-interactions-main-3}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "7_test_Interactions"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 6, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1X2", max = 104)
+
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitudes $a_1 = a_{12}$ of a combined main effect on $X_1$ and an interaction effect $X_1 \times X_2$ ($n=20$)
+:::
+
+
 ### Statistical power {#power}
-Our fifth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type II errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, both main or interation effects. We only report results for $n=20$ (see supplementary materials for additional results). 
+Our sixth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type II errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, both main or interation effects. We only report results for $n=20$ (see supplementary materials for additional results). 
 
 **Main effects**. We individually vary the magnitude of effect on $X_1$ and $X_2$ and observe the power of each method to detect this effect ($\alpha = .05$). Specifically, we manipulate the parameters $a_1$ or $a_2$ within the range of $0.4$ to $1.0$. Depending on the experimentl design, this range allows us to simulate both low-power experiments (e.g., with less than $30\%$ power) and high-power experiments (e.g., with more than $80\%$ power). 
 
@@ -1016,7 +1061,7 @@ Overall, the experiment was structured as a $2 \times 2$ within-participants des
 
 > *Aligned rank transform (ART) ANOVA revealed significant main effects of Coupling (Df residual = 147, F = 104.353, p < 0.001) and Perspective (Df residual = 147, F = 8.983, p < 0.01) on the self-reported ownership ratings. The former indicates that participants were capable of telling apart their own hand from the partner’s regardless of the visual perspective, whilst the latter indicates that perceiving a hand in 1st person generally resulted in a stronger sense of ownership. Crucially, the interaction effect between Coupling and Perspective (Df residual = 147, F = 5.232, p < 0.05) revealed that the increase in ownership relative to the 2nd person perspective was significantly stronger when participants were coupled.* [@Rosso:2023]
 
-Thus, the authors found supportive statistical evidence for both main effects and the interaction of the two factors. We replicated their analysis and found that the author did not conduct a repeated-measures ANOVA. We analysed the data with a mixed-effects *lmer* model, treating the participant identifier as a random effect nested under the identifier of participant pairs (dyads). Conclusions do not change since our model is more powerful --- $p$-values are now even smaller for all three effects. However, we also conducted the analysis using the three other methods (PAR, RNK, INT), and unfortunately, results are very different:
+Thus, the authors found supportive statistical evidence for both main effects and the interaction of the two factors. We replicated their analysis and found that the author did not conduct a repeated-measures ANOVA, i.e., they did not treat ratings from the same participan as independent. We re-analyzed the data with a mixed-effects *lmer* model, treating the participant identifier as a random effect nested under the identifier of participant pairs (dyads). Conclusions do not change since our analysis is more powerful, so $p$-values are now even smaller for all three effects. However, we also conducted the analysis using the three other methods (PAR, RNK, INT), and unfortunately, conclusions are very different:
 
 |  | ART | PAR | RNK | INT |
 |------|-----|-----|-----|-----|
@@ -1041,7 +1086,7 @@ fit_ownership <- brm(
 )
 ```
 
- For an extensive discussion about why using a Bayesian framework for this type of models, we refer interested readers to @Liddell:2018. We have previously used such models for the analysis of ordinal responses in two experimental studies [@fages:2022]. However, the HCI community is not yet familiar with this method.
+ For an extensive discussion about why using a Bayesian framework for this type of models, we refer interested readers to @Liddell:2018. We have previously used such models for the analysis of ordinal responses in two experimental studies [@fages:2022], but the HCI community is not familiar with this method.
 
 Below, we present estimates of the regression coefficients of the model together with their $95\%$ credible intervals: 
 
@@ -1052,7 +1097,7 @@ Below, we present estimates of the regression coefficients of the model together
 
 Notice that all effects are expressed in standard deviations units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. The above results suggest that participants' sense of ownership was $1.95$ standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. The whole $95\%$ is far below zero, which means that there is overwhelming evidence that this effect is strong. Credible intervals are analogous to the confidence intervals of frequential statistics, but unlike confidence intervals, they allow for a probabilistic interpretation. For example, we can conclude that the above credile interval contains the true difference in people's sense of ownership with a $95\%$ probability.  
 
-In contrast, we observe that the credible intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. These results are consistent with the results of our *lmer* models using PAR, RNK, and INT. In conclusion, using ART to analyse these data is problematic. Here, the presense of a strong effect on the first factor seems to make ART sensitive in detecting non-existent effects, or perhaps in exaggerating small effects. 
+In contrast, we observe that the credible intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. These results are consistent with the results of our *lmer* models using PAR, RNK, and INT. In conclusion, using ART to analyse these data is problematic. Here, the presense of a strong effect on the first factor seems to make ART sensitive in detecting non-existent effects, or perhaps in exaggerating tiny effects. 
 
 ### Likert scales
 
