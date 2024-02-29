@@ -251,24 +251,24 @@ Common nonparametric methods pose significant analysis constraints compared to g
 
 @conover:1981 showed that for one-factor designs, using ANOVAs on these ranks produces tests that are equivalent or good replacements of traditional nonparametric tests (see [Section 3](#interpretation)). However, a series of studies in the 80s raised caution flags on the use of the method, showing that it may confound main and interaction effects in two-factor and three-fractor experimental designs. For an extensive review of these studies, we refer readers to @Sawilowsky:1990.
 
-**The aligned rank transform.** Given these negative results, many researchers turned to aligned (or adjusted) rank transformations. @higgins:1990 detail the aligned rank transform that we evaluate in this paper for two-way designs, while @wobbrock:2011 generalize it to more than two factors. We explain it for a design with two factors $A$ and $B$ in @fig-ART-explained.   
+**The aligned rank transform.** Given these negative results, many researchers turned to aligned (or adjusted) rank transformations. @Sawilowsky:1990 discusses several variations of aligned rank-based transfomrations (ART) and tests, while @higgins:1990 detail the ART method that we evaluate in this paper for two-way designs. @wobbrock:2011 generalize it to more than two factors, while 10 years later, @elkin:2021 show how to apply it to multifactor contrast tests. @fig-ART-explained explains the general method for a design with two factors, $A$ and $B$.
 
-![Construction of the Aligned Rank Transform for a two-factor design](images/art-explained.svg){#fig-ART-explained width=80%}
+![Example showing the use of the rank, ART, and INT transformation methods (a). Construction of ART for a two-factor design (b,c)](images/art-explained.svg){#fig-ART-explained width=80%}
          
-The key intuition behind the transform is that responses are ranked after *aligning* them, such that effects of interest are separated from other effects. This means that for each effect of interest, either main or interaction, we produce a separate ranking. This is clearly demonstrated through the example dataset in @fig-ART-explained (a), where each aligned ranking ($ART_A$, $ART_B$, and $ART_{AB}$) is for testing a different effect ($A$, $B$, and $A \times B$, respectively). Notice that even for this very small dataset ($n = 2$), these three rankings are distinct from each other, as well as very different from the ranking of the simple rank transform ($rank(Y)$). Interestingly, equal responses (the two $1.5$ in our example dataset) may be assigned to very different ranks, while very different responses (such as $0.3$ and $3.0$ in our dataset) can be assigned to the same rank. We will later see that this behavior can lead to unstable results and conclusions, and is the source of the main problems of the method. 
+The key intuition behind the transform is that responses are ranked after *aligning* them, such that effects of interest are separated from other effects. This means that for each effect of interest, either main or interaction, we produce a separate ranking. This is clearly demonstrated through the example dataset in @fig-ART-explained (a), where each aligned ranking ($ART_A$, $ART_B$, and $ART_{AB}$) is for testing a different effect ($A$, $B$, and $A \times B$, respectively). Notice that even for this very small dataset ($n = 2$), these three rankings are distinct from each other, as well as very different from the ranking of the simple rank transform. Interestingly, equal responses (the two $1.5$ in our example dataset) may be assigned to very different ranks, while very different responses (such as $0.3$ and $3.0$ in our dataset) can be assigned to the same rank. We will later see that this behavior can lead to unstable results and conclusions, and is the source of the main problems of the method. 
 
 @fig-ART-explained (b-c) details the calculation of the transformation, where we highlight the following terms: (i) residuals (in yellow) that represent the unexplained error (due to individual differences in our example); (ii) main effects (in green and pink) estimated from the observed means of the individual levels of the two factors; and (iii) interaction effect estimates (in blue). Observe that the estimates of two main effects are substracted from the interaction term. The objective of this approach is to eliminate the influence of main effects when estimating interaction effects. 
 
-This is not the only alignment technique found in the research literature. @Sawilowsky:1990 discusses several variations of aligned rank-based tests. @Sawilowsky:1990 also suggests that at least for balanced designs, interactions could be removed when aligning main effects, in the same way main effects are removed when aligning interactions. This approach is also taken by @Leys:2010, who derive a common ranking for both main effects after substracting the interation term. We do not evaluate these alternative alignment methods in this paper.
+This is not the only alignment technique found in the research literature.  @Sawilowsky:1990 also suggests that at least for balanced designs, interactions could be removed when aligning main effects, in the same way main effects are removed when aligning interactions. This approach is also taken by @Leys:2010, who derive a common ranking for both main effects after substracting the interation term. We do not evaluate these alternative alignment methods in this paper, as they are not as commonly used as the method of @wobbrock:2011. 
 
 **The inverse normal transform.** 
-A third tranformation method that we evaluate is the rank-based inverse normal transformation (INT). More than 70 years old [@VanDerWaerden:1952], it has appeared in several variations [@Beasley:2009,@Solomon2009]. However, its general formulation is as follows: 
+A third tranformation method that we evaluate is the rank-based inverse normal transformation (INT). INT is more than 70 years old [@VanDerWaerden:1952] and appears in several variations [@Beasley:2009;@Solomon2009]. Its general formulation is as follows: 
 
 $$ 
 INT(Y) = \Phi^{-1}(\frac{rank(Y) - c}{N - 2c + 1})
 $${#eq-int}
 
-where $N$ is the total number of observations and $\Phi^{-1}$ is the standard normal quantile function, which aims to transform the uniform distribution of ranks into a normal distribution. Different authors have used a different parameter $c$. In our experiments, we use the *Rankit* formulation [@Bliss:1956], where $c = 0.5$, because past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. However, @Beasley:2009 report that the choice of $c$ has minor importance. We implement the INT method in R as follows: 
+where $N$ is the total number of observations and $\Phi^{-1}$ is the standard normal quantile function, which transforms a uniform distribution of ranks into a normal distribution. Different authors have used a different parameter $c$. In our experiments, we use the *Rankit* formulation [@Bliss:1956], where $c = 0.5$, since past simulation studies [@Solomon2009] have shown that it is more accurate than alternative formulations. However, as @Beasley:2009 report, the choice of $c$ is of minor importance. For our experiments, we implement the INT method in R as follows: 
 
 ```{r}
 INT <- function(x){
@@ -276,31 +276,35 @@ INT <- function(x){
 }
 ```
 
-**Other rank-based tests.** Alternative nonparametric approaches such as ATS [@Brunner_ATS:2021], which was proposed for Likert scales in HCI by @Kaptein:2010. 
+@fig-ART-explained (a) shows how this function transforms the responses for our example dataset. 
 
-### The use of ART in experimental research 
-[F: Pesent the survey of papers using ART here?]{.f}
+**Other non-parametric rank-based methods.** There are other rank-based statistical tests that deal with interactions, the ANOVA-type statistic (ATS) [@Brunner_ATS:2021] being the most representative one. @Kaptein:2010 introduced this method to the HCI community, advocating its application in the analysis of Likert-type data as a viable alternative to parametric ANOVA. We do not report on ATS in the main paper. However, we provide additional experimental results (see supplementary materials), suggesting that ATS's performance is comparable to the performance of the rank transformation. The method suffers from similar problems and appears to be inferior to the simpler (and more versatile) INT.
 
-To analyze how the ART is used in experimental research, we collected in November 2023 the 39 most recent papers written in English and citing [@wobbrock:2011] on Google Scholar. The papers were published in Bio, Education, HCI, Haptic, Medecine, Neuroscience, VR domains. 64.1% of the papers reported experiments using a within-participants design, 7.7% a between-participants design and 28.2% a mixed-participants one. The number of factors ranged from 1 to 5, with 2 factors representing 64.1% of the experiments (1: 12.8%, 3: 15.4%). For 2 factors, the number of levels ranged between 2 and 15, with 2 levels being the most widely used (58.0%), followed by 3 (22.0%). The studies had between 12 and 468 participants (median = 24.0), with subgroups ranging from 8 to 48 (median = 20.0). For dependent variables, 51.3% of the studies used ratio variables and the remaining ordinal variables.  94.9% of the studies found at least one significant main effect in the results, using the ART. 80.0% of the studies studying the interaction between factors using the ART found at least one significant interaction. Only 12.8% of the papers made the data of their studies publicly available.
+### Previous evaluations
+For a more extensive review, we refer readers to @luepsen:2018.
 
-### Evaluations of ART and past warnings
-Include here all the background related to the 
+**Results in support of ART**. The outcomes from numerous Monte Carlo experiments conducted in the 80s and 90s revealed the robustness of ART in testing interaction effects. Noteworthy instances include studies, such as those by Salter (1993), which compared the method to parametric ANOVA. The authors found that ART remains robust even in the presence of outliers or specific non-normal distributions, such as the logistic, exponential, and double exponential distribution. Their findings indicated only a marginal increase in error rates (ranging from 6.0% to 6.3% instead of the expected 5%) when applied to the exponential distribution. Furthermore, ART demonstrated superior statistical power compared to parametric ANOVA. @Mansouri:1995 evaluated ART under a different set of non-normal distributions (normal, uniform, log-normal, exponential, double exponential, and Cauchy) in the presence of increasing main effects. Except for the Cauchy distribution, ART maintained Type I error rates close to nominal levels across all scenarios, irrespective of the magnitude of main effects.
+In constrast, the error rates of the rank transformation reached very high levels (up to $100\%$) as the magnitude of main effects increased, even under the normal distribution. ART only failed under the Cauchy distribution, which is well known to be pathological. 
 
-[@Salter:1993]
-[@Mansouri:1995]
+More recently, @elkin:2021 compared ART to parametric t-tests for testing multifactor contrasts under six distributions: normal, log-normal, exponential, double exponential, Cauchy, and Student's t-distribution ($\nu=3$). Their results confirmed that ART keeps Type I error rates close to nominal levels across all distributions, except for the Cauchy distribution. In addition, they found that ART exhibits a higher power than the t-test. We emphasize, however, that the experimental method of @elkin:2021 did not allow for detecting the influence of a main effect on one factor on the the effect of a different factor or their interaction.
+
+While most evaluation studies have focused on continuous distributions, @Payton:2006 have also studied how various transformations (rank, ART, log-transform, and squared-root transform) perform under the Poisson distribution, focusing again on interaction effects when main effects were present. The authors found that ART and parametric ANOVA (no transformation) performed best, keeping Type I error rates close to nominal levels. All other transformations inflated error rates.
+
+**Past warnings**. Other authors found that ART presents challenges in a range of situations. @Carletti:2005 report that *"aligned rank transform methods are more affected by unequal variances than analysis of variance especially when sample sizes are large."* @luepsen:2018 
 
 
-[@Payton:2006] To check: This paper tests Poisson data and surprisingly, it shows that PAR and ART work well for interaction effects.
-
-[@Toothaker:1994]
 [@casiez:2022] [@luepsen:2017; @luepsen:2018]
 
-Also, check those for heteroscedacity issues: [@Carletti:2005; @Leys:2010]
+Also, check those for heteroscedacity issues: [@Carletti:2005]
 
 - The problem of unequal variances
 
 -  Data discretization and ordinal scales
 
+### The use of ART in experimental research {#ART-use}
+[F: Pesent the survey of papers using ART here?]{.f}
+
+To analyze how the ART is used in experimental research, we collected in November 2023 the 39 most recent papers written in English and citing [@wobbrock:2011] on Google Scholar. The papers were published in Bio, Education, HCI, Haptic, Medecine, Neuroscience, VR domains. 64.1% of the papers reported experiments using a within-participants design, 7.7% a between-participants design and 28.2% a mixed-participants one. The number of factors ranged from 1 to 5, with 2 factors representing 64.1% of the experiments (1: 12.8%, 3: 15.4%). For 2 factors, the number of levels ranged between 2 and 15, with 2 levels being the most widely used (58.0%), followed by 3 (22.0%). The studies had between 12 and 468 participants (median = 24.0), with subgroups ranging from 8 to 48 (median = 20.0). For dependent variables, 51.3% of the studies used ratio variables and the remaining ordinal variables.  94.9% of the studies found at least one significant main effect in the results, using the ART. 80.0% of the studies studying the interaction between factors using the ART found at least one significant interaction. Only 12.8% of the papers made the data of their studies publicly available.
 
 ## Interpreting effects {#interpretation}
 The ART procedure was proposed as an alternative to the rank transformation [@conover:1981] for testing interactions. As @higgins:1990 explained, the rank transformation is non-linear and, as a result, it changes the structure of interactions. Therefore, *"interaction may exist in the transformed data but not in the original data, or vice versa"* [@higgins:1990]. @fig-interactions-rank demonstrates the problem through a representative example. In this example, the data have been sampled from perfectly normal distributions with equal variances. 
