@@ -1,5 +1,5 @@
 ---
-title: "The illusory promise of the Aligned Rank Transform --- A procedure that should be abandoned"
+title: "The illusory promise of the Aligned Rank Transform"
 author: 
   - name: Theophanis Tsandilas
     orcid: 0000-0002-0158-228X
@@ -615,7 +615,7 @@ Our first experiments evaluate Type I error rates for ratio scales. We test a 4 
 
 2. Log-normal distribution $LogN(\mu, \sigma)$ with global parameters $\mu = 0$ and $\sigma = 1$. As discussed in [the introduction](#intro), the log-normal distribution is a good model for various measures bounded by zero, such as task-completion times.
 
-3. Exponential distribution $Exp(\lambda)$ with a global parameter $\lambda = 2$. The exponential distribution naturally emerges when describing time elapsed between events. For example, we could use it to model the time a random person spends with a public display, or the waiting time before a new person approaches to interact with the display, when the average waiting time is $\frac{1}{\lambda}$. 
+3. Exponential distribution $Exp(\lambda)$ with a global parameter $\lambda = 2$. The exponential distribution naturally emerges when describing the time elapsed between events. For example, we could use it to model the time a random person spends with a public display, or the waiting time before a new person approaches to interact with the display, when the average waiting time is $\frac{1}{\lambda}$. 
 
 4. Cauchy distribution $Cauchy(x_0,\gamma)$ with global parameters $x_0 = 0$ and $\gamma = 1$. The Cauchy distribution is the distribution of the ratio of two independent normally distributed random variables. It rarely emerges in practice. However, it is commonly used in statistics to test the robustness of statistical procedures because both its mean and variance are undefined. As we discussed earlier, past evaluations of ART [@Mansouri:1995; @elkin:2021] show that the method fails under the Cauchy distribution.
 
@@ -947,7 +947,7 @@ Notice that this experiment studies a wider range of scenarios, where main and i
 
 ::: {#fig-effect-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "6_test-Effect-Size"
+prefix <- "6_test-Effect-Size-Main"
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
@@ -957,7 +957,7 @@ df <- df %>% arrange(design,distr,effectX1,etaX1)  %>% group_by(design,distr,eff
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = -5, max = 103, ytitle = 'R squared')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = -20, max = 103, ytitle = 'R squared')
 ```
 $R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
@@ -1067,19 +1067,19 @@ We have not examined how design imbalance affects ART's accuracy.
 
 **Monte Carlo simulation.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
-As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ ---average success rate found by @Martin:2023--- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows: [Provide percentages to ease reading?]{.g}
+As @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ ---average success rate found by @Martin:2023--- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA with no transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. Our results over 5000 iterations are as follows:
 
 |  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
 |:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| PAR | $.047$ | $.051$ | $.048$ | $.057$ | $.048$ | $.049$ | $.044$ |
-| ART | $.212$ | $.208$ | $.200$ | $.220$ | $.215$ | $.197$ | $.213$ |
-: Type I error rates for $\alpha = .05$ {.sm}
+| PAR | $4.7$ | $5.1$ | $4.8$ | $5.7$ | $4.8$ | $4.9$ | $4.4$ |
+| ART | $21.2$ | $20.8$ | $20.0$ | $22.0$ | $21.5$ | $19.7$ | $21.3$ |
+: Type I error rates (%) for $\alpha = .05$ (nominal error rate $=5\%$) {.sm}
 
 |  | $X_1$ | $X_2$ | $X_3$ | $X_1 \times X_2$ | $X_1 \times X_3$ | $X_2 \times X_3$ | $X_1 \times X_2 \times X_3$ |
 |:------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-| PAR | $.010$ | $.011$ | $.011$ | $.012$ | $.011$ | $.010$ | $.009$ |
-| ART | $.095$ | $.094$ | $.095$ | $.105$ | $.097$ | $.095$ | $.092$ |
-: Type I error rates for $\alpha = .01$ {.sm}
+| PAR | $1.0$ | $1.1$ | $1.1$ | $1.2$ | $1.1$ | $1.0$ | $0.9$ |
+| ART | $9.5$ | $9.4$ | $9.5$ | $10.5$ | $9.7$ | $9.5$ | $9.2$ |
+: Type I error rates (%) for $\alpha = .01$ (nominal error rate $=1\%$) {.sm}
 
 We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR consistently maintains error rates close to nominal levels. Despite the higher rate of Type I errors, ART seems to detect main effects on $X_2$ and $X_3$ with lower power compared to PAR. For example, for $a_2 = 0.5$ (main effect of $X_2$), its power is $79\%$ compared to a power of $90\%$ for PAR ($\alpha = .05$). In conclusion, ART is completely inappropriate when responses are binary, even when the average rate of each binary outcome is close to $50\%$. 
 
