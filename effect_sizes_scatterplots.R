@@ -11,7 +11,7 @@ plotlyScatter <- function(df, xlab = "eta squared (ground truth)", ylab= 'eta sq
   symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")
   palette <- c("#888888", "#E69F00", "#009E73", "#FF5E00")
   margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
-  ldata = data.frame(x=c(0,1), y = c(0,1))
+  ldata = data.frame(x=c(0,5), y = c(0,5))
 
   dnames <- levels(df$distr)
 
@@ -86,9 +86,47 @@ readlyDataPoints <- function(prefix = "6_plot_Effect_Size", distributions=c("nor
   df
 }
 
-#prefix <- "6_scatter-Effect_Size"
+readlyDataPoints <- function(prefix = "6_plot_Effect_Size", distributions=c("norm", "lnorm", "exp", "poisson", "binom", "likert5B"),
+    dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)"), methods = c("PAR", "RNK", "INT", "ART"), effect = "X1") {
+
+  df <- read.csv(paste("data/", prefix, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+  #df <- df[df$design=="2x3",]
+  df <- df[df$distr %in% distributions,]
+  df$distr <- factor(df$distr, levels=distributions)
+
+  vars <- paste(tolower(methods), effect, sep ="") # e.g., parX1, rnkX1, ...
+
+  df <- reshape2::melt(df, id.vars = c("n", "design", "distr", paste("eta", effect, sep="")), measure.vars = vars, 
+      variable.name = "method", value.name = paste("eta", effect, "_", sep=""))
+
+  df <- df %>% group_by(method) %>%  mutate(method = methods[cur_group_id()])
+  df$method <- factor(df$method, levels = methods)
+
+  df <- df %>% group_by(distr) %>%  mutate(distr=dnames[cur_group_id()])
+  df$distr <- factor(df$distr, levels = dnames)
+
+  # crearte an iteration column for each cell:
+  df <- df %>% group_by(n,design,distr,method) %>% mutate(iteration = sequence(n()))
+
+  groupvars = c("distr","method","n", "iteration")
+  # Different column for each design
+  df <- reshape(as.data.frame(df), idvar=groupvars, timevar = "design", direction = "wide")
+
+  df
+}
+
+toCohensf <- function(df){
+    df[,5:10] <- sqrt(df[,5:10]/(1-df[,5:10]))
+    names(df)[5:10] <- c("fX1.2x3", "fX1_.2x3", "fX1.2x4", "fX1_.2x4", "fX1.4x3", "fX1_.4x3")
+
+    df
+}
+
+
+#prefix <- "6_scatter-Effect_Size-Main"
 #df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
-#fig <- plotlyScatter(df)
+#df_f <- df %>% toCohensf()
+#fig <- plotlyScatter(df_f, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1", max = 4.1)
 
 
 

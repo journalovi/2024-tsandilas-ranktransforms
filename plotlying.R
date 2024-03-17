@@ -201,15 +201,16 @@ plotlyErrorByDesign3 <- function(df, xlab = "magnitude of main effects", var = "
 # library(tidyverse)
 # alpha = 0.05
 
-# prefix <- "6_test-Effect-Size"
-# distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B", "likert7B", "likert20B")
+ #prefix <- "6_test-Effect-Size-Main"
+ #distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B", "likert7B", "likert20B")
 # dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)", "Ordinal (7 levels)", "Ordinal (20 levels)")
+ #dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-# df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions = distributions)
+ #df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions = distributions)
 
-# df <- df %>% arrange(design,distr,effectX1X2,etaX1X2)  %>% group_by(design,distr,effectX1X2) #%>% mutate(rank = rank(etaX2))
-# df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"),  groupvars = c("distr","method","n"))
+ #df <- df %>% arrange(design,distr,effectX1X2,etaX1X2)  %>% group_by(design,distr,effectX1X2) #%>% mutate(rank = rank(etaX2))
+ #df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"),  groupvars = c("distr","method","n"))
 
-# #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-# #plotlyErrorByDesign3(df, xlab = "magnitude of main effect", var = "rank", hovervar = "etaX2", xvar = "effectX2", max = 4.2, ytitle = 'r (%) - ranking')
-# plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "etaX2", xvar = "effectX1X2", min = 10, max = 103, ytitle = 'r (%)')
+# df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+ #plotlyErrorByDesign3(df, xlab = "magnitude of main effect", var = "rank", hovervar = "etaX2", xvar = "effectX2", max = 4.2, ytitle = 'r (%) - ranking')
+ #plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "etaX1", xvar = "effectX1X2", min = 10, max = 103, ytitle = 'r (%)')

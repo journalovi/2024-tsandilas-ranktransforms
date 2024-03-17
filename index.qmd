@@ -937,7 +937,44 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 
 
 ### Effect size estimates {#effect-sizes}
-In our final experiment, we assess the accuracy of each method in estimating standardized effect sizes across the three 2-factor designs. We employ a parametric ANOVA on the latent variable $Y$ and calculate partial $\eta^2$ for the effects of $X_1$, $X_2$, and $X_1 \times X_2$, treating these values as ground truth estimates. Subsequently, we evaluate the corresponding partial $\eta^2$ using each of the four methods (PAR, RNK, ART, and INT) on the observed variable $Y'$.
+In our final experiment, we assess how well each method estimates standardized effect sizes, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $Y$.
+While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$ because it is expected to be proportional to the real magnitude of effect. Cohen's $f$ can be derived directly from $\eta^2$ as follows:
+
+$$ 
+f = \sqrt{\frac{\eta^2}{1 - \eta^2}}
+$${#eq-cohensf}
+
+**Main effects**. We first evaluate estimates of the main effect of $X_1$ as the magnitude of both main effects varies. As a first step, we focus on the normal, log-normal, and ordinal distributions. @fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground truth method, when $a_1$ and $a_2$ are within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
+
+::: {#fig-effect-main-scatterplots-1}
+```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
+source("effect_sizes_scatterplots.R")
+prefix <- "6_scatter-Effect_Size-g2"
+df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)")) %>% toCohensf()
+fig <- plotlyScatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1", max = 1.05)
+
+fig
+```
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-2, 2]$. 
+:::
+
+We observe that PAR tends to underestimate effect sizes under the log-normal distribution, which is consistent with the low power of the method for this distribution (see @fig-power-main-1). In contrast, ART's estimates are spread across both sides. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
+
+@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects in the range $[-8, 8]$. Notice that effect sizes are severely distorted by all four methods. We invite the reader to zoom in on the lower range of values (partial $\eta^2 < 0.6$), where ART's estimates for the two non-normal distributions appear as quasi-random. Interestingly, the performance of RNK and INT also deteriorates, as the methods seem to struggle with detecting main effects in the presence of strong interactions.
+
+::: {#fig-effect-main-scatterplots-2}
+```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
+#source("effect_sizes_scatterplots.R")
+prefix <- "6_scatter-Effect_Size-g8"
+
+df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)")) %>% toCohensf()
+fig <- plotlyScatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1", max = 4.05)
+
+fig
+```
+Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-8, 8]$. 
+:::
+
 
 Then, we compute the coefficient of determination $R^2$ ($R$ squared) over 1000 iterations, that is, the proportion of variation in the $\eta^2$ estimates of each method that is predictable from the estimate of the grand truth method. In each iteration, we randomly draw the magnitude of all three effects ($a_1$, $a_2$, and $a_{12}$) from a range $[-g, g]$, where $g$ varies in $\{0, 0.5, 1, 2, 4, 8\}$. This $R^2$ measure allows us to assess how close the estimates of each method are to estimates of the theoretically most appropriate method. We present the results for a sample size of $n=20$. 
 
@@ -953,43 +990,15 @@ dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordina
 
 df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions)
 
-df <- df %>% arrange(design,distr,effectX1,etaX1)  %>% group_by(design,distr,effectX1)
+df <- df %>% arrange(design,distr,effectX1,cohensfX1)  %>% group_by(design,distr,effectX1)
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1", xvar = "effectX1", min = -20, max = 103, ytitle = 'R squared')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1", xvar = "effectX1", min = -4, max = 103, ytitle = 'R squared')
 ```
 $R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
-@fig-effect-main-scatterplots illustrates the relationship between the $\eta^2$ estimated by each method and the $\eta^2$ of the ground truth method, when $g = 2$. For clarity, we focus on the normal, log-normal, and ordinal distributions. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. We observe that PAR tends to underestimate effect sizes under the log-normal distribution, which is consistent with the low power of the method for this distribution (see @fig-power-main-1). In contrast, ART's estimates are spread across both sides. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
-
-::: {#fig-effect-main-scatterplots}
-```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
-source("effect_sizes_scatterplots.R")
-prefix <- "6_scatter-Effect_Size"
-df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
-fig <- plotlyScatter(df, max = 0.51)
-
-fig
-```
-Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-2, 2]$. 
-:::
-
-@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects ($g=8$). Notice that effect sizes are severely distorted by all four methods. We invite the reader to zoom in on the lower range of values (partial $\eta^2 < 0.6$), where ART's estimates for the two non-normal distributions appear as quasi-random. Interestingly, the performance of RNK and INT also deteriorates, as the methods seem to struggle with detecting main effects in the presence of strong interactions.
-
-::: {#fig-effect-main-scatterplots-2}
-```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
-source("effect_sizes_scatterplots.R")
-prefix <- "6_scatter-Effect_Size-g8"
-
-df <- readlyDataPoints(prefix,  distributions=c("norm", "lnorm", "likert5B"), dnames = c("Normal", "Log-normal", "Ordinal (5 levels)"))
-fig <- plotlyScatter(df, max = 1.1)
-
-fig
-```
-Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-8, 8]$. 
-:::
 
 <!-- 
 @fig-effect-main-2 presents $R^2$ trends for the second factor $X_2$. 
@@ -1023,11 +1032,11 @@ dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordina
 
 df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions)
 
-df <- df %>% arrange(design,distr,effectX1X2,etaX1X2)  %>% group_by(design,distr,effectX1X2)
+df <- df %>% arrange(design,distr,effectX1X2,cohensfX1X2)  %>% group_by(design,distr,effectX1X2)
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX1X2", xvar = "effectX1X2", min = -51, max = 105, ytitle = 'R squared')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1X2", xvar = "effectX1X2", min = -51, max = 105, ytitle = 'R squared')
 ```
 $R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
