@@ -319,7 +319,7 @@ We see that ART is frequently used for the analysis of experimental results. Reg
 
 Our goal is to verify Luepsen's findings by employing an alternative set of experimental configurations and a distinctly different methodology. In particular, we adopt a latent variable modeling approach that establishes a unified framework for data generation across all distributions. This approach allows us to demonstrate the shortcomings of rank-based approaches in effectively addressing interactions through the lens of removable interactions [@Loftus:1978]. Moreover, it facilitates the assessment of the methods through more suitable generation procedures for ordinal data, as suggested by @Liddell:2018.
 
-With a focus on clarity, we chose to exclusively examine the three rank-based transformations presented earlier: the pure rank transformation (RNK), ART, and INT. While we do not elaborate on the performance of ATS in the main paper, additional experimental results are available in the supplementary materials. These findings indicate that its performance is comparable to the rank transformation but seems to be inferior to the simpler and more versatile INT. Our supplementary materials feature additional results regarding the performance of the generalized van der Waerden test, as well as the generalized Kruskal-Wallis and Friedman tests. Our findings do not support the conclusions of @luepsen:2018 and @luepsen:2023, as they indicate an exceptionally low power for these methods. Lacking compelling evidence of their potential strengths, we refrain from further discussion on these tests.
+With a focus on clarity, we chose to exclusively examine the three rank-based transformations presented earlier: the pure rank transformation (RNK), ART, and INT. While we do not elaborate on the performance of ATS in the main paper, additional experimental results are available in the supplementary materials. These findings indicate that its performance is comparable to the rank transformation but seems to be inferior to the simpler and more versatile INT. Our supplementary materials feature additional results regarding the performance of the generalized van der Waerden test, as well as the generalized Kruskal-Wallis and Friedman tests. Our findings show that at least in balanced designs, both methods are again inferior to INT. Thefore, we do not discuss them further in this paper. 
 
 Finally, we chose to limit our investigation to balanced experimental designs. The rationale behind this decision is that we have not encountered any prior claims about ART's suitability for unbalanced data, and the ARTool [@artool] issues a warning in such situations. However, we present several case studies in Section 6, where data are often unbalanced.
 
@@ -938,13 +938,13 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 
 ### Effect size estimates {#effect-sizes}
 In our final experiment, we assess how well each method estimates standardized effect sizes, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $Y$.
-While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$ because it is expected to be proportional to the real magnitude of effect. Cohen's $f$ can be derived directly from $\eta^2$ as follows:
+While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
 
 $$ 
-f = \sqrt{\frac{\eta^2}{1 - \eta^2}}
+\eta^2 = \frac{f^2}{1 + f^2}
 $${#eq-cohensf}
 
-**Main effects**. We first evaluate estimates of the main effect of $X_1$ as the magnitude of both main effects varies. As a first step, we focus on the normal, log-normal, and ordinal distributions. @fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground truth method, when $a_1$ and $a_2$ are within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
+**Main effects**. We first evaluate estimates of the main effect of $X_1$ as the magnitude of the two main effects varies. @fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground truth method, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
 
 ::: {#fig-effect-main-scatterplots-1}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -955,12 +955,12 @@ fig <- plotlyScatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1",
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-2, 2]$. 
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. 
 :::
 
-We observe that PAR tends to underestimate effect sizes under the log-normal distribution, which is consistent with the low power of the method for this distribution (see @fig-power-main-1). In contrast, ART's estimates are spread across both sides. INT demonstrates the highest precision, followed by RNK. Both methods, however, fail to produce accurate estimates under the ordinal scale, tending to underestimate effects. Still, ART performs worse than the other methods.
+We observe that PAR tends to underestimate effect sizes under log-normal distributions, in consistency with its low power (see @fig-power-main-1). ART's estimates are instead spread across both sides. We invite the reader to zoom in on the lower range of values ($f < 0.4$), where the method frequently exagerates effects. INT demonstrates the highest precision, followed by RNK. However, their performance deteriorates under the ordinal scale. Still, ART performs worse than all other methods.
 
-@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects in the range $[-8, 8]$. Notice that effect sizes are severely distorted by all four methods. We invite the reader to zoom in on the lower range of values (partial $\eta^2 < 0.6$), where ART's estimates for the two non-normal distributions appear as quasi-random. Interestingly, the performance of RNK and INT also deteriorates, as the methods seem to struggle with detecting main effects in the presence of strong interactions.
+@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects $[-8, 8]$. We observe that all three rank-based methods struggle to detect large effects, even when the underlying distribution is normal. Interestingly, INT's performance declines when Cohen's $f$ exceeds a certain level. For the ordinal distribution, estimates are extremely noisy across all methods. 
 
 ::: {#fig-effect-main-scatterplots-2}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -972,15 +972,12 @@ fig <- plotlyScatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1",
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (partial $\eta^2$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when the magnitude of the three effects is within the range $[-8, 8]$. 
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the main effect of $X_1$, when $a_1$ and $a_2$ vary within the range $[-8, 8]$. 
 :::
 
+To systematically evaluate the precision of effect size estimates across different methods, we employ the coefficient of determination, denoted as $R^2$ ($R$ squared). This metric quantifies the proportion of variation in the $f$ estimates of each method that is predictable from the estimate provided by the reference method, considered as the ground truth. We compute $R^2$ over 1000 iterations. Within each iteration, we randomly sample the magnitude of the two main effects ($a_1$ and $a_2$) from a range spanning $[-g, g]$, where $g$ takes values from the set ${0, 0.5, 1, 2, 4, 8}$. It is worth noting that the $R^2$ measure assesses the proximity of estimates to the ground truth, without distinguishing between underestimates and overestimates. We present these results based on a sample size of $n=20$.
 
-Then, we compute the coefficient of determination $R^2$ ($R$ squared) over 1000 iterations, that is, the proportion of variation in the $\eta^2$ estimates of each method that is predictable from the estimate of the grand truth method. In each iteration, we randomly draw the magnitude of all three effects ($a_1$, $a_2$, and $a_{12}$) from a range $[-g, g]$, where $g$ varies in $\{0, 0.5, 1, 2, 4, 8\}$. This $R^2$ measure allows us to assess how close the estimates of each method are to estimates of the theoretically most appropriate method. We present the results for a sample size of $n=20$. 
-
-Notice that this experiment studies a wider range of scenarios, where main and interaction effects are present at the same time.
-
-**Main effects**. @fig-effect-main-1 depicts trends for the first factor $X_1$. All methods demonstrate high $R^2$ levels under the normal distribution. INT performs exceptionally well across all continuous distributions. However, its performance declines when the range of effects becomes large ($g \ge 4$). PAR's performance is strikingly low under the log-normal distribution and, to a lesser degree, under the exponential distribution. ART emerges as the second-worst method for these specific distributions. Finally, we observe low $R^2$ values for all methods under the binomial and ordinal distributions, where ART's performance is particularly problematic under low effect size ranges.  
+@fig-effect-main-1 depicts trends for the first factor $X_1$. INT performs exceptionally well across all continuous distributions, but its precision declines when the range of effects becomes large ($g > 4$). PAR's performance is strikingly low under the log-normal distribution and, to a lesser degree, under the exponential distribution. ART emerges as the second-worst method for these distributions. Finally, we observe low $R^2$ values for all methods under the binomial and ordinal distributions. ART's performance is particularly problematic when effects sizes are low.  
 
 ::: {#fig-effect-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -996,33 +993,11 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1", xvar = "effectX1", min = -4, max = 103, ytitle = 'R squared')
 ```
-$R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
+$R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 
-<!-- 
-@fig-effect-main-2 presents $R^2$ trends for the second factor $X_2$. 
- These trends mirror the observed patterns for $X_1$ in @fig-effect-main-1. However, upon closer inspection of the results for the $2 \times 3$ between-subjects and the $2 \times 4$ mixed designs  across the three discrete distributions, the differences between the four methods are less pronounced.
-
-::: {#fig-effect-main-2}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "6_test-Effect-Size"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha= NA, effectType = -1, distributions)
-
-df <- df %>% arrange(design,distr,effectX2,etaX2)  %>% group_by(design,distr,effectX2)
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "etaX2", xvar = "effectX2", min = -5, max = 103, ytitle = 'R squared')
-```
-$R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the main effect on $X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
-:::
- -->
-
-We also show results for the interaction effect in @fig-effect-interaction. $R^2$ can approach zero or even become negative under certain conditions, implying that effect size estimates cannot be trusted. Both RNK and INT start failing when the range of effects becomes large. Additionally, we observe low $R^2$ values for all methods under an ordinal or binomial scale. These results suggest that interaction effect estimates are not reliable in this case. 
+**Interaction effects**. We extend our analysis to examine trends regarding the interaction effect, as depicted in Figure @fig-effect-interaction. We now also vary $a_{12}$ within the same range $[-g, g]$. $R^2$ approaches zero or becomes negative under certain conditions, indicating that effect size estimates cannot be trusted in these cases. RNK and INT emerge as the most precise methods under non-normal distributions, but their performance declines rapidly when $g > 2$. Finally, PAR outperforms ART across all discrete distributions, as well as the normal distribution. 
 
 ::: {#fig-effect-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -1038,12 +1013,12 @@ df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","e
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1X2", xvar = "effectX1X2", min = -51, max = 105, ytitle = 'R squared')
 ```
-$R^2$ scores measuring the relationship between estimates (partial $\eta^2$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
+$R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 
 ## Case studies {#casestudies}
-In this section, we examine some specific types of data through concrete examples. We focus on recent work (published in 2023) that has used ART and has made data publicly available. We identify problems and evaluate possible risks. We also show alternative methods for conducting the analysis and compare their outcomes.
+In this section, we examine some specific types of data through concrete examples. We focus on recent work (published in 2023) that has used ART and made data publicly available. We identify problems and evaluate possible risks. We also show alternative methods for conducting the analysis and compare their outcomes.
 
 ### Binary responses
 
@@ -1184,9 +1159,7 @@ We see now that results from different methods can lead to different conclusions
 | partial $\eta^2$| $0.12$ $[.01, 1.0]$ | $0.07$ $[.00, 1.0]$| $0.04$ $[.00, 1.0]$| $0.02$ $[.00, 1.0]$|
 : effect size estimates for Modification and their $95\%$ confidence intervals {.sm}
 
-Several authors have argued that parametric statistics are robust enough to be used with Likert scales that group multiple items together [@Carifio:2008], or with individual Likert items with at least five levels [@Harper:2015]. However, @Liddell:2018 identified several situations in which parametric tests may fail, even when they are applied to averages of multiple ordinal items. For example, they can inflate errors when the variances are not equal. They can also deform interaction effects. Unfortunately, rank transformations suffer from similar problems, e.g., we observed that all methods can detect non-existent interactions in the presence of strong main effects (see @fig-interactions). We can show that such problems persist even when we take averages of multiple correlated items.
-
-@Liddell:2018 recommend using ordered-probit models for the analysis of Likert scales. @Burkner:2019 demonstrate how to fit such models through specific examples. Here, we apply their approach to analyze participants' responses for intrinsic motivation [@Karolus:2023]. To this end, we do not average the individual Likert items of the scale. We treat instead items and participants as a random effects through the following mixed-effects model:  
+@Liddell:2018 recommend using ordered-probit models for the analysis of Likert scales, and @Burkner:2019 demonstrate how to fit such models. Here, we apply their approach to analyze participants' responses for intrinsic motivation [@Karolus:2023]. To this end, we do not average the individual Likert items of the scale. We treat instead items and participants as a random effects through the following mixed-effects model:  
 
 ```{r, eval=FALSE}
 library(brms)
@@ -1197,7 +1170,10 @@ fit_intrinsic_motivation <- brm(
   family = cumulative("probit")
 )
 ```
-Fitting this model allows us, for instance, to estimate the difference between the progresive bar and the Emoji representation to be $1.08$, $95\%$ Credible Interval $= [0.10, 2.06]$. Units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
+Fitting this model allows us, for instance, to estimate the difference between the progresive bar and the Emoji representation to be $1.08$, $95\%$ Credible Interval $= [0.10, 2.06]$, where units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
+
+Despite the theoretical advantages and flexibility of this method, its use in practice presents certain challenges. For example, the above model assumes that thresholds are common across all items of the scale. Although it is possible to dispense with this assumption and consider variable threholds [@kurz2021probit], doing so increases the model complexity and introduces convergance issues that are hard to solve without using effective priors. Overall, fine-tuning these models still demands substantial expertise, while the effect of such tuning is difficult to assess through Monte Carlo experiments due to the method's substantial computational overhead.
+
 
 <!-- **Simulated data.** Do rank-transformation methods address the issues raised by @Liddell:2018?  
 
@@ -1235,6 +1211,11 @@ The authors ran a $2 \times 2$ repeated-measures ANOVA using ART to test their e
 
 
 ## Recommendations {#recommendations}
+
+(On Likert scales) I moved this paragraph to the discussion.
+
+Several authors have argued that parametric statistics are robust enough to be used with Likert scales that group multiple items together [@Carifio:2008], or with individual Likert items with at least five levels [@Harper:2015]. However, @Liddell:2018 identified several situations in which parametric tests may fail, even when they are applied to averages of multiple ordinal items. For example, they can inflate errors when the variances are not equal. They can also deform interaction effects. Unfortunately, rank transformations suffer from similar problems, e.g., we observed that all methods can detect non-existent interactions in the presence of strong main effects (see @fig-interactions). We can show that such problems persist even when we take averages of multiple correlated items.
+
 
 ## Conclusion {#conclusion}
 
