@@ -1,0 +1,90 @@
+---
+title: "Appendix. Additional experimental results"
+author: 
+  - name: Theophanis Tsandilas
+    orcid: 0000-0002-0158-228X
+    email: theophanis.tsandilas@inria.fr
+    affiliations:
+      - name: Université Paris-Saclay, CNRS, Inria, LISN
+        country: France
+  - name: Géry Casiez
+    orcid: 0000-0003-1905-815X
+    email: gery.casiezuniv-lille.fr
+    affiliations:
+      - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
+        country: France
+bibliography: bibliography.bib
+
+tbl-cap-location: top
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Useful libraries
+library(crosstalk)
+library(kableExtra)
+library(gridExtra)
+library(lmerTest)
+library(tidyverse)
+library(plotly)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Source code for reading data from experimental results and for plotting
+source("dataReaders.R")
+source("plotting.R")
+```
+
+```{=html}
+<style>
+.math.inline .MathJax  {
+  font-size: 105% !important;
+}
+
+.g::before {
+  content: "[G: ";
+}
+
+.g::after {
+  content: "]";
+}
+.g {
+  color: #F28C28;
+}
+
+.f {
+  color: #d62b1c;
+}
+</style>
+```
+
+## Results for $\alpha = .01$
+
+## Results for 3-way interactions
+
+## Ordinal data
+Alternative designs with ordinal data
+
+## Log-normal distributions
+sigma = 0.2
+sigma = 0.4
+sigma = 0.6
+sigma = 0.8
+sigma = 1
+sigma = 1.2
+
+## Binomial distributions
+n=5, p=5%
+n=5, p=10%
+n=5, p=20%
+n=10, p=5%
+n=10, p=10%
+n=10, p=20%
+
+## Unbalanaced designs 
+
+
+## ATS
+
+## Other tests 
+
+
