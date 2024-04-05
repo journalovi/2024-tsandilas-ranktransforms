@@ -592,9 +592,14 @@ Significance tests have two types of errors. *Type I errors*, or false positives
 
 Statistical significance testing requires setting a significance threshold known as significance or $\alpha$ (alpha) level, with typical values $\alpha = .05$ and $\alpha = .01$. The Type I error rate of a well-behaved significance test should be close to this nominal alpha level. An error rate clearly above this level suggests that the significance test is too liberal, while an error rate clearly below this level suggests that the test is too conservative. Four of our experiments specifically assess the Type I error rate of the methods. We test two significance levels: $\alpha = .05$ and $\alpha = .01$. For brevity, we only report results for $\alpha = .05$ in the main paper and include additional results in our supplementary material. 
 
-We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, focusing on the partial $\eta^2$ measure, which is commonly used in ANOVA. To evaluate the quality of estimates of different methods, we measure how well they correlate with the estimates of the optimal ground-truth method, e.g., parametric ANOVA over the normal latent variable. 
+We do not directly evaluate Type II errors. Instead, we report on statistical *power* defined as $Power = 1 - \beta$, where $\beta$ is the rate of Type II errors. Significance tests do not provide any power guarantees. However, we can compare the power of different methods to evaluate their relative performance. In addition to power, we assess effect size estimates, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $Y$. While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
 
-As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable. We make this distinction whenever it is relevant in our analysis.  
+$$ 
+\eta^2 = \frac{f^2}{1 + f^2}
+$${#eq-cohensf}
+
+
+As we explained earlier, interaction effects are deformed when we transform the latent variable $Y$ to obtain the observed responses. Such transformations also affect the Type I error rates and power that we observe. Here, we are interested in evaluating these measures with respect to the effects we apply to the latent variable $Y$. We make this distinction whenever it is relevant in our analysis.  
 
 ### Hardware platform and iterations
 Our experimental R code is available in our supplementary material. We ran our experiments seperately in a cluster of 8 machines Dell R640 Intel Xeon Silver 4112 2.6GHz with 4 cores and 64 GB memory. Our R code was parallelized to use all four cores of each machine. Some experiments took a few hours to complete, while others took several days. 
@@ -937,14 +942,9 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 
 
 ### Effect size estimates {#effect-sizes}
-In our final experiment, we assess how well each method estimates standardized effect sizes, where we use as ground truth the estimates of a parametric ANOVA conducted on the latent variable $Y$.
-While partial $\eta^2$ is the most commonly used effect size measure, we chose to base our analysis on Cohen's $f$, as its expected value is proportional to the real magnitude of effect. However, $\eta^2$ can be directly derived from Cohen's $f$ as follows:
+Our final experiment assesses the precision of the effect size estimates (Cohen's $f$) of each method, 
 
-$$ 
-\eta^2 = \frac{f^2}{1 + f^2}
-$${#eq-cohensf}
-
-**Main effects**. We first evaluate estimates of the main effect of $X_1$ as the magnitude of the two main effects varies. @fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground truth method, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
+**Main effects**. We first evaluate estimates of the main effect of $X_1$ as the magnitude of the two main effects varies. @fig-effect-main-scatterplots-1 illustrates the relationship between the Cohen's $f$ obtained with each method and the $f$ of the ground-truth method, when $a_1$ and $a_2$ vary within the range $[-2, 2]$. The proximity of data points to the black diagonal indicates the closeness of estimates to the ground truth. Points above the line are likely to overestimate the effect size, while points under the line are likely to underestimate it. 
 
 ::: {#fig-effect-main-scatterplots-1}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -972,7 +972,7 @@ fig <- plotlyScatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "fX1",
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the main effect of $X_1$, when $a_1$ and $a_2$ vary within the range $[-8, 8]$. 
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect of $X_1$, when $a_1$ and $a_2$ vary within the range $[-8, 8]$. 
 :::
 
 To systematically evaluate the precision of effect size estimates across different methods, we employ the coefficient of determination, denoted as $R^2$ ($R$ squared). This metric quantifies the proportion of variation in the $f$ estimates of each method that is predictable from the estimate provided by the reference method, considered as the ground truth. We compute $R^2$ over 1000 iterations. Within each iteration, we randomly sample the magnitude of the two main effects ($a_1$ and $a_2$) from a range spanning $[-g, g]$, where $g$ takes values from the set ${0, 0.5, 1, 2, 4, 8}$. It is worth noting that the $R^2$ measure assesses the proximity of estimates to the ground truth, without distinguishing between underestimates and overestimates. We present these results based on a sample size of $n=20$.
@@ -991,9 +991,9 @@ df <- df %>% arrange(design,distr,effectX1,cohensfX1)  %>% group_by(design,distr
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1", xvar = "effectX1", min = -4, max = 103, ytitle = 'R squared')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1", xvar = "effectX1", min = -6, max = 103, ytitle = 'R squared')
 ```
-$R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
+$R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
 
