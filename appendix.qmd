@@ -32,6 +32,10 @@ library(plotly)
 # Source code for reading data from experimental results and for plotting
 source("dataReaders.R")
 source("plotting.R")
+
+library(dplyr)
+library(tidyverse)
+source("plotlying.R")
 ```
 
 ```{=html}
@@ -56,6 +60,61 @@ source("plotting.R")
 }
 </style>
 ```
+
+
+## Main effects in the presence of interactions {#effect-sizes}
+In all previous experiments, we assumed zero interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. Our fifth experiment evaluates the Type I error rate of the methods in the presence of an interaction effect alone, or alternatively, in the presence of a simultaneous main effect. We focus again on the three 2-factor experimental designs that we evaluated for our previous experiment and set the sample size to $n = 20$.
+
+To simulate populations in which interactions emerge in the absence of main effects, we examine perfectly symmetric cross-interactions. To this end, we slightly change the method we use to encode the levels of each factor, such that levels are uniformly positioned around 0. For a factor with three levels, we numerically encode the levels as $\{-0.5, 0, 0.5\}$. For a factor with four levels, we encode them as $\{-0.5, -0.1667, 0.1667, 0.5\}$. 
+
+**Interaction effect only**. We first test how the interaction effect alone influences the Type I error rate on $X_2$. @fig-interactions-main-2 presents our results. We observe that both PAR and ART fail for many configurations. Error rates are especially high in the case of the $4 \times 3$ within-subjects design and the $2\times 4$ mixed design under the log-normal and exponential distribution. ART exhibits the worst performance. In constrast, RNK and INT keep error rates close to nominal levels. However, when interaction effects become sufficiently large ($a_{12} > 4$), we observe that under the binomial and ordinal scale, they also start inflating errors.
+
+::: {#fig-interactions-main-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+alpha <- .05
+
+prefix <- "7_test_Interactions"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX1", xvar = "effectX1X2", max = 104)
+
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as a function of the magnitude $a_{12}$ of the interaction effect $X_1 \times X_2$ ($n=20$)
+:::
+
+
+::: {#fig-interactions-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "7_test_Interactions"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX2", xvar = "effectX1X2", max = 104)
+
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{12}$ of the interaction effect $X_1 \times X_2$ ($n=20$)
+:::
+
+**Interaction effect combined with main effect**. We also evaluate the Type I error rate on $X_2$ when the interaction effect is combined with a main effect on $X_1$. @fig-interactions-main-3 presents our results. The error rates of ART and PAR now explode for all non-normal distributions and all three designs. But the performance of RNK and INT is also affected. Their error rates become extremely low under continuous distributions, which suggests a lack of power in detecting small main effects when strong effects of other factors are combined with strong interactions. In contrast, the Type I error of the two methods explodes under the binomial and ordinal scale. Interestingly, RNK exhibits the best performance in these tests.    
+
+::: {#fig-interactions-main-3}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "7_test_Interactions"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha, effectType = 6, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of effects", var = "rateX2", xvar = "effectX1X2", max = 104)
+
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitudes $a_1 = a_{12}$ of a combined main effect on $X_1$ and an interaction effect $X_1 \times X_2$ ($n=20$)
+:::
 
 ## Results for $\alpha = .01$
 
