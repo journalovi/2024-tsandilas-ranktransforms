@@ -423,7 +423,9 @@ fig
 Time distributions for two task populations with difficulty levels 2 and 3 (see @fig-example). 
 :::
 
-Nevertheless, the increased difficulty of the task does not simply translate the distribution to the right. The shape and scale of the distribution also change --- the variance increases, and the mean and median do not increase by the same amount. Unfortunately, this poses a probem for ART's alignment procedure, which relies entirely on means. In particular, the more extreme values of a random sample that appear near the further right of the wider distribution (depicted in green in @fig-distributions) will have a significant impact on the calculation of the within-cell mean. This will lead to the exaggeration of all ranks within this cell. However, an additional issue arises. Such non-linear transformations complexify the interpretation of interactions.
+Nevertheless, the increased difficulty of the task does not simply translate the distribution to the right. The shape and scale of the distribution also change --- the variance increases, and the mean and median do not increase by the same amount. This poses a probem for ART's alignment procedure, which relies entirely on means. In particular, the more extreme values of a random sample that appear near the further right of the wider distribution (depicted in green in @fig-distributions) will have a significant impact on the calculation of the within-cell mean. This will lead to the exaggeration of all ranks within this cell. 
+
+Unfortunately, an additional issue arises that we need to discuss in more depth. Such non-linear transformations complexify the interpretation of interactions.
 
 ### Interaction interpretation problems
 
@@ -813,7 +815,7 @@ Varying the ratio $r_{sd}$ of standard deviations between the levels of $X_1$. T
 
 **Main effects**. We begin by investigating how the four methods detect main effects on $X_1$. The interpretation of results in this scenario is challenging due to differences in the original populations — although they share the same means (and medians), their variances differ. Depending on the null hypothesis of interest, conclusions may vary. Complicating matters further, non-linear transformations can result in distributions with differing means and medians. Consequently, the choice of statistical method may lead to different outcomes; one method may be sensitive to mean differences while others to median differences.
 
-@fig-unequal-main-1 presents the percentage of times each method rejects the null hypothesis ($\%$ positives) at a significance level of $\alpha = .05$. If the null hypothesis of interest posits that "$X_1$ has no effect on the mean of the latent variable $Y$," then these instances should be considered as Type I errors. Under normal distributions, all methods either moderately inflate or deflate error rates as $r_{sd}$ increases. For the $4 \times 3$ within-subjects design ($r_{sd} \ge 2.5$), error rates for PAR, RNK, and ART reach levels of around $7-8\%$, while error rates for INT drop below $3\%$ for the $2 \times 4$ mixed design ($r_{sd} \ge 2.5$).
+@fig-unequal-main-1 presents the percentage of times each method rejects the null hypothesis ($\%$ positives) at a significance level of $\alpha = .05$. If the null hypothesis of interest posits that *"$X_1$ has no effect on the mean of the latent variable $Y$,"* then these instances should be considered as Type I errors. Under normal distributions, all methods either moderately inflate or deflate the positives ratio as $r_{sd}$ increases. For the $4 \times 3$ within-subjects design ($r_{sd} \ge 2.5$), the ratio for PAR, RNK, and ART reaches levels of around $7-8\%$, while for INT, it drops below $3\%$ under the $2 \times 4$ mixed design ($r_{sd} \ge 2.5$).
 
 ::: {#fig-unequal-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -1177,9 +1179,27 @@ The authors ran a $2 \times 2$ repeated-measures ANOVA using ART to test their e
 
 ## Recommendations {#recommendations}
 
-(On Likert scales) I moved this paragraph to the discussion.
+### Abandoning ART
+Our experimental results corroborate Lüpsen's earlier warnings [@luepsen:2017;@luepsen:2018]. They overwhelmignly demonstrate that the ART method is defective. Its advantages over the simple rank transformation (RNK) are marginal and only applicable to normal distributions with equal variances. However, ART introduces additional risks for a broad spectrum of non-normal distributions. Specifically, it confounds main effects and inflates the Type I error rate of both main effects and interactions. Furthermore, the risks associated with ART are more severe compared to those associated with parametric ANOVA. While skewed distributions lead to a loss of statistical power with parametric ANOVA, ART consistently inflates Type I error rates. In light of these findings, we conclude that ART is an outdated procedure and strongly advise researchers to discontinue its use.
+ 
+Some researchers may be tempted to seek alternative formulations of ART. For example, @Salter:1993 find that using ART with median alignment (i.e., using medians instead of means to align values) corrects the method's instability under the Cauchy distribution. 
+
+### Looking for alternative methods
+Given the widespread adoption of ART, many researchers may feel purplexed about which non-parametric alternative method to use. Some may see the inverve normal transformation (INT) as the best candidate for replacing ART. Our results show it to behave well in most configurations that we studied and be the winner among rank tranformations. However, like other rank-based methods, INT still struggles to correctly infer interactions in the presence of parallel main effects, while the method also tends to underestimate large effect sizes. We found that these two problems become more apparent when distributions are discrete. @Beasley:2009 present additional cases 
+
+
+also observe that INT may inflate Type I errors when designs are imbalanced.  
+
+
+### Studying interaction effects
+
+### Choosing between parametric and non-parametric methods
+
+### Analyzing ordinal data
 
 Several authors have argued that parametric statistics are robust enough to be used with Likert scales that group multiple items together [@Carifio:2008], or with individual Likert items with at least five levels [@Harper:2015]. However, @Liddell:2018 identified several situations in which parametric tests may fail, even when they are applied to averages of multiple ordinal items. For example, they can inflate errors when the variances are not equal. They can also deform interaction effects. Unfortunately, rank transformations suffer from similar problems, e.g., we observed that all methods can detect non-existent interactions in the presence of strong main effects (see @fig-interactions). We can show that such problems persist even when we take averages of multiple correlated items.
+
+### Opting for simplicity and transparency 
 
 
 ## Conclusion {#conclusion}
