@@ -225,7 +225,49 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 
 ## Ordinal data
 
+## ART with median alignment 
 
+**Main effects**. 
+
+::: {#fig-median-main}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Appendix_test_4x3_ART-Median"
+alpha <- .05
+
+#methods = c("PAR", "ART-MED", "INT", "ART")
+
+methods = c("PAR", "INT", "ART", "ART-MED")
+palette = c("#888888", "#009E73", "#FF5E00", "#ECB159")
+symbols = c("asterisk",  "star-diamond", "star-triangle-up", "star-triangle-down")
+
+distributions <- c("lnorm", "exp", "cauchy", "poisson", "binom", "likert5B")
+dnames <- c("Log-normal", "Exponential", "Cauchy", "Poisson", "Binomial", "Ordinal (5 levels)")
+df <- readlyData(prefix, alpha, 1, distributions, dnames, methods = methods)
+
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 64, cbPalette = palette, symbols = symbols)
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
+:::
+
+
+**Interaction effects**. 
+
+::: {#fig-median-interaction-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 64, cbPalette = palette, symbols = symbols)
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
+:::
+
+::: {#fig-median-interaction-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readlyData(prefix, alpha, 0, distributions, dnames, methods = methods)
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105, cbPalette = palette, symbols = symbols)
+
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
+:::
 
 ## ATS
 

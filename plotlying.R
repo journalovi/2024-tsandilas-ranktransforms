@@ -2,10 +2,10 @@
 library(plotly)
 
 # If byDesign is TRUE, then the menu will choose among three experimental designs 
-plotlyError <- function(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 100){
+plotlyError <- function(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 100, 
+	cbPalette = c("#888888", "#E69F00", "#009E73", "#FF5E00"), symbols = c("asterisk", "x", "star-diamond", "star-triangle-up")){
 	# aesthetics
-	symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")
-	cbPalette <- c("#888888", "#E69F00", "#009E73", "#FF5E00")
+	
 	margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
 
 	dnames <- levels(df$distr)
