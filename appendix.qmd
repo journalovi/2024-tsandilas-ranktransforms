@@ -225,6 +225,43 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 
 ## Ordinal data
 
+**Main effects**. 
+
+::: {#fig-ordinal-designs-main}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Appendix_test_ordinal"
+alpha = 0.05
+
+distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert20", "likert20B")
+dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "20 - equidistant", "20 - flexible")
+
+df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
+df <- reshapeByDesign(df, dnames)
+
+plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 62)
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
+:::
+
+**Interaction effects**. 
+
+::: {#fig-ordinal-designs-interaction-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 62)
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$) 
+:::
+
+::: {#fig-ordinal-designs-interaction-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames)
+plotlyErrorByDesign(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 105)
+```
+Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
+:::
+
+
 ## ART with median alignment 
 
 **Main effects**. 

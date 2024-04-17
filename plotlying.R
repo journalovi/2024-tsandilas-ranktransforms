@@ -197,17 +197,17 @@ plotlyErrorByDesign3 <- function(df, xlab = "magnitude of main effects", var = "
 	fig
 }
 
- source("dataReaders.R")
- library(tidyverse)
- alpha = 0.05
+# source("dataReaders.R")
+# library(tidyverse)
+# alpha = 0.05
 
-prefix <- "Appendix_test_lognormal"
-distributions = c("lnorm-0.2", "lnorm-0.4", "lnorm-0.6", "lnorm-0.8", "lnorm-1.0", "lnorm-1.2")
-dnames = c("sdlog= 0.2", "sdlog= 0.4", "sdlog= 0.6", "sdlog= 0.8", "sdlog= 1.0", "sdlog= 1.2")
+#prefix <- "Appendix_test_lognormal"
+#distributions = c("lnorm-0.2", "lnorm-0.4", "lnorm-0.6", "lnorm-0.8", "lnorm-1.0", "lnorm-1.2")
+#dnames = c("sdlog= 0.2", "sdlog= 0.4", "sdlog= 0.6", "sdlog= 0.8", "sdlog= 1.0", "sdlog= 1.2")
 
-df <- readData(prefix, n = 20, alpha = .05, effectType = 1, distributions)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX2", xvar = "effectX1", max = 69)
+#df <- readData(prefix, n = 20, alpha = .05, effectType = 1, distributions)
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+#plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX2", xvar = "effectX1", max = 69)
 
 
 

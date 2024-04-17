@@ -3,7 +3,6 @@ library(lmerTest)
 library(ARTool)
 library(effectsize) 
 
-
 inverseNormalTransform = function(x){
    qnorm((rank(x) - 0.5)/length(x))
 }
@@ -11,7 +10,7 @@ inverseNormalTransform = function(x){
 
 df <- read.csv("removable_interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
 df$SID <- factor(df$SID)
-df$Difficulty <- factor(df$Difficulty, order = TRUE) # We can consider it as ordinal
+df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal
 df$Technique <- factor(df$Technique)
 
 # Time
@@ -33,11 +32,18 @@ mp_art <- art(PerceivedPerformance ~ Difficulty*Technique + (1|SID), data = df)
 library(nparLD)
 mp_ats <- nparLD(PerceivedPerformance ~ Difficulty*Technique, data=df, subject="SID", description=FALSE)
 
-# And finally, we comnduct an analysis with a probit model -- This is the recommended one
+
+# And finally, we comnduct an analysis with a probit model -- This is the recommended one (Bayesian approach)
 library(brms)
  mp_brm <- brm(
    formula = PerceivedPerformance ~ mo(Difficulty)*Technique + (1|SID),
    data = df,
    family = cumulative("probit")
  )
+
+
+# And frequentist approach
+df$PerceivedPerformance <- factor(df$PerceivedPerformance, ordered = TRUE)
+# Frequentist probit/logit model 
+mprob <- clmm(PerceivedPerformance ~ Difficulty*Technique + (1|SID), link ="probit", threshold = "flexible", data=df)
 

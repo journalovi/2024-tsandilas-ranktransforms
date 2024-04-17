@@ -198,7 +198,7 @@ plotThresholds <- function(){
 	ggarrange(
 	  plot1 + ggtitle(TeX("$\\alpha_1 = 2$")) + centered + annotate("text", x=-10, y=middleY(plot1), label="Equidistant", family = "Arial", size = 4, hjust = 0),
 	  plot2 + ggtitle(TeX("$\\alpha_1 = 8$")) + centered,
-	  plot3 + annotate("text", x=-10, y=middleY(plot3), label="Random", family = "Arial", size = 4, hjust = 0),
+	  plot3 + annotate("text", x=-10, y=middleY(plot3), label="Flexible", family = "Arial", size = 4, hjust = 0),
 	  plot4,
 		ncol= 2) 
 } 
