@@ -1,0 +1,26 @@
+---
+title: "Appendix. Additional experimental results"
+author: 
+  - name: Theophanis Tsandilas
+    orcid: 0000-0002-0158-228X
+    email: theophanis.tsandilas@inria.fr
+    affiliations:
+      - name: Université Paris-Saclay, CNRS, Inria, LISN
+        country: France
+  - name: Géry Casiez
+    orcid: 0000-0003-1905-815X
+    email: gery.casiezuniv-lille.fr
+    affiliations:
+      - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
+        country: France
+bibliography: bibliography.bib
+
+tbl-cap-location: top
+---
+
+| | Frequentist [@Christensen2023ordinal] | Bayesian [@Burkner:2019] |
+|-----|-----|-----|
+| Coupling (Coupled $-$ Uncoupled) | $-1.85$ $[-2.46, -1.24]$ | $-1.95$ $[-2.58, -1.35]$  |
+| Perspective (1P $-$ 2P) |  $\quad 0.29$ $[-0.37, 0.94]$  | $\quad 0.28$ $[-0.39, 0.95]$ |
+| Coupling $\times$ Perspective | $-0.11$ $[-0.93, 0.70]$| $-0.09$ $[-0.89, 0.75]$ |
+: Effect estimates and their $95\%$ confidence or credible intervals, expressed as standard deviations of the latent variable {.sm}
