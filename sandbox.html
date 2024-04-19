@@ -22,26 +22,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="sandbox_files/libs/clipboard/clipboard.min.js"></script>
@@ -54,9 +35,15 @@ div.csl-indent {
 <script src="sandbox_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="sandbox_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="sandbox_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="sandbox_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="sandbox_files/libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="sandbox_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="sandbox_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="sandbox_files/libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="sandbox_files/libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="sandbox_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="sandbox_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -106,48 +93,19 @@ div.csl-indent {
 
 </header>
 
-<table class="table-sm small table">
-<caption>Effect estimates and their <span class="math inline">\(95\%\)</span> confidence or credible intervals, expressed as standard deviations of the latent variable</caption>
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th>Frequentist <span class="citation" data-cites="Christensen2023ordinal">(<a href="#ref-Christensen2023ordinal" role="doc-biblioref">Christensen 2023</a>)</span></th>
-<th>Bayesian <span class="citation" data-cites="Burkner:2019">(<a href="#ref-Burkner:2019" role="doc-biblioref">Bürkner and Vuorre 2019</a>)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Coupling (Coupled <span class="math inline">\(-\)</span> Uncoupled)</td>
-<td><span class="math inline">\(-1.85\)</span> <span class="math inline">\([-2.46, -1.24]\)</span></td>
-<td><span class="math inline">\(-1.95\)</span> <span class="math inline">\([-2.58, -1.35]\)</span></td>
-</tr>
-<tr class="even">
-<td>Perspective (1P <span class="math inline">\(-\)</span> 2P)</td>
-<td><span class="math inline">\(\quad 0.29\)</span> <span class="math inline">\([-0.37, 0.94]\)</span></td>
-<td><span class="math inline">\(\quad 0.28\)</span> <span class="math inline">\([-0.39, 0.95]\)</span></td>
-</tr>
-<tr class="odd">
-<td>Coupling <span class="math inline">\(\times\)</span> Perspective</td>
-<td><span class="math inline">\(-0.11\)</span> <span class="math inline">\([-0.93, 0.70]\)</span></td>
-<td><span class="math inline">\(-0.09\)</span> <span class="math inline">\([-0.89, 0.75]\)</span></td>
-</tr>
-</tbody>
-</table>
-
-
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Burkner:2019" class="csl-entry" role="listitem">
-Bürkner, Paul-Christian, and Matti Vuorre. 2019. <span>“Ordinal Regression Models in Psychology: A Tutorial.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 2 (1): 77–101. <a href="https://doi.org/10.1177/2515245918823199">https://doi.org/10.1177/2515245918823199</a>.
+<div id="fig-removable-interactions" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<div class="cell">
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d173db2d740c6727cc08" style="width:100%;height:252px;"></div>
+<script type="application/json" data-for="htmlwidget-d173db2d740c6727cc08">{"x":{"data":[{"x":["easy","hard"],"y":[0.29999999999999999,1.1000000000000001],"mode":"lines+markers","line":{"color":"rgba(136,136,136,1)","dash":"solid","width":4},"marker":{"color":"rgba(136,136,136,1)","symbol":"diamond","line":{"color":"rgba(136,136,136,1)","width":4}},"showlegend":false,"type":"scatter","name":"Tech A","textfont":{"color":"rgba(136,136,136,1)"},"error_y":{"color":"rgba(136,136,136,1)"},"error_x":{"color":"rgba(136,136,136,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["easy","hard"],"y":[1.5,3.7999999999999998],"mode":"lines+markers","line":{"color":"rgba(136,136,136,1)","dash":"dash","width":4},"marker":{"color":"rgba(136,136,136,1)","symbol":"x-thin","line":{"color":"rgba(136,136,136,1)","width":4}},"showlegend":false,"type":"scatter","name":"Tech B","textfont":{"color":"rgba(136,136,136,1)"},"error_y":{"color":"rgba(136,136,136,1)"},"error_x":{"color":"rgba(136,136,136,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["Tech A","Tech B"],"y":[0.29999999999999999,1.5],"mode":"lines+markers","line":{"color":"rgba(255,94,0,1)","dash":"solid","width":4},"marker":{"color":"rgba(255,94,0,1)","symbol":"diamond","line":{"color":"rgba(255,94,0,1)","width":4}},"showlegend":false,"type":"scatter","name":"easy","textfont":{"color":"rgba(255,94,0,1)"},"error_y":{"color":"rgba(255,94,0,1)"},"error_x":{"color":"rgba(255,94,0,1)"},"xaxis":"x2","yaxis":"y","frame":null},{"x":["Tech A","Tech B"],"y":[1.1000000000000001,3.7999999999999998],"mode":"lines+markers","line":{"color":"rgba(255,94,0,1)","dash":"dash","width":4},"marker":{"color":"rgba(255,94,0,1)","symbol":"x-thin","line":{"color":"rgba(255,94,0,1)","width":4}},"showlegend":false,"type":"scatter","name":"hard","textfont":{"color":"rgba(255,94,0,1)"},"error_y":{"color":"rgba(255,94,0,1)"},"error_x":{"color":"rgba(255,94,0,1)"},"xaxis":"x2","yaxis":"y","frame":null},{"x":["easy","hard"],"y":[1.5,0.40000000000000002],"mode":"lines+markers","line":{"color":"rgba(136,136,136,1)","dash":"solid","width":4},"marker":{"color":"rgba(136,136,136,1)","symbol":"diamond","line":{"color":"rgba(136,136,136,1)","width":4}},"showlegend":false,"type":"scatter","name":"Tech A","textfont":{"color":"rgba(136,136,136,1)"},"error_y":{"color":"rgba(136,136,136,1)"},"error_x":{"color":"rgba(136,136,136,1)"},"xaxis":"x3","yaxis":"y2","frame":null},{"x":["easy","hard"],"y":[2.5,3.7999999999999998],"mode":"lines+markers","line":{"color":"rgba(136,136,136,1)","dash":"dash","width":4},"marker":{"color":"rgba(136,136,136,1)","symbol":"x-thin","line":{"color":"rgba(136,136,136,1)","width":4}},"showlegend":false,"type":"scatter","name":"Tech B","textfont":{"color":"rgba(136,136,136,1)"},"error_y":{"color":"rgba(136,136,136,1)"},"error_x":{"color":"rgba(136,136,136,1)"},"xaxis":"x3","yaxis":"y2","frame":null},{"x":["Tech A","Tech B"],"y":[1.5,2.5],"mode":"lines+markers","line":{"color":"rgba(255,94,0,1)","dash":"solid","width":4},"marker":{"color":"rgba(255,94,0,1)","symbol":"diamond","line":{"color":"rgba(255,94,0,1)","width":4}},"showlegend":false,"type":"scatter","name":"easy","textfont":{"color":"rgba(255,94,0,1)"},"error_y":{"color":"rgba(255,94,0,1)"},"error_x":{"color":"rgba(255,94,0,1)"},"xaxis":"x4","yaxis":"y2","frame":null},{"x":["Tech A","Tech B"],"y":[0.40000000000000002,3.7999999999999998],"mode":"lines+markers","line":{"color":"rgba(255,94,0,1)","dash":"dash","width":4},"marker":{"color":"rgba(255,94,0,1)","symbol":"x-thin","line":{"color":"rgba(255,94,0,1)","width":4}},"showlegend":false,"type":"scatter","name":"hard","textfont":{"color":"rgba(255,94,0,1)"},"error_y":{"color":"rgba(255,94,0,1)"},"error_x":{"color":"rgba(255,94,0,1)"},"xaxis":"x4","yaxis":"y2","frame":null}],"layout":{"xaxis":{"domain":[0,0.2024],"automargin":true,"showline":true,"mirror":false,"fixedrange":true,"ticks":"outside","tickangle":0,"tickfont":{"size":12},"type":"category","categoryorder":"array","categoryarray":["easy","hard"],"anchor":"y"},"xaxis2":{"domain":[0.23760000000000001,0.44],"automargin":true,"showline":true,"mirror":false,"fixedrange":true,"ticks":"outside","tickangle":0,"tickfont":{"size":12},"type":"category","categoryorder":"array","categoryarray":["Tech A","Tech B"],"anchor":"y"},"xaxis3":{"domain":[0.56000000000000005,0.76240000000000008],"automargin":true,"showline":true,"mirror":false,"fixedrange":true,"ticks":"outside","tickangle":0,"tickfont":{"size":12},"type":"category","categoryorder":"array","categoryarray":["easy","hard"],"anchor":"y2"},"xaxis4":{"domain":[0.79760000000000009,1],"automargin":true,"showline":true,"mirror":false,"fixedrange":true,"ticks":"outside","tickangle":0,"tickfont":{"size":12},"type":"category","categoryorder":"array","categoryarray":["Tech A","Tech B"],"anchor":"y2"},"yaxis2":{"domain":[0,1],"automargin":true,"type":"-","title":"Time (min)","font":{"size":13},"zeroline":false,"showline":true,"linewidth":1,"mirror":false,"nticks":4,"ticks":"inside","tickfont":{"size":12},"range":[0,4.0999999999999996],"ticktext":["0","1","2","3","4"],"tickvals":[0,1,2,3,4],"tickangle":0,"anchor":"x3"},"yaxis":{"domain":[0,1],"automargin":true,"type":"-","title":"Time (min)","font":{"size":13},"zeroline":false,"showline":true,"linewidth":1,"mirror":false,"nticks":4,"ticks":"inside","tickfont":{"size":12},"range":[0,4.0999999999999996],"ticktext":["0","1","2","3","4"],"tickvals":[0,1,2,3,4],"tickangle":0,"anchor":"x"},"annotations":[{"xref":"paper","yref":"y","x":0.10524800000000001,"y":0.70000000000000007,"xanchor":"left","yanchor":"top","text":"Tech A","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y","x":0.10524800000000001,"y":0.70000000000000007,"xanchor":"left","yanchor":"top","text":"Tech A","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y","x":0.10524800000000001,"y":0.70000000000000007,"xanchor":"left","yanchor":"top","text":"Tech A","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y","x":0.10524800000000001,"y":2.6499999999999999,"xanchor":"left","yanchor":"top","text":"Tech B","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y","x":0.10524800000000001,"y":2.6499999999999999,"xanchor":"left","yanchor":"top","text":"Tech B","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y","x":0.10524800000000001,"y":2.6499999999999999,"xanchor":"left","yanchor":"top","text":"Tech B","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y","x":0.34284799999999999,"y":0.90000000000000002,"xanchor":"left","yanchor":"top","text":"easy","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y","x":0.34284799999999999,"y":0.90000000000000002,"xanchor":"left","yanchor":"top","text":"easy","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y","x":0.34284799999999999,"y":0.90000000000000002,"xanchor":"left","yanchor":"top","text":"easy","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y","x":0.34284799999999999,"y":2.4500000000000002,"xanchor":"left","yanchor":"top","text":"hard","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y","x":0.34284799999999999,"y":2.4500000000000002,"xanchor":"left","yanchor":"top","text":"hard","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y","x":0.34284799999999999,"y":2.4500000000000002,"xanchor":"left","yanchor":"top","text":"hard","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.60452800000000007,"y":0.94999999999999996,"xanchor":"left","yanchor":"top","text":"Tech A","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.60452800000000007,"y":0.94999999999999996,"xanchor":"left","yanchor":"top","text":"Tech A","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.60452800000000007,"y":0.94999999999999996,"xanchor":"left","yanchor":"top","text":"Tech A","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.66524800000000006,"y":3.1499999999999999,"xanchor":"left","yanchor":"top","text":"Tech B","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.66524800000000006,"y":3.1499999999999999,"xanchor":"left","yanchor":"top","text":"Tech B","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.66524800000000006,"y":3.1499999999999999,"xanchor":"left","yanchor":"top","text":"Tech B","font":{"family":"Arial","size":14,"color":"#888888"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.77128799999999997,"y":2,"xanchor":"left","yanchor":"top","text":"easy","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.77128799999999997,"y":2,"xanchor":"left","yanchor":"top","text":"easy","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.77128799999999997,"y":2,"xanchor":"left","yanchor":"top","text":"easy","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.90284800000000009,"y":3.6000000000000001,"xanchor":"left","yanchor":"top","text":"hard","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.90284800000000009,"y":3.6000000000000001,"xanchor":"left","yanchor":"top","text":"hard","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"xref":"paper","yref":"y2","x":0.90284800000000009,"y":3.6000000000000001,"xanchor":"left","yanchor":"top","text":"hard","font":{"family":"Arial","size":14,"color":"#FF5E00"},"showarrow":false},{"x":0.20000000000000001,"y":1,"text":"removable interaction","xref":"paper","yref":"paper","xanchor":"center","yanchor":"bottom","showarrow":false},{"x":0.80000000000000004,"y":1,"text":"nonremovable interaction","xref":"paper","yref":"paper","xanchor":"center","yanchor":"bottom","showarrow":false}],"shapes":[],"images":[],"margin":{"b":0,"l":40,"t":40,"r":0,"pad":0},"hovermode":"x","showlegend":false,"dragmode":"pan"},"attrs":{"e7806e36017":{"x":{},"y":{},"mode":"lines+markers","line":{"width":4},"marker":{"line":{"width":4}},"showlegend":false,"color":{},"symbol":{},"linetype":{},"colors":["#888888","#888888"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"symbols":["diamond","x-thin"],"type":"scatter"},"e78039b98989":{"x":{},"y":{},"mode":"lines+markers","line":{"width":4},"marker":{"line":{"width":4}},"showlegend":false,"color":{},"symbol":{},"linetype":{},"colors":["#FF5E00","#FF5E00"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"symbols":["diamond","x-thin"],"type":"scatter"},"e78043f49efa":{"x":{},"y":{},"mode":"lines+markers","line":{"width":4},"marker":{"line":{"width":4}},"showlegend":false,"color":{},"symbol":{},"linetype":{},"colors":["#888888","#888888"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"symbols":["diamond","x-thin"],"type":"scatter"},"e78070f151f0":{"x":{},"y":{},"mode":"lines+markers","line":{"width":4},"marker":{"line":{"width":4}},"showlegend":false,"color":{},"symbol":{},"linetype":{},"colors":["#FF5E00","#FF5E00"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"symbols":["diamond","x-thin"],"type":"scatter"}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"displayModeBar":false,"displaylogo":false,"modeBarButtonsToRemove":["lasso2d","select2d","zoomIn2d","zoomOut2d","autoscale"],"scrollZoom":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
-<div id="ref-Christensen2023ordinal" class="csl-entry" role="listitem">
-Christensen, Rune H. B. 2023. <em>Ordinal—Regression Models for Ordinal Data</em>. <a href="https://CRAN.R-project.org/package=ordinal">https://CRAN.R-project.org/package=ordinal</a>.
 </div>
-</div></section></div></main>
+<figcaption class="figure-caption">Figure&nbsp;1: Examples of a removable (left) and a nonremovable interaction (right). A removable interactions does not cross over regardless of how it is plotted.</figcaption>
+</figure>
+</div>
+
+</main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

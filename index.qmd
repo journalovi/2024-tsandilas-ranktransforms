@@ -958,7 +958,7 @@ df <- df %>% arrange(design,distr,effectX1,cohensfX1)  %>% group_by(design,distr
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"), groupvars = c("distr","method","n"))
 
 #df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1", xvar = "effectX1", min = -6, max = 103, ytitle = 'R squared')
+plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1", xvar = "effectX1", min = -11, max = 103, ytitle = 'R squared')
 ```
 $R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground-truth method for the main effect on $X_1$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
@@ -1203,11 +1203,61 @@ However, @Carifio:2008 also stated that analyzing individual Likert items *"is a
 
 Our experimental results on individual Likert items with 5, 7, and 20 levels show that parametric ANOVA is surpisingly robust for the analysis of main effects, as long as variances are equal. On the other hand, we observed that parametric ANOVA method often fails to correctly infer interactions when main effects become large, and the problem becomes more apparent when ordinal thresholds are not equidistant. INT appears to reduce the impact of this problem but without offering a satisfying solution. We also found that at least for 5-level items with flexible thresholds, all methods may lead to unprecise effect size estimates. In conclusion, while ANOVA seems to be a valid method for hypothesis testing even based on the analysis of individual Likert-item responses, we identified situations that require special attention. Unfortunately, nonparametric approaches may not necessariy work well in these situations. 
 
-In our prior research [@fages:2022], we applied ordered probit models [@Burkner:2019;@Christensen2023ordinal] for analyzing ordinal responses in two experimental studies. But since the HCI community is not familiar with these models, we found it necessary to provide motivation for their use and offer explanations to readers on how to interpret the results. In our view, these models offer numerous advantages, including their ability to support estimation and prediction in addition to hypothesis testing. However, researchers are required to acquaint themselves with concepts of generalized mixed-effects models or Bayesian inference to effectively use them. We hope that our examples in the paper and the supplementary materials can inspire the community to give these methods more thoughtful consideration. 
+In our prior research [@fages:2022], we applied ordered probit models [@Burkner:2019;@Christensen2023ordinal] for analyzing ordinal responses in two experimental studies. Since the HCI community is not familiar with these models, we found it necessary to provide motivation for their use and offer additional explanations to reviewers and readers on how to interpret results. These models offer numerous advantages, including their ability to support interval estimation and prediction in addition to null hypothesis testing. However, researchers are required to acquaint themselves with concepts of generalized mixed-effects models or Bayesian inference in order to use them correctly. We hope that our examples in the paper and the supplementary materials can inspire the community to give these methods more thoughtful consideration. 
  
 ### Interpreting interactions
-When parallel effects emerge, the interpretation of interactions becomes a challenge. We discussed the problem of removable interactions [@Loftus:1978] but also showed that even nonparametric methods do not provide a good control of Type I errors for interactions. 
+ We discussed the problem of removable interactions [@Loftus:1978] and demonstrated that even nonparametric methods struggle to control Type I errors of interactions in the presence of parallel main effects. Thus, a positive test for interaction does not necessarily indicate a genuine interaction when tests on main effects also yield positive results. It is crucial to emphasize that if distributional assumptions are violated, larger sample sizes will not mitigate this issue; instead, the ratio of false positives will increase with sample size, as the test will become more sensitive in detecting removable interactions. 
+  
+A good way to diagnose such problems is to plot interactions (e.g., see @fig-interactions) and visually inspect the trends of the effects. @Loftus:1978 observes that interactions that do not cross over are removable under monotonic transformations, and therefore they cannot be interpreted. In constrast, interactions that cross over are nonremovable. @fig-removable-interactions presents examples of a removable and a nonremovable interaction. Notice that the crossover of the nonremovable interaction is only visible on the second chart (orange), where each line shows the effect of Technique.
 
+::: {#fig-removable-interactions}
+```{r, echo=FALSE, message=FALSE, fig.height=3.5, fig.width = 9, warning=FALSE}
+df1 <- data.frame(Difficulty = c("easy","hard","easy","hard"), Technique=c("Tech A","Tech A","Tech B","Tech B"),
+   Time=c(0.3, 1.1, 1.5, 3.8))
+
+df2 <- data.frame(Difficulty = c("easy","hard","easy","hard"), Technique=c("Tech A","Tech A","Tech B","Tech B"),
+   Time=c(1.5, 0.4, 2.5, 3.8))
+
+annotations = list( 
+  list( 
+    x = 0.2,  
+    y = 1.0,  
+    text = "removable interaction",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.8,  
+    y = 1,  
+    text = "nonremovable interaction",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ))
+
+fig1 <- createInteractionPlot(df1, palette = c("#888888", "#888888"))
+fig2 <- createInteractionPlotInv(df1, palette = c("#FF5E00", "#FF5E00"))
+fig3 <- createInteractionPlot(df2, offx = -0.3, palette = c("#888888", "#888888"))
+fig4 <- createInteractionPlotInv(df2, offx = -0.65, offy = 1.5, palette = c("#FF5E00", "#FF5E00"))
+
+figA <- subplot(fig1, fig2, titleY = TRUE, shareY = TRUE, titleX = TRUE, margin = 0.04)
+figB <- subplot(fig3, fig4, titleY = TRUE, shareY = TRUE, titleX = TRUE, margin = 0.04)
+
+fig <- subplot(figA, figB, titleY = TRUE, margin = 0.06) %>%   
+  layout(annotations = annotations) %>%
+  config(displayModeBar = FALSE, scrollZoom = FALSE, displaylogo = FALSE) %>% layout(hovermode = 'x', dragmode='pan')
+
+fig
+```
+Examples of a removable (left) and a nonremovable interaction (right). A removable interactions does not cross over regardless of how it is plotted. 
+:::
+
+While these visual methods help interpret interations, we encourage researchers to use transformation procedures and latent variable models that describe their data generation processes more accurately than one-size-fits-all (either parametric or nonparametric) methods. For instance, time responses following log-normal distributions are best studied after log-transformation. Likewise, binary or ordinal data are best analyzed through logistic regression or ordered probit models. These methods link the observed responses with a normal latent variable, where interactions can then be studied on a common scale. 
 
 ### Keeping it simple
 Furthermore, planning the analysis methods before data collection is a sensible practice, as it helps focus on measures that are easy to analyze with existing tools and anticipate the types of their generated responses.

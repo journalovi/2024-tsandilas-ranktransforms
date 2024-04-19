@@ -18,9 +18,67 @@ bibliography: bibliography.bib
 tbl-cap-location: top
 ---
 
-| | Frequentist [@Christensen2023ordinal] | Bayesian [@Burkner:2019] |
-|-----|-----|-----|
-| Coupling (Coupled $-$ Uncoupled) | $-1.85$ $[-2.46, -1.24]$ | $-1.95$ $[-2.58, -1.35]$  |
-| Perspective (1P $-$ 2P) |  $\quad 0.29$ $[-0.37, 0.94]$  | $\quad 0.28$ $[-0.39, 0.95]$ |
-| Coupling $\times$ Perspective | $-0.11$ $[-0.93, 0.70]$| $-0.09$ $[-0.89, 0.75]$ |
-: Effect estimates and their $95\%$ confidence or credible intervals, expressed as standard deviations of the latent variable {.sm}
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Useful libraries
+library(crosstalk)
+library(gridExtra)
+library(lmerTest)
+library(tidyverse)
+library(plotly)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Source code for reading data from experimental results and for plotting
+source("dataReaders.R")
+source("plotting.R")
+source("interactions_plot.R")
+```
+
+
+::: {#fig-removable-interactions}
+```{r, echo=FALSE, message=FALSE, fig.height=3.5, fig.width = 9, warning=FALSE}
+df1 <- data.frame(Difficulty = c("easy","hard","easy","hard"), Technique=c("Tech A","Tech A","Tech B","Tech B"),
+   Time=c(0.3, 1.1, 1.5, 3.8))
+
+df2 <- data.frame(Difficulty = c("easy","hard","easy","hard"), Technique=c("Tech A","Tech A","Tech B","Tech B"),
+   Time=c(1.5, 0.4, 2.5, 3.8))
+
+annotations = list( 
+  list( 
+    x = 0.2,  
+    y = 1.0,  
+    text = "removable interaction",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.8,  
+    y = 1,  
+    text = "nonremovable interaction",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ))
+
+fig1 <- createInteractionPlot(df1, palette = c("#888888", "#888888"))
+fig2 <- createInteractionPlotInv(df1, palette = c("#FF5E00", "#FF5E00"))
+fig3 <- createInteractionPlot(df2, offx = -0.3, palette = c("#888888", "#888888"))
+fig4 <- createInteractionPlotInv(df2, offx = -0.65, offy = 1.5, palette = c("#FF5E00", "#FF5E00"))
+
+figA <- subplot(fig1, fig2, titleY = TRUE, shareY = TRUE, titleX = TRUE, margin = 0.04)
+figB <- subplot(fig3, fig4, titleY = TRUE, shareY = TRUE, titleX = TRUE, margin = 0.04)
+
+fig <- subplot(figA, figB, titleY = TRUE, margin = 0.06) %>%   
+  layout(annotations = annotations) %>%
+  config(displayModeBar = FALSE, scrollZoom = FALSE, displaylogo = FALSE) %>% layout(hovermode = 'x', dragmode='pan')
+
+fig
+```
+Examples of a removable (left) and a nonremovable interaction (right). A removable interactions does not cross over regardless of how it is plotted. 
+:::
