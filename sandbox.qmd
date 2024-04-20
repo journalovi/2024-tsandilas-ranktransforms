@@ -80,5 +80,5 @@ fig <- subplot(figA, figB, titleY = TRUE, margin = 0.06) %>%
 
 fig
 ```
-Examples of a removable (left) and a nonremovable interaction (right). A removable interactions does not cross over regardless of how it is plotted. 
+Examples of a removable (left) and a nonremovable interaction (right). A removable interactions does not cross over regardless of how it is plotted. <span style="color:red"> **in red**</span>
 :::
