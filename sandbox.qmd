@@ -32,53 +32,61 @@ library(plotly)
 # Source code for reading data from experimental results and for plotting
 source("dataReaders.R")
 source("plotting.R")
+source("plotlying-v2.R")
 source("interactions_plot.R")
 ```
 
-
-::: {#fig-removable-interactions}
-```{r, echo=FALSE, message=FALSE, fig.height=3.5, fig.width = 9, warning=FALSE}
-df1 <- data.frame(Difficulty = c("easy","hard","easy","hard"), Technique=c("Tech A","Tech A","Tech B","Tech B"),
-   Time=c(0.3, 1.1, 1.5, 3.8))
-
-df2 <- data.frame(Difficulty = c("easy","hard","easy","hard"), Technique=c("Tech A","Tech A","Tech B","Tech B"),
-   Time=c(1.5, 0.4, 2.5, 3.8))
-
-annotations = list( 
-  list( 
-    x = 0.2,  
-    y = 1.0,  
-    text = "removable interaction",  
-    xref = "paper",  
-    yref = "paper",  
-    xanchor = "center",  
-    yanchor = "bottom",  
-    showarrow = FALSE 
-  ),  
-  list( 
-    x = 0.8,  
-    y = 1,  
-    text = "nonremovable interaction",  
-    xref = "paper",  
-    yref = "paper",  
-    xanchor = "center",  
-    yanchor = "bottom",  
-    showarrow = FALSE 
-  ))
-
-fig1 <- createInteractionPlot(df1, palette = c("#888888", "#888888"))
-fig2 <- createInteractionPlotInv(df1, palette = c("#FF5E00", "#FF5E00"))
-fig3 <- createInteractionPlot(df2, offx = -0.3, palette = c("#888888", "#888888"))
-fig4 <- createInteractionPlotInv(df2, offx = -0.65, offy = 1.5, palette = c("#FF5E00", "#FF5E00"))
-
-figA <- subplot(fig1, fig2, titleY = TRUE, shareY = TRUE, titleX = TRUE, margin = 0.04)
-figB <- subplot(fig3, fig4, titleY = TRUE, shareY = TRUE, titleX = TRUE, margin = 0.04)
-
-fig <- subplot(figA, figB, titleY = TRUE, margin = 0.06) %>%   
-  layout(annotations = annotations) %>%
-  config(displayModeBar = FALSE, scrollZoom = FALSE, displaylogo = FALSE) %>% layout(hovermode = 'x', dragmode='pan')
-
-fig
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("plotlying-v2.R")
 ```
-Examples of a removable (left) and a nonremovable interaction (right). A removable interactions does not cross over regardless of how it is plotted. <span style="color:red"> **in red**</span>
+
+**Type I error rates**. 
+
+
+**Power**. 
+
+::: {#fig-ATS-power-main-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+alpha <- .05
+
+prefix <- "Appendix_test-ATS-Power"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+methods = c("PAR", "RNK", "INT", "ATS")
+
+df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
+
+df <- df %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyPowerByDesign_v2(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to inspect their power ($\%$).
+:::
+
+::: {#fig-ATS-power-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 4, distributions, methods = methods) 
+
+df <- df %>% arrange(design,distr,effectX2,rateX2)  %>% group_by(design,distr,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyPowerByDesign_v2(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$). Hover over the charts to inspect their power ($\%$).
+:::
+
+::: {#fig-ATS-power-interaction}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
+
+df <- df %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyPowerByDesign_v2(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to inspect their power ($\%$).
 :::

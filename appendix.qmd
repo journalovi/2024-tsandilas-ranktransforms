@@ -308,6 +308,61 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 
 ## ATS
 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("plotlying-v2.R")
+```
+
+**Type I error rates**. 
+
+
+**Power**. 
+
+::: {#fig-ATS-power-main-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+alpha <- .05
+
+prefix <- "Appendix_test-ATS-Power"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+methods = c("PAR", "RNK", "INT", "ATS")
+
+df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
+
+df <- df %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyPowerByDesign_v2(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to inspect their power ($\%$).
+:::
+
+::: {#fig-ATS-power-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 4, distributions, methods = methods) 
+
+df <- df %>% arrange(design,distr,effectX2,rateX2)  %>% group_by(design,distr,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+plotlyPowerByDesign_v2(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$). Hover over the charts to inspect their power ($\%$).
+:::
+
+::: {#fig-ATS-power-interaction}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
+
+df <- df %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+plotlyPowerByDesign_v2(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power (%) - ranking')
+```
+Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to inspect their power ($\%$).
+:::
+
+
 ## Other tests 
 
 
