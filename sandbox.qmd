@@ -90,3 +90,5 @@ plotlyPowerByDesign_v2(df, xlab = "magnitude of interaction effect", var = "rank
 ```
 Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to inspect their power ($\%$).
 :::
+
+discernible on the second chart (in <span style="color:#FF5E00"> **red**</span>)
