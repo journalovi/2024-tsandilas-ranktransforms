@@ -98,13 +98,10 @@ We will demonstrate that the aligned rank transform procedure [@higgins:1990; @S
 
 We will also demonstrate that simpler transformation methods exhibit better behavior, although they have their limitations. In light of these new results, we will argue that the aligned rank transform is not a viable analysis method. From now on, researchers should consider the method obsolete and replace it with better alternatives. Main and interaction effects reported in the past through statistical analyses conducted with the method should not be trusted unless samples come from populations that do not significantly deviate from normal and the assumption of equal variance holds. Past analyses over ordinal data, such as Likert items with five or seven levels are also concerned. 
 
-### Illustrative example
-<!----- 
-The aligned rank transfom was introduced as a remedy to the problematic behavior of the simple rank transformation [@conover:1981]. @higgins:1990, as well as later @Salter:1993 used an example of normally distributed data to illustrate how the rank transform fails to correctly assess interaction effects when large main effects appear. I will use a different example to illustrate how the aligned rank transform fails when data follow instead a log-normal distribution [@Limbert:2001]. Older results from the 90s [@Salter:1993; @Mansouri:1995] suggest that the method is robust under log-normal distributions, and more recent work [@elkin:2021] states the same for contrast tests. But to what extent can we trust these results?   
------>
-We will start with an example to illustrate how the aligned rank transform can increase false positives and significantly inflate observed effects. The example will also serve as a quick introduction to key concepts and methods used throughout the paper. 
+### Illustrative example 
+We will begin with an illustrative example to demonstrate how the aligned rank transform can lead to an increase in false positives and a significant inflation of observed effects. This example will also serve as a brief introduction to the key concepts and methods employed throughout the paper.
 
-Suppose an HCI researcher conducts an experiment to compare the performance of three user interface techniques (A, B, and C) that help users complete image editing tasks of four different difficulty levels. The experiment is structured using a fully balanced $4 \times 3$ repeated-measures factorial design, where each participant (N = 12) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. The following table presents the experimental results: 
+Suppose an HCI researcher conducts an experiment to compare the performance of three user interface techniques (A, B, and C) that help users complete image editing tasks of four different difficulty levels. The experiment follows a fully balanced $4 \times 3$ repeated-measures factorial design, where each participant (N = 12) performs 12 tasks in a unique order. The researcher measures the time that it takes participants to complete each task. The following table presents the experimental results: 
 
 ::: {#tbl-example}
 ```{r, echo=FALSE, warning=FALSE}
@@ -145,54 +142,8 @@ p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% summarise(Time = m
 
 grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
 ```
-Boxplots summarizing the results of our example. Dots represent the median time performance of each individual participant. 
+Boxplots summarizing the results of our illustrative example. Dots represent the median time performance of each individual participant. 
 :::
-
-
-<!-- 
-[I've made a try with plotly: individual plots look good but when using subplot, the bars are pretty narrow and I can't figure out how to fix that. ]{.g}
-
-::: {#fig-exampleUsingPlotly}
-```{r, echo=FALSE, warning=FALSE, fig.height=2.7, fig.width=8}
-cbPalette <- c("#999999", "#E69F00", "#F15854")
-
-df <- read.csv("example_data.csv", sep=",", header=TRUE, strip.white=TRUE)
-
-p1 <- df %>%  
-  group_by(Participant, Technique) %>%
-  summarise(Time = median(Time), .groups="drop") %>%
-  plot_ly(x = ~Technique, y = ~Time, type = "box", color = ~Technique,
-          colors = cbPalette,
-          line = list(color = "black"),
-          marker = list(color = cbPalette), 
-          boxpoints = "all", jitter = 0.3, pointpos = 0
-          ) %>%
-  layout(yaxis = list(title = "Median Time (min)", range = c(0,3)),
-         xaxis = list(title = "Technique"),
-         showlegend = FALSE, boxgap=0.01
-         )
-
-
-p2 <- df %>%  
-  group_by(Participant, Difficulty, Technique) %>%
-  summarise(Time = median(Time), .groups="drop") %>%
-  plot_ly(x = ~Difficulty, y = ~Time, type = "box", color = ~Technique,
-          colors = cbPalette,
-          line = list(color = "black"),
-          marker = list(color = cbPalette), 
-          boxpoints = "all", jitter = 0.3, pointpos = 0
-          ) %>%
-  layout( yaxis = list(title = "Median Time (min)", range = c(0,6)),
-         xaxis = list(title = "Difficulty"),
-         showlegend = FALSE, boxmode = "group"
-        )
-#p1
-#p2
-subplot(p1, p2, widths = c(0.6, 0.4))
-```
-Boxplots summarizing the results of our example. Dots represent the median time performance of each individual participant. 
-::: 
--->
 
 We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where we conduct a repeated-measures ANOVA with four different data-transformation methods:
 
@@ -230,14 +181,12 @@ We also examine effect size measures, which are commonly reported in scientific 
 | Difficulty $\times$ Technique | $.10\ [.00, 1.0]$ | $.08\ [.00, 1.0]$  | $.16\ [.04, 1.0]$| $.06\ [.00, 1.0]$| $.06\ [.00, 1.0]$ |
 : partial $\eta^2$ and its 95\% confidence interval {.sm}
 
-
 We observe that ART exaggerates both the effect of *Technique* and its interaction with *Difficulty*. 
-
 
 ### Overview
 The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. 
 
-<!-- Even worse, while the rank transformation can inflate Type I and Type II errors on interactions, ART struggles to correctly infer both main and interaction effects.  -->
+The paper is structured as follows. [Section 2](#background) introduces nonparametric tests and rank transformations, and elucidates the construction of ART. It also provides a summary of previous experimental results regarding the robustness of ART and other related rank-based procedures, along with a survey of recent studies using ART. [Section 3](#interpretation) delves into issues regarding effect interpretation and introduces our approach to simulating effects across distributions. [Section 4](#methodology) outlines our experimental methodology, while [Section 5](#results) presents our findings. [Section 6](#casestudies) revisits the results of previous studies employing ART and  illustrates how its application can lead to erroneous conclusions. [Section 7](#recommendations) offers recommendations for researchers. Finally, [Section 8](#conclusion) concludes the paper.
 
 ## Background {#background}
 
@@ -631,7 +580,7 @@ Our first experiments evaluate Type I error rates for ratio scales. We test a 4 
 
 5. The Poisson distribution $Pois(\lambda)$ with a single parameter $\lambda = 3$. It expresses the probability of a given number of events in a fixed interval of time. For example, we could use it to model the number of people who interact with a public display in an hour, when the average rate is $\lambda = 3$ people per hour.
 
-6. The binomial distribution $B(n,p)$ with parameters $n = 10$ and $p=.1$. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. For example, we could use it to model the number of errors that participants make in a series of $n = 10$ repetitions of a memorization task, when the average error rate is $10\%$, thus the average error probability is $p=.1$. 
+6. The binomial distribution $B(k,p)$ with parameters $k = 10$ and $p=.1$. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. For example, we could use it to model the number of errors that participants make in a series of $k = 10$ repetitions of a memorization task, when the average error rate is $10\%$, thus the average error probability is $p=.1$. 
 
 **Main effects**. @fig-ratio-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases. The results show a very good behavior for RNK and INT across all distributions. The regular parametric ANOVA (PAR) keeps error rates below $5\%$. However, error rates become extremely low for some distributions, suggesting a loss in statistical power. We confirm previous results that ART fails to control the Type I error rate under the Cauchy distribution [@Mansouri:1995; @elkin:2021]. However, we also show that the method can be problematic with other non-normal distributions. As the main effect on the first factor $X_1$ increases, Type I errors on the second factor $X_2$ grow and reach high levels. This pattern is particularly pronounced under the log-normal distribution. We also observe that for the binomial distribution, error rates are high ($\approx 11\%$ for $n = 20$) even when effects on $X_1$ are zero. In addition, error rates further grow when the sample size increases.
 
