@@ -57,14 +57,26 @@ source("plotting.R")
 </style>
 ```
 
-::: {.callout-note appearance="simple" icon=false collapse=true}
+::: {.callout-note appearance="simple" icon=false collapse=false}
 ## Abstract {.unnumbered}
 
 ###### Introduction
-The research question and a succinct motivation for answering it. 
+The Aligned Rank Transform (ART) is routinely used for the analysis of the data from user studies when the statistical assumptions of parametric procedures, e.g., normality assumptions, are not met. Its popularity stems from several Monte Carlo experiments showing that the method is robust and powerful. However, contrary experimental findings suggest that ART may be less robust compared to simpler rank transformation methods, failing to adequately control Type I error rates across various scenarios, including discrete data, skewed distributions, and distributions with unequal variances. These results have not gained attention within the Human-Computer Interaction community, where ART is frequently utilized.
 
-###### Background
-Background research. 
+###### Objectives
+The objective of this research is to 
+
+###### Methods
+For empirical research, reanalysis, or meta-analysis: An overview of analysis approaches used as evidence for conclusions. This section does not apply to articles that only use datasets for demonstrations.
+
+###### Results
+For empirical research, reanalysis, or meta-analysis: A summary of the analysis findings
+
+###### Conclusion
+An interpretation of results, lessons learned, etc. in the context of the research question and its implications. Avoid overgeneralizing, and avoid broad behavioral claims without strong evidence.
+
+###### Materials
+Link to repositories containing raw data, open source code or (pre-)registration number/links.
 
 :::
 
@@ -184,7 +196,7 @@ We also examine effect size measures, which are commonly reported in scientific 
 We observe that ART exaggerates both the effect of *Technique* and its interaction with *Difficulty*. 
 
 ### Overview
-The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and ordinal. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. 
+The above example does not capture a rare phenomenon. We will show that ART's error inflation is systematic for a range of distributions that deviate from normality, both continuous and discrete. We will explain how the problem emerges. We will also see that ART often performs worse than simpler methods that ART is widely considered to repair or improve, such as the pure rank transformation or no transformation at all. 
 
 The paper is structured as follows. [Section 2](#background) introduces nonparametric tests and rank transformations, and elucidates the construction of ART. It also provides a summary of previous experimental results regarding the robustness of ART and other related rank-based procedures, along with a survey of recent studies using ART. [Section 3](#interpretation) delves into issues regarding effect interpretation and introduces our approach to simulating effects across distributions. [Section 4](#methodology) outlines our experimental methodology, while [Section 5](#results) presents our findings. [Section 6](#casestudies) revisits the results of previous studies employing ART and  illustrates how its application can lead to erroneous conclusions. [Section 7](#recommendations) offers recommendations for researchers. Finally, [Section 8](#conclusion) concludes the paper.
 
@@ -234,7 +246,7 @@ INT <- function(x){
 ### Experimental evaluations
 Previous studies have assessed ART and related procedures through various Monte Carlo experiments, yielding conflicting results and conclusions.
 
-**Results in support of ART**. The outcomes from numerous Monte Carlo experiments conducted in the 80s and 90s revealed the robustness of ART in testing interaction effects. Noteworthy instances include studies, such as those by @Salter:1993, which compared the method to parametric ANOVA. The authors found that ART remains robust even in the presence of outliers or specific non-normal distributions, such as the logistic, exponential, and double exponential distributions. Their findings indicated only a marginal increase in error rates (ranging from 6.0% to 6.3% instead of the expected 5%) when applied to the exponential distribution. Furthermore, ART demonstrated superior statistical power compared to parametric ANOVA. @Mansouri:1995 evaluated ART under a different set of non-normal distributions (normal, uniform, log-normal, exponential, double exponential, and Cauchy) in the presence of increasing main effects. Except for the Cauchy distribution, ART maintained Type I error rates close to nominal levels across all scenarios, irrespective of the magnitude of main effects. In contrast, the error rates of the rank transformation reached very high levels (up to $100\%$) as the magnitude of main effects increased, even under the normal distribution. ART only failed under the Cauchy distribution, which is well known to be pathological. 
+**Results in support of ART**. The outcomes from numerous experiments conducted in the 80s and 90s suggested that ART was robust in testing interaction effects. Noteworthy instances include studies, such as those by @Salter:1993, which compared the method to parametric ANOVA. The authors found that ART remains robust even in the presence of outliers or specific non-normal distributions, such as the logistic, exponential, and double exponential distributions. Their findings indicated only a marginal increase in error rates (ranging from 6.0% to 6.3% instead of the expected 5%) when applied to the exponential distribution. Furthermore, ART demonstrated superior statistical power compared to parametric ANOVA. @Mansouri:1995 evaluated ART under a different set of non-normal distributions (normal, uniform, log-normal, exponential, double exponential, and Cauchy) in the presence of increasing main effects. Except for the Cauchy distribution, ART maintained Type I error rates close to nominal levels across all scenarios, irrespective of the magnitude of main effects. In contrast, the error rates of the rank transformation reached very high levels (up to $100\%$) as the magnitude of main effects increased, even under the normal distribution. ART only failed under the Cauchy distribution, which is well known to be pathological. 
 
 More recently, @elkin:2021 compared ART to parametric t-tests for testing multifactor contrasts under six distributions: normal, log-normal, exponential, double exponential, Cauchy, and Student's t-distribution ($\nu=3$). Their results confirmed that ART keeps Type I error rates close to nominal levels across all distributions, except for the Cauchy distribution. In addition, they found that ART exhibits a higher power than the t-test. We emphasize, however, that the experimental methodoogy of @elkin:2021 did not allow for detecting the influence of a factor's main effect on the effect of a different factor or their interaction.
 
@@ -1214,8 +1226,8 @@ The Align Rank Transformation (ART) was introduced as a remedy for interaction e
 
 However, our experimental findigns and examples reveal that ART is defective, as it performs adequately only with normal distributions and under the assumption of equal variances. These results corroborate previous warnings regarding ART's performance [@luepsen:2017;@luepsen:2018], leading us to conclude that the method should be abandoned. We recommend prioritizing parametric methods, which, thanks to generalized linear and latent variable models, offer versatility beyond traditional ANOVA models. While we propose the inverse normal transformation (INT) as a generic nonparametric alternative, we caution researchers about the limitations of rank-based transformation methods.
 
-## Acknowledgements {#ack}
-We express our gratitude to Pierre Dragicevic for introducing us to the concept of removable interactions [@Loftus:1978;@Wagenmakers:2012]. Additionally, we extend our thanks to Haiko Lüpsen for his invaluable assistance in evaluating his implementation of the multifactorial generalizations of the van der Waerden test, as well as the Kruskal-Wallis and Friedman tests. Finally, we are thankful to Sophie Siestrup and Daniel Martin for their responsiveness and for generously sharing their data with us. 
+## Acknowledgements {.unnumbered}
+We express our gratitude to Pierre Dragicevic for introducing us to the concept of removable interactions [@Loftus:1978;@Wagenmakers:2012]. Additionally, we extend our thanks to Haiko Lüpsen for his invaluable assistance in evaluating his implementation of the multifactorial generalizations of the van der Waerden test, and the Kruskal-Wallis and Friedman tests. Finally, we are grateful to Sophie Siestrup and Daniel Martin for their responsiveness and for generously sharing their data with us. 
 
 ## References {.unnumbered}
 
