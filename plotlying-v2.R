@@ -3,7 +3,7 @@
 library(plotly)
 
 # This is for alterative graphs for a different set of designs : 2x3, 2x4, 4x3 (writing more generic code with plotly is painful)
-plotlyErrorByDesign_v2 <- function(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", min = 0, max = 100, ytitle = 'Type I errors (%)', cbPalette = c("#888888", "#E69F00", "#009E73", "#FF5E00"), nticks=6){
+plotlyErrorByDesign_v2 <- function(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", min = 0, max = 100, ytitle = 'Type I errors (%)', cbPalette = c("#888888", "#E69F00", "#009E73", "#FF5E00"), nticks=8){
 	# aesthetics
 	symbols <- c("asterisk", "x", "star-diamond", "star-triangle-up")
 	margins <- list(l = 50, r = 0, b = 60, t = 0, pad = 0)
@@ -21,7 +21,7 @@ plotlyErrorByDesign_v2 <- function(df, xlab = "magnitude of main effects", var =
 	  layout(
 	    legend = list(orientation = 'h', yanchor="bottom", xanchor="center", y = 1.2, x = .5),
 	    xaxis = list(title = NA, showline=T, mirror = F, fixedrange=T, ticks="outside",tickangle=60, tickfont = list(size = 11)),
-	    yaxis = list(title = ytitle, font = list(size = 13), zeroline = F, showline=T, linewidth=1, mirror = F,  nticks=8, ticks="inside", tickfont = list(size = 11), range=c(min, max))
+	    yaxis = list(title = ytitle, font = list(size = 13), zeroline = F, showline=T, linewidth=1, mirror = F,  nticks=nticks, ticks="inside", tickfont = list(size = 11), range=c(min, max))
 	  ) 
 
 	  p
@@ -95,18 +95,18 @@ plotlyPowerByDesign_v2 <- function(df, xlab = "magnitude of main effects", var =
 	fig
 }
 
-source("dataReaders.R")
-library(tidyverse)
+#source("dataReaders.R")
+#library(tidyverse)
 
-alpha <- .05
+#alpha <- .05
 
-prefix <- "Appendix_test-ATS"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-methods = c("PAR", "RNK", "INT", "ATS")
+#prefix <- "Appendix_test-ATS"
+#distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+#dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+#methods = c("PAR", "RNK", "INT", "ATS")
 
-df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+#df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
+#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-p <- plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 7.1, nticks=8)
+#p <- plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 7.1, nticks=8)
 
