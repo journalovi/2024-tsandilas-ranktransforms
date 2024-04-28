@@ -74,10 +74,10 @@ Our experimental methodology build upon a latent variable modeling approach, ena
 ###### Results
 Our results indicate that ART systematically confounds effects when the assumptions of normality and equal variances are violated. In such cases, an effect on one factor may cause ART to incorrectly detect effects on other factors or their interactions. The method leads to additional false positives in discrete distributions, particularly when the number of discrete values is small. Moreover, it fails to address scaling issues when testing interactions, resulting in a rapid escalation of Type I error rates when data distributions are ordinal or skewed.
 
-Overall, ART operates as expected only under normal distributions with equal variances. In all other scenarios, it performs less effectively than the simpler rank transformations we evaluated, while in many instances, such as with ordinal data, it performs notably worse than parametric ANOVA. Our analysis of real-world data further demonstrates that the use of ART often leads to incorrect conclusions. Conversely, the inverse normal transformation emerges as the most versatile and robust nonparametric method. However, we also identify situations in which this method can also fail.
+Overall, ART operates as expected only under normal distributions with equal variances. In all other scenarios, it performs less effectively than the simpler rank transformations we evaluated, while in many instances, such as with ordinal data, it performs notably worse than parametric ANOVA. Our analysis of real-world data further demonstrates that the use of ART often leads to incorrect conclusions. Conversely, the inverse normal transformation emerges as the most versatile and most robust nonparametric method. However, we identify situations in which this method can also inflate errors or deform effect sizes.
 
 ###### Conclusion
-We conclude that ART is a problematic statistical method and should be abandoned. We recommend using parametric methods, such as linear models and their generalizations, whenever it is possible. We propose the inverse normal transformation as a generic nonparametric alternative but caution researchers about its limitations.
+We conclude that ART is a problematic statistical method and should be abandoned. We recommend prioritizing parametric methods, such as linear models and their generalizations. While we propose the inverse normal transformation as a generic nonparametric alternative, we caution researchers about limitations of rank transformation methods.
 
 ###### Materials
 Link to repositories containing raw data, open source code or (pre-)registration number/links.
@@ -208,7 +208,7 @@ The above example does not capture a rare phenomenon. We will show that ART's er
 
 The paper is structured as follows. [Section 2](#background) introduces nonparametric tests and rank transformations, and elucidates the construction of ART. It also provides a summary of previous experimental results regarding the robustness of ART and other related rank-based procedures, along with a survey of recent studies using ART. [Section 3](#interpretation) delves into issues regarding effect interpretation and introduces our approach to simulating effects across distributions. [Section 4](#methodology) outlines our experimental methodology, while [Section 5](#results) presents our findings. [Section 6](#casestudies) revisits the results of previous studies employing ART and  illustrates how its application can lead to erroneous conclusions. [Section 7](#recommendations) offers recommendations for researchers. Finally, [Section 8](#conclusion) concludes the paper.
 
-
+In addition to the main sections of the paper, we provide two appendices: Appendix I presents results from additional Monte Carlo experiments, and Appendix II details analysis alternatives for specific dataset examples.
 
 ## Background {#background}
 
@@ -1019,7 +1019,7 @@ We observe that ART exhibits significant challenges with such binary data, as it
 
 Clearly, ART is completely inappropriate when responses are binary. In contrast, parametric ANOVA demonstrates an excellent behavior even when the success (or error) rate is as low as $6\%$. 
 
-A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. The key adavantage of such models is that they are in line with the latent variable approach, where the link function establishes a connection between a normally distributed latent psychological variable (e.g., the human ability to detect changes in a virtual environment) and the observed variable (e.g., successes or failures in sequential change detection tests). Consequently, we expect them to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, the application of such models requires additional steps, such as comparing alternative models using different criteria [@Bolker2009glm] that are often difficult to evaluate. We thus do not incude them in our simulations here.
+A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. Such models are in line with the latent variable approach, where the link function establishes a connection between a normally distributed latent psychological variable (e.g., the human ability to detect changes in a virtual environment) and the observed variable (e.g., successes or failures in sequential change detection tests). Consequently, we expect them to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, inference with such models requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not incude them in our evaluation here.
 
 ### Likert items 
 
@@ -1063,7 +1063,7 @@ fit_frequentist <- clmm(
 )
 ```
 
-We can build a simpler regression model by setting ```threshold = "equidistant"``` and compare the two models, e.g., using the Akaike information criterion (AIC). For this specific example, both models lead to almost identical parameter estimates.
+We can build a simpler regression model by setting ```threshold = "equidistant"``` and compare the two models by conducting a likelihood-ratio test. For this specific example, the flexible thresholds do not improve the model's predictive power, so the simpler model is more promising. However, both models lead to almost identical parameter estimates. 
 
 For the Bayesian formulation, we use the the following code in R:
 
@@ -1090,7 +1090,9 @@ Below, we present parameter estimates from the two methods, where brackets repre
 
 <!--Credible intervals are analogous to the confidence intervals of frequential statistics, but unlike confidence intervals, they allow for a probabilistic interpretation. For example, we can conclude that the above credible intervals contains the true differences in people's sense of ownership with a $95\%$ probability. --> 
 
-Interpreting these results requires special attention, as the above estimates do not refer to the observed ordinal scale of measurements. All effects are expressed in standard deviation units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. The above results suggest that participants' sense of ownership was $1.85$ (or $1.95$) standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. The whole $95\%$ CI for both methods is far below zero, which means that there is overwhelming evidence that this effect is strong. In contrast, we observe that the intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. 
+Interpreting these results requires special attention, as the above estimates do not refer to the observed ordinal scale of measurements. All effects are expressed in standard deviation units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. The above results suggest that participants' sense of ownership was $1.85$ (or $1.95$) standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. 
+
+The whole $95\%$ CI for both methods is far below zero, which means that there is overwhelming evidence that this effect is strong. In contrast, we observe that the intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. If we subsequently conduct a likelihood-ratio test with alternative models (or calculate a Bayes factor for the Bayesian approach), the simpler model with ```formula = ownership ~ Coupling + (1|Dyad/Participant)``` will be the winning one.
 
 These results are consistent with the results of our *lmer* models using PAR, RNK, and INT. In conclusion, using ART to analyze these data is problematic. Here, the presence of a strong effect on the first factor seems to make ART sensitive in detecting other non-existent effects (or perhaps in amplifying tiny effects). 
 
