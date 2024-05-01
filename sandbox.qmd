@@ -18,8 +18,6 @@ bibliography: bibliography.bib
 tbl-cap-location: top
 ---
 
-## vdWaerden
-
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("dataReaders.R")
 source("plotting.R")
@@ -29,118 +27,39 @@ library(tidyverse)
 source("plotlying.R")
 ```
 
-**Type I error rates**. 
+![Citations of the CHI 2011 paper on ARTool [@wobbrock:2011] as shown in Google Scholar on 28/4/2024. We analyzed the 439 citing biobliographic entries of 2023.](images/ARTool-citations-28-april-2024.png){width=80% #fig-ARTool-citations}
 
-::: {#fig-vdWaerden-designs-main}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-vdWaerden"
-alpha = 0.05
 
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-methods = c("RNK", "INT", "VDW", "KWF")
-palette = c("#E69F00", "#009E73", "#E42256", "#888888")
+::: {#fig-ART-citations-venues}
+```{r, echo=FALSE, message=FALSE, fig.height=4.5, fig.width = 8, warning=FALSE}
+library(ggplot2)
+library(bib2df)
+library(stringr)
 
-df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- bib2df("2023-papers/citations-ART-2024-v2.bib")
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 7.1, nticks=8, cbPalette = palette)
+df$venue <- tools::toTitleCase(ifelse(!is.na(df$JOURNAL), df$JOURNAL, df$BOOKTITLE))
+ venues <- df %>%
+  filter(!is.na(venue)) %>%
+  group_by(venue) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+venues <- venues %>% slice(1:17)
+venues$venue <- factor(venues$venue, levels = venues$venue[order(venues$n)])
+
+plot <- ggplot(venues, aes(x = venue, y = n)) +
+  geom_col(fill = "gray70") +
+  geom_text(
+    aes(label = n), 
+    ## make labels left-aligned
+    hjust = 1, nudge_y = -.4, 
+  ) + coord_flip()  +
+  theme_void() + theme(axis.title = element_blank()) + 
+  theme(axis.text.y = element_text(size = 10, hjust = 1, family = "Arial"),
+        plot.margin = margin(rep(15, 4)))
+
+plot
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
+Publication venues with the highest number of citations to ARTool  [@wobbrock:2011] in 2023. 
 :::
-
-::: {#fig-vdWaerden-designs-interaction-1}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 7.1, nticks=8, cbPalette = palette)
-```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$) 
-:::
-
-::: {#fig-vdWaerden-designs-interaction-2}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha, effectType = 0, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 104, nticks=8, cbPalette = palette)
-```
-Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
-:::
-
-
-**Power**. 
-
-::: {#fig-vdWaerden-power-main-1}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-alpha <- .05
-
-prefix <- "Appendix_test-vdWaerden-Power"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
-
-df <- df %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking', cbPalette = palette)
-```
-Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). Hover over the charts to inspect their power ($\%$).
-:::
-
-::: {#fig-vdWaerden-power-main-1B}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-alpha <- .05
-prefix <- "Appendix_test-vdWaerden-Power-Multieffect"
-
-df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 104, nticks=6, cbPalette = palette)
-```
-Power ($\alpha = .05$) to detect the **main effect of $X_1$** ($a_1 = 0.8$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
-:::
-
-
-::: {#fig-vdWaerden-power-main-2}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-vdWaerden-Power"
-df <- readData(prefix, n = 20, alpha, effectType = 4, distributions, methods = methods) 
-
-df <- df %>% arrange(design,distr,effectX2,rateX2)  %>% group_by(design,distr,effectX2) %>% mutate(rank = rank(rateX2))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power (%) - ranking', cbPalette = palette)
-```
-Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$). Hover over the charts to inspect their power ($\%$).
-:::
-
-::: {#fig-vdWaerden-power-interaction}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
-
-df <- df %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power (%) - ranking', cbPalette = palette)
-```
-Ranking of methods for their power ($\alpha = .05$) to detect the **interaction effect $X_1 \times X_2$** as a function of the magnitude of effect $a_{12}$ ($n=20$). Hover over the charts to inspect their power ($\%$).
-:::
-
-::: {#fig-vdWaerden-power-interaction-B}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-alpha <- .05
-prefix <- "Appendix_test-vdWaerden-Power-Multieffect"
-
-df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", max = 104, nticks=6, cbPalette = palette)
-```
-Power ($\alpha = .05$) to detect the **interaction effect** (($a_{12} = 1.5$) ) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
-:::
-

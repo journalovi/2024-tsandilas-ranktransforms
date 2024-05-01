@@ -232,7 +232,7 @@ Notice that even for this very small dataset ($n = 2$), these three rankings are
 
 @fig-ART-explained (b-c) details the calculation of the transformation, where we highlight the following terms: (i) residuals (in yellow) that represent the unexplained error (due to individual differences in our example); (ii) main effects (in green and pink) estimated from the observed means of the individual levels of the two factors; and (iii) interaction effect estimates (in blue). Observe that the estimates of the two main effects are subtracted from the interaction term. The objective of this approach is to eliminate the influence of main effects when estimating interaction effects. 
 
-This is not the only alignment technique found in the research literature. @Sawilowsky:1990 suggests that at least for balanced designs, interactions could be removed when aligning main effects, in the same way main effects are removed when aligning interactions. This approach is also taken by @Leys:2010, who derived a common ranking for both main effects after subtracting the interaction term. We do not test these alternative alignment methods in this paper since at least in the HCI community, they are not commonly used. 
+This is not the only alignment technique found in the research literature. @Sawilowsky:1990 suggests that at least for balanced designs, interactions could be removed when aligning main effects, in the same way main effects are removed when aligning interactions. This approach is also taken by @Leys:2010, who derived a common ranking for both main effects after subtracting the interaction term. We do not test these alternative alignment methods in this paper since to the best of our knowledge, they are not commonly used. 
 
 **The inverse normal transform.** 
 A third transformation method that we evaluate is the rank-based inverse normal transformation (INT). INT is more than 70 years old [@VanDerWaerden:1952] and appears in several variations [@Beasley:2009;@Solomon2009]. Its general formulation is as follows: 
@@ -251,7 +251,7 @@ INT <- function(x){
 
 @fig-ART-explained (a) shows how this function transforms the responses for our example dataset. 
 
-**Other non-parametric rank-based methods.** There are other rank-based statistical tests that deal with interactions, the ANOVA-type statistic (ATS) [@Brunner_ATS:2001] being the most representative one. @Kaptein:2010 introduced this method to the HCI community, advocating its application in the analysis of Likert-type data as a viable alternative to parametric ANOVA. In addition to ATS, @luepsen:2017, @luepsen:2018, and more recently @luepsen:2023 investigated several other multifactorial nonparametric methods. In particular, the author evaluated the hybrid ART+INT technique proposed by @Mansouri:1995, which applies INT on the ranks of ART. He also tested multifactorial generalizations of the van der Waerden test [@VanDerWaerden:1952] and the Kruskal-Wallis and Friedman tests [@Kruskal-Wallis;@Friedman]. The former is based on INT, but instead of using F-tests on the transformed values as part of ANOVA, it computes $\chi^2$ ratios over sums of squares. These two methods are not widely available --- an R implementation can be downloaded from Lupsen's web page [@luepsen_R]. 
+**Other non-parametric rank-based methods.** There are other rank-based statistical tests that deal with interactions, the ANOVA-type statistic (ATS) [@Brunner_ATS:2001] being the most representative one. @Kaptein:2010 introduced this method to the HCI community, advocating its application in the analysis of Likert-type data as a viable alternative to parametric ANOVA. In addition to ATS, @luepsen:2017, @luepsen:2018, and more recently @luepsen:2023 investigated several other multifactorial nonparametric methods. In particular, the author evaluated the hybrid ART+INT technique proposed by @Mansouri:1995, which applies INT on the ranks of ART. He also tested multifactorial generalizations of the van der Waerden test [@VanDerWaerden:1952] and the Kruskal-Wallis and Friedman tests [@Kruskal-Wallis;@Friedman]. The former is based on INT, but instead of using F-tests on the transformed values as part of ANOVA, it computes $\chi^2$ ratios over sums of squares. Although these two methods are not widely available, their implementation in R can be downloaded from Lupsen's web page [@luepsen_R]. 
 
 ### Experimental evaluations
 Previous studies have assessed ART and related procedures through various Monte Carlo experiments, yielding conflicting results and conclusions.
@@ -281,7 +281,44 @@ Given these results, the author's conclusion was the following:
 In addition to INT, @luepsen:2018 evaluated the ATS method but found it to suffer from low power while presenting similar challenges as the rank transformation with regard to Type I error rates. Amongst all evaluated methods, the author identified the generalized van der Waerden test as the method that provided the best overall control of Type I error rates. More recently, @luepsen:2023 conducted a new series of experiments testing rank-based nonparametric methods on split-plot designs with two factors. While the author reported on various tradeoffs of the methods, he concluded that overall, the generalized van der Waerden test and the generalized Kruskal-Wallis and Friedman tests were the best performing methods.
 
 ### The use of ART in experimental research {#ART-use}
-[F: Pesent the survey of papers using ART here?]{.f}
+
+![Citations of the CHI 2011 paper on ARTool [@wobbrock:2011] as shown in Google Scholar on 28/4/2024. We analyzed the 439 citing biobliographic entries of 2023.](images/ARTool-citations-28-april-2024.png){width=80% #fig-ARTool-citations}
+
+
+::: {#fig-ART-citations-venues}
+```{r, echo=FALSE, message=FALSE, fig.height=4.5, fig.width = 8, warning=FALSE}
+library(ggplot2)
+library(bib2df)
+library(stringr)
+
+df <- bib2df("2023-papers/citations-ART-2024-v2.bib")
+
+df$venue <- tools::toTitleCase(ifelse(!is.na(df$JOURNAL), df$JOURNAL, df$BOOKTITLE))
+ venues <- df %>%
+  filter(!is.na(venue)) %>%
+  group_by(venue) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
+
+venues <- venues %>% slice(1:17)
+venues$venue <- factor(venues$venue, levels = venues$venue[order(venues$n)])
+
+plot <- ggplot(venues, aes(x = venue, y = n)) +
+  geom_col(fill = "gray70") +
+  geom_text(
+    aes(label = n), 
+    ## make labels left-aligned
+    hjust = 1, nudge_y = -.4, 
+  ) + coord_flip()  +
+  theme_void() + theme(axis.title = element_blank()) + 
+  theme(axis.text.y = element_text(size = 10, hjust = 1, family = "Arial"),
+        plot.margin = margin(rep(15, 4)))
+
+plot
+```
+Publication venues with the highest number of citations to ARTool  [@wobbrock:2011] in 2023. 
+:::
+
 
 To analyze how the ART is used in experimental research, we collected in November 2023 the 39 most recent papers written in English and citing [@wobbrock:2011] on Google Scholar. The papers were published in Bio, Education, HCI, Haptic, Medecine, Neuroscience, VR domains. 64.1% of the papers reported experiments using a within-participants design, 7.7% a between-participants design and 28.2% a mixed-participants one. The number of factors ranged from 1 to 5, with 2 factors representing 64.1% of the experiments (1: 12.8%, 3: 15.4%). For 2 factors, the number of levels ranged between 2 and 15, with 2 levels being the most widely used (58.0%), followed by 3 (22.0%). The studies had between 12 and 468 participants (median = 24.0), with subgroups ranging from 8 to 48 (median = 20.0). For dependent variables, 51.3% of the studies used ratio variables and the remaining ordinal variables.  94.9% of the studies found at least one significant main effect in the results, using the ART. 80.0% of the studies studying the interaction between factors using the ART found at least one significant interaction. Only 12.8% of the papers made the data of their studies publicly available.
 
@@ -394,9 +431,9 @@ fig
 Time distributions for two task populations with difficulty levels 2 and 3 (see @fig-example). 
 :::
 
-Nevertheless, the increased difficulty of the task does not simply translate the distribution to the right. The shape and scale of the distribution also change --- the variance increases, and the mean and median do not increase by the same amount. This poses a probem for ART's alignment procedure, which relies entirely on means. In particular, the more extreme values of a random sample that appear near the further right of the wider distribution (depicted in green in @fig-distributions) will have a significant impact on the calculation of the within-cell mean. This will lead to the exaggeration of all ranks within this cell. 
+Nevertheless, the increased difficulty of the task does not simply translate the distribution to the right. The shape and scale of the distribution also change --- the variance increases, and the mean and median do not increase by the same amount. This poses a probem for ART's alignment procedure because the more extreme values of a random sample that appear near the further right of the wider distribution (depicted in green in @fig-distributions) will have a significant impact on the calculation of the within-cell mean. This will lead to the exaggeration of all ranks within this cell. 
 
-Unfortunately, an additional issue arises that we need to discuss in more depth. Such non-linear transformations complexify the interpretation of interactions.
+Unfortunately, an additional issue arises regarding the interpretation of interactions, which we discus in depth below.
 
 ### Interaction interpretation problems
 
@@ -491,9 +528,9 @@ For the binomial scale of @fig-conversions (left), we use instead the inverse qu
 
 To transform the latent variable to an ordinal scale, we implement an ordered-probit model, as explained by @Liddell:2018. According to this model, we discretize the latent variable with thresholds that determine the ordinal levels of interest. For our example in @fig-conversions (right), we use as threshold the values $(-2.5, -1, 0, 2.5)$, defining an ordinal scale of five levels. Observe that these thresholds are not equidistant. 
 
-**Interpreting effects.** Our approach allows us to simulate main and interaction effects on the latent variable $Y$ and observe them on the transformed variable $Y' = \mathcal{T}(Y)$. As discussed earlier, how to infer main effects is straightforward since we only study monotonic transformations here. Specifically, if we observe a main effect on the observed variable $Y'$, we can also conclude that there is a main effect on the latent variabe $Y$.
+**Interpreting effects.** Our approach allows us to simulate main and interaction effects on the latent variable $Y$ and observe them on the transformed variable $Y' = \mathcal{T}(Y)$. As discussed earlier, how to infer main effects is straightforward since we only study monotonic transformations here. Specifically, if we observe a main effect on the observed variable $Y'$, we can also conclude that there is a main effect on the latent variabe $Y$. Notice however that if the observed variable is bounded or takes discrete only values, a main effect on $Y$ may not be observable.
 
-However, depending on how the statistical procedure we use deals with different scales, observations of interactions among two or more factors on the transformed variable $Y'$ may lead to incorrect conclusions about the presence of interactions on the latent space of $Y$. Such errors only emerge when the main effect of all interacting factors on the latent (or observed) variable is non-zero. In our analysis, we count them as statistical inference errors (Type I and II errors). Nevertheless, we try to distinguish them from typical inference errors, for which interaction interpretation issues do not come into place.
+The interpretation of interactions is more challenging. Depending on how the statistical procedure we use deals with different scales, observations of interactions among two or more factors on the transformed variable $Y'$ may lead to incorrect conclusions about the presence of interactions on the latent space of $Y$. Such errors emerge when the main effect of all interacting factors on the latent (or observed) variable is non-zero. In our analysis, we count them as statistical inference errors (Type I and II errors). Nevertheless, we try to distinguish them from typical inference errors, for which interaction interpretation issues do not come into place.
 
 ## Experimental method {#methodology}
 We can now detail our experimental method. We evaluate the standard parametric approach (*PAR*) and the three rank-transformation methods (*RNK*, *INT*, and *ART*) that we introduced earlier. We conduct a series of Monte Carlo experiments that assess their performance under a variety of experimental configurations:
@@ -502,7 +539,7 @@ We can now detail our experimental method. We evaluate the standard parametric a
 
 2. We present results for five experimental designs. To simplify our presentation, we start with a 4 $\times$ 3 repeated-measures factorial design. We then show how our conclusions generalize to four additional designs: (i) a 2 $\times$ 3 between-subjects design; (ii) a 2 $\times$ 4 mixed design, with a between-subjects factor and a repeated-measures factor; (iii) a 2 $\times$ 2 $\times$ 2 repeated-measures design, and (iv) a 3 $\times$ 3 $\times$ 3 repeated-measures design.
 
-3. We evaluate three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. For within-subjects designs where all factors are treated as repeated measures, $n$ coincides with the number of subjects (or commonly human participants in HCI research). 
+3. We evaluate three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. For within-subjects designs where all factors are treated as repeated measures, $n$ coincides with the number $N$ of subjects (or commonly human participants in HCI research). In contrast, for a 2 $\times$ 3 between-subjects design, if the cell size is $n = 20$, then the number of subjects is $N = 120$.
 
 4. We test the robustness of the methods under unequal variances. 
 
@@ -900,7 +937,7 @@ Scatterplots showing the relationship between effect size estimates (Cohen's $f$
 
 We observe that PAR tends to underestimate effect sizes under log-normal distributions, in consistency with its low power (see @fig-power-main-1). ART's estimates are instead spread across both sides. We invite the reader to zoom in on the lower range of values ($f < 0.4$), where the method frequently exagerates effects. INT demonstrates the highest precision, followed by RNK. However, their performance deteriorates under the ordinal scale. Still, ART performs worse than all other methods.
 
-@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects $[-8, 8]$. We observe that all three rank-based methods struggle to detect large effects, even when the underlying distribution is normal. Interestingly, INT's performance declines when Cohen's $f$ exceeds a certain level. For the ordinal distribution, estimates are extremely noisy across all methods. 
+@fig-effect-main-scatterplots-2 shows the same relationship but for a larger range of effects $[-8, 8]$. We observe that all three rank-based methods struggle to detect large effects, even when the underlying distribution is normal. Interestingly, INT's performance declines when Cohen's $f$ exceeds a certain level. For the ordinal distribution, estimates are extremely noisy across all methods. We emphasize, however, that this is at least partly due to the low precision of the ordinal scale itself, since its five discrete levels cannot capture the full range of variations of the latent variable. The fact that all methods underestimate large effects can be simply explained by the limited range of the ordinal scale's extremes.
 
 ::: {#fig-effect-main-scatterplots-2}
 ```{r, echo=FALSE, fig.height=3.4, message=FALSE, warning=FALSE}
@@ -956,6 +993,8 @@ plotlyErrorByDesign2(df, xlab = "range of effects (g)", var = "cohensfX1X2", xva
 $R^2$ scores measuring the relationship between effect size estimates (Cohen's $f$) of each method and estimates of the ground truth method for the interaction effect $X_1 \times X_2$. We express these scores as a function of the range of the magnitude of effects $g$.
 :::
 
+### Summary and additional results
+
 
 ## Case studies {#casestudies}
 In this section, we examine some specific types of data through concrete examples. We focus on recent work (published in 2023) that has used ART and made data publicly available. We identify problems and evaluate possible risks. We also present alternative methods for conducting the analysis and compare their outcomes.
@@ -983,11 +1022,13 @@ Below, we present the *p*-values obtained from each method:
 | Type $\times$ Distance $\times$ Complexity | $.00055$ | $.00016$ |
 : *p*-values keeping two significant digits - Type III hypothesis tests {.sm}
 
-There are notable differences among the results obtained from the two methods. It is important to note that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Thus, the presence of interactions in the above unbalanced design complexifies the detection and intepretation of main effects. We emphasize that the ARTool raises a warning for such unbalanced designs:
+There are notable differences among the results obtained from the two methods, but it is important to note that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Thus, the presence of interactions in the above unbalanced design complexifies the detection and intepretation of main effects. In this specific case, the authors decided to create partial models with two factors each time to further evaluate contrasts, and intrestingly, they now used t-tests instead of ART.   
+
+We emphasize that the ARTool raises a warning for such unbalanced designs:
 
 > *F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.*
 
-**Monte Carlo simulation.** What if the experimental design were balanced, and this warning did not appear? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
+**Monte Carlo simulation.** What if the experimental design were balanced, and such issues did not emerge? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.
 
 Like @Martin:2023, we investigate a $4 \times 2 \times 2$ repeated-measures design and set the number of participants to $n=22$. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter $p=.46$ ---average success rate found by @Martin:2023--- and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA (LMER model) with no transformation (PAR). Our results over 5000 iterations are as follows:
 
@@ -1255,7 +1296,7 @@ The Align Rank Transformation (ART) was introduced as a remedy for interaction e
 However, our experimental findigns and examples reveal that ART is defective, as it performs adequately only with normal distributions and under the assumption of equal variances. These results corroborate previous warnings regarding ART's performance [@luepsen:2017;@luepsen:2018], leading us to conclude that the method should be abandoned. We recommend prioritizing parametric methods, which, thanks to generalized models, offer versatility beyond traditional ANOVA and can support latent variable inference. While we propose the inverse normal transformation (INT) as a generic nonparametric alternative, we caution researchers about the limitations of rank transformation methods.
 
 ## Acknowledgements {.unnumbered}
-We express our gratitude to Pierre Dragicevic for introducing us to the concept of removable interactions [@Loftus:1978;@Wagenmakers:2012]. Additionally, we extend our thanks to Haiko Lüpsen for his invaluable assistance in evaluating his implementation of the multifactorial generalizations of the van der Waerden test, and the Kruskal-Wallis and Friedman tests. Finally, we are grateful to Sophie Siestrup and Daniel Martin for their responsiveness and for generously sharing their data with us. 
+We express our gratitude to Pierre Dragicevic for introducing us to the concept of removable interactions [@Loftus:1978;@Wagenmakers:2012]. Additionally, we extend our thanks to Haiko Lüpsen for his invaluable assistance in correctly using his implementation of the multifactorial generalizations of the van der Waerden test, and the Kruskal-Wallis and Friedman tests. Finally, we are grateful to Sophie Siestrup and Daniel Martin for their responsiveness and for generously sharing their data with us. 
 
 ## References {.unnumbered}
 
