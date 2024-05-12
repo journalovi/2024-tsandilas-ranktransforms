@@ -7,7 +7,7 @@
 import bibtexparser
 from openpyxl import Workbook
 
-with open('100papers/biblio.bib') as bibtex_file:
+with open('biblio.bib') as bibtex_file:
     bibtex_str = bibtex_file.read()
 
 bib = bibtexparser.loads(bibtex_str)

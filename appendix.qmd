@@ -293,6 +293,12 @@ plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "ef
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::
 
+## Nonparametric tests (single-factor designs)
+
+
+
+
+
 ## ANOVA-type statistic (ATS)
 
 

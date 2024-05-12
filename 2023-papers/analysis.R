@@ -8,7 +8,7 @@ library(tidyr)
 library(bib2df)
 library(stringr)
 
-df <- bib2df("citations-ART-2024-v2.bib")
+df <- bib2df("citations-ART-2024-no-theses.bib")
 
 #  %>% slice(1:3)
 

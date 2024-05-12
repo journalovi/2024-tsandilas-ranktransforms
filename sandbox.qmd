@@ -24,42 +24,41 @@ source("plotting.R")
 
 library(dplyr)
 library(tidyverse)
-source("plotlying.R")
+source("plotlying-v3.R")
 ```
 
-![Citations of the CHI 2011 paper on ARTool [@wobbrock:2011] as shown in Google Scholar on 28/4/2024. We analyzed the 439 citing biobliographic entries of 2023.](images/ARTool-citations-28-april-2024.png){width=80% #fig-ARTool-citations}
+**Type I error rates**. 
 
+::: {#fig-nonparametric}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+readSingle <- function(prefix, n, alpha, distributions, methods, POWER = FALSE) {
+  	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+	  df$distr <- factor(df$distr, levels=distributions)
+	  df$method <- factor(df$method, levels=methods)
 
-::: {#fig-ART-citations-venues}
-```{r, echo=FALSE, message=FALSE, fig.height=4.5, fig.width = 8, warning=FALSE}
-library(ggplot2)
-library(bib2df)
-library(stringr)
+    if(POWER) {
+      df <- df[df$effect > 0,]
+    }
+    else {
+      df <- df[df$effect == 0,]
+    }
 
-df <- bib2df("2023-papers/citations-ART-2024-v2.bib")
+    if(is.na(alpha)) return(df)
+    else return(df[df$alpha == alpha,])
+}
 
-df$venue <- tools::toTitleCase(ifelse(!is.na(df$JOURNAL), df$JOURNAL, df$BOOKTITLE))
- venues <- df %>%
-  filter(!is.na(venue)) %>%
-  group_by(venue) %>%
-  summarize(n = n()) %>%
-  arrange(desc(n))
+prefix <- "Appendix_test-One-Factor-Unequal-Var"
+alpha = 0.05
 
-venues <- venues %>% slice(1:17)
-venues$venue <- factor(venues$venue, levels = venues$venue[order(venues$n)])
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+methods = c("PAR", "RNK", "INT", "NON")
+palette = c("#888888", "#E69F00", "#009E73", "#E42256")
 
-plot <- ggplot(venues, aes(x = venue, y = n)) +
-  geom_col(fill = "gray70") +
-  geom_text(
-    aes(label = n), 
-    ## make labels left-aligned
-    hjust = 1, nudge_y = -.4, 
-  ) + coord_flip()  +
-  theme_void() + theme(axis.title = element_blank()) + 
-  theme(axis.text.y = element_text(size = 10, hjust = 1, family = "Arial"),
-        plot.margin = margin(rep(15, 4)))
+df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
+df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
 
-plot
+plotlyErrorByDesign_v3(df, xlab = "magnitude of main effect", var = "rates", xvar = "effect", max = 7.1, nticks=8, cbPalette = palette)
 ```
-Publication venues with the highest number of citations to ARTool  [@wobbrock:2011] in 2023. 
+Positives rate ($\alpha = .05$) for the **main effect** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
