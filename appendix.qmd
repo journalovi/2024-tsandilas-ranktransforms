@@ -226,8 +226,8 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 prefix <- "Appendix_test_ordinal"
 alpha = 0.05
 
-distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert20", "likert20B")
-dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "20 - equidistant", "20 - flexible")
+distributions <- c("likert5", "likert5B", "likert7", "likert7B", "likert11", "likert11B")
+dnames <- c("5 - equidistant", "5 - flexible", "7 - equidistant", "7 - flexible", "11 - equidistant", "11 - flexible")
 
 df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
 df <- reshapeByDesign(df, dnames)
@@ -295,9 +295,59 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 
 ## Nonparametric tests (single-factor designs)
 
+**Power**. 
 
+::: {#fig-nonparametric-power}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+source("plotlying-v3.R")
 
+readSingle <- function(prefix, n, alpha, distributions, methods, POWER = FALSE) {
+  	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+	  df$distr <- factor(df$distr, levels=distributions)
+	  df$method <- factor(df$method, levels=methods)
 
+    if(POWER) {
+      df <- df[df$effect > 0,]
+    }
+    else {
+      df <- df[df$effect == 0,]
+    }
+
+    if(is.na(alpha)) return(df)
+    else return(df[df$alpha == alpha,])
+}
+
+prefix <- "Appendix_test-One-Factor"
+alpha = 0.05
+
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+methods = c("PAR", "RNK", "INT", "NON")
+palette = c("#888888", "#E69F00", "#009E73", "#E42256")
+
+df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods, POWER = TRUE)
+#df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
+df <- df %>% arrange(design,distr,effect,rates)  %>% group_by(design,distr,effect) %>% mutate(rank = rank(rates))
+
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effect"))
+plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
+```
+Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
+:::
+
+**Type I Error rates under unequal variances**. 
+
+::: {#fig-nonparametric-unequal-var}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Appendix_test-One-Factor-Unequal-Var"
+
+df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
+df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
+
+plotlyErrorByDesign_v3(df, xlab = "magnitude of main effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
+```
+Positives rates ($\alpha = .05$) as a function of the ratio $r_sd$ of standard deviations ($n = 20$)
+:::
 
 ## ANOVA-type statistic (ATS)
 
@@ -468,7 +518,7 @@ prefix <- "Appendix_test-vdWaerden-Power-Multieffect"
 df <- readData(prefix, n = 20, alpha, effectType = 3, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 104, nticks=6, cbPalette = palette)
+plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6, cbPalette = palette)
 ```
 Power ($\alpha = .05$) to detect the **main effect of $X_1$** ($a_1 = 0.8$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
 :::
@@ -509,7 +559,7 @@ prefix <- "Appendix_test-vdWaerden-Power-Multieffect"
 df <- readData(prefix, n = 20, alpha, effectType = 5, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", max = 104, nticks=6, cbPalette = palette)
+plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6, cbPalette = palette)
 ```
 Power ($\alpha = .05$) to detect the **interaction effect** ($a_{12} = 1.5$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
 :::

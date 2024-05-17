@@ -129,17 +129,17 @@ createInteractionPlotInv <- function(data, likert = FALSE, logscale = FALSE, pal
 
 createRankInteractionPlot <- function(data, rnkscale = FALSE, symbols = c("diamond", "x-thin"), palette = c("#888888", "#FF5E00")) {
 
-  ytitle <- ifelse(rnkscale, 'rank(Y)', 'Y')
-  range <- if(rnkscale) c(0, max(data$Y) + 10) else c(min(data$Y) - 2, max(data$Y) + 2)
+  ytitle <- ifelse(rnkscale, 'rank(Time)', 'Time (sec)')
+  range <- if(rnkscale) c(0, max(data$Time) + 10) else c(min(data$Time) - 2, max(data$Time) + 2)
 
   techA <- list(
   xref = 'paper',
     yref = 'y',
     x = 0.55,
-    y = (data[data$Technique == "Technique A",]$Y[1] + data[data$Technique == "Technique A",]$Y[3])/2,
+    y = (data[data$Technique == "Tech A",]$Time[1] + data[data$Technique == "Tech A",]$Time[3])/2,
     xanchor = 'left',
     yanchor = 'top',
-    text = "Technique A",
+    text = "Tech A",
     font = list(family = 'Arial',
               size = 16,
               color = palette[1]),
@@ -150,17 +150,17 @@ createRankInteractionPlot <- function(data, rnkscale = FALSE, symbols = c("diamo
   xref = 'paper',
     yref = 'y',
     x = 0.44,
-    y = (data[data$Technique == "Technique B",]$Y[1] + data[data$Technique == "Technique B",]$Y[3])/2,
+    y = (data[data$Technique == "Tech B",]$Time[1] + data[data$Technique == "Tech B",]$Time[3])/2,
     xanchor = 'right',
     yanchor = 'bottom',
-    text = "Technique B",
+    text = "Tech B",
     font = list(family = 'Arial',
               size = 16,
               color = palette[2]),
     showarrow = FALSE
   )
 
-  p <- plot_ly(data,  x = ~factor(Difficulty), y = ~Y, color = ~Technique, symbol = ~Technique, linetype = ~Technique, symbols = symbols, 
+  p <- plot_ly(data,  x = ~factor(Difficulty), y = ~Time, color = ~Technique, symbol = ~Technique, linetype = ~Technique, symbols = symbols, 
     colors = palette, type = 'scatter', mode = 'lines+markers', line = list(width = 4), marker = list(line = list(width = 4)), showlegend = FALSE) %>%
   layout(
     xaxis = list(title = 'Difficulty', showline=T, mirror = F, fixedrange=T, ticks="outside",tickangle=0, tickfont = list(size = 12)),
@@ -169,7 +169,7 @@ createRankInteractionPlot <- function(data, rnkscale = FALSE, symbols = c("diamo
       #ticktext = lticktext, tickvals = ltickvals)
   ) %>% layout(annotations = techA)  %>% layout(annotations = techB)  %>% 
         config(displayModeBar = TRUE, displaylogo = FALSE, modeBarButtonsToRemove = c("lasso2d", "select2d",  "zoomIn2d", "zoomOut2d", "autoscale")) %>% 
-        layout(margin = list(l = 60, r = 0, b = 0, t = 20, pad = 0))
+        layout(margin = list(l = 60, r = 0, b = 1, t = 20, pad = 0))
 
   p
 }

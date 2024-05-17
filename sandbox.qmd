@@ -27,9 +27,9 @@ library(tidyverse)
 source("plotlying-v3.R")
 ```
 
-**Type I error rates**. 
+**Power**. 
 
-::: {#fig-nonparametric}
+::: {#fig-nonparametric-power}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 readSingle <- function(prefix, n, alpha, distributions, methods, POWER = FALSE) {
   	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
@@ -47,7 +47,7 @@ readSingle <- function(prefix, n, alpha, distributions, methods, POWER = FALSE) 
     else return(df[df$alpha == alpha,])
 }
 
-prefix <- "Appendix_test-One-Factor-Unequal-Var"
+prefix <- "Appendix_test-One-Factor"
 alpha = 0.05
 
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
@@ -55,10 +55,27 @@ dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordina
 methods = c("PAR", "RNK", "INT", "NON")
 palette = c("#888888", "#E69F00", "#009E73", "#E42256")
 
-df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
+df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods, POWER = TRUE)
+#df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
+df <- df %>% arrange(design,distr,effect,rates)  %>% group_by(design,distr,effect) %>% mutate(rank = rank(rates))
 
-plotlyErrorByDesign_v3(df, xlab = "magnitude of main effect", var = "rates", xvar = "effect", max = 7.1, nticks=8, cbPalette = palette)
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effect"))
+plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
 ```
-Positives rate ($\alpha = .05$) for the **main effect** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
+Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
 :::
+
+**Type I Error rates under unequal variances**. 
+
+::: {#fig-nonparametric-unequal-var}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Appendix_test-One-Factor-Unequal-Var"
+
+df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
+df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
+
+plotlyErrorByDesign_v3(df, xlab = "magnitude of main effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
+```
+Positives rates ($\alpha = .05$) as a function of the ratio $r_sd$ of standard deviations ($n = 20$)
+:::
+
