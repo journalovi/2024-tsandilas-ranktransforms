@@ -61,44 +61,10 @@ source("plotlying.R")
 </style>
 ```
 
-
-## Missing data
-
-::: {#fig-missing-main}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test_missing"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha = .05, effectType = 1, distributions)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 98)
-
-```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
-:::
-
-::: {#fig-missing-interaction1}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 98)
-
-```
-Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
-:::
-
-::: {#fig-missing-interaction2}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- readData(prefix, n = 20, alpha = .05, effectType = 0, distributions)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 103)
-
-```
-Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as a function of the magnitudes $a_{1}$ and $a_{2}$ of the main effects ($n=20$)
-:::
-
+We present results from experiments that investigate additional scenarios, as well as other nonparametric methods. Unless explicitely mentioned in each section, we follow the experimental methodology presented in the main article. For most experiments, we focus on $n = 20$. 
 
 ## Main effects in the presence of interactions {#effect-sizes}
-In all previous experiments, we assumed zero interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. Our fifth experiment evaluates the Type I error rate of the methods in the presence of an interaction effect alone, or alternatively, in the presence of a simultaneous main effect. We focus again on the three 2-factor experimental designs that we evaluated for our previous experiment and set the sample size to $n = 20$.
+In all experiments assessing Type I error rates reported in our article, we assumed no interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. This experiment evaluates the Type I error rate of the methods in the presence of an interaction effect alone, or alternatively, in the presence of a simultaneous main effect. We focus again on the three 2-factor experimental designs that we evaluated for our previous experiment and set the sample size to $n = 20$.
 
 To simulate populations in which interactions emerge in the absence of main effects, we examine perfectly symmetric cross-interactions. To this end, we slightly change the method we use to encode the levels of each factor, such that levels are uniformly positioned around 0. For a factor with three levels, we numerically encode the levels as $\{-0.5, 0, 0.5\}$. For a factor with four levels, we encode them as $\{-0.5, -0.1667, 0.1667, 0.5\}$. 
 
@@ -119,7 +85,6 @@ plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX1
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as a function of the magnitude $a_{12}$ of the interaction effect $X_1 \times X_2$ ($n=20$)
 :::
-
 
 ::: {#fig-interactions-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -151,12 +116,65 @@ plotlyErrorByDesign2(df, xlab = "magnitude of effects", var = "rateX2", xvar = "
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitudes $a_1 = a_{12}$ of a combined main effect on $X_1$ and an interaction effect $X_1 \times X_2$ ($n=20$)
 :::
 
+
+## Missing data
+We evaluate how missing data can affect the performance of the four methods. Specifically, we study a scenario, where a random sample of $10\%$ of the observations is missing. Missing observations lead to unbalanced designs. However, we emphasize that our scenario does not cover systematic imbalances due to missing data for specific levels of a factor.  
+
+**Main effects**. @fig-missing-main presents Type I error rates for the main effect of $X_2$ as the magnitude of the main effect of $X_1$ increases. We observe that missing data make the error rate for ART to increase even further, with a larger increase for the mixed design. This is also the case for the normal distribution. In contrast, the accuracy of the three other methods does not seem to be affected.
+
+::: {#fig-missing-main}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Appendix_test_missing"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+
+df <- readData(prefix, n = 20, alpha = .05, effectType = 1, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 98)
+
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
+:::
+
+**Interaction effects**. @fig-missing-interaction1 and @fig-missing-interaction2 present Type I error rates for the interaction effect in the presence of a single main effect or two parallel main effects. The error levels for all methods, including ART, are now very similar to the ones observed with no missing data. 
+
+::: {#fig-missing-interaction1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 98)
+
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
+:::
+
+::: {#fig-missing-interaction2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readData(prefix, n = 20, alpha = .05, effectType = 0, distributions)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotlyErrorByDesign2(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 103)
+
+```
+Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as a function of the magnitudes $a_{1}$ and $a_{2}$ of the main effects ($n=20$)
+:::
+
+
 ## Log-normal distributions
+We conduct an experiment to evaluate log-normal distributions with a wider range of $\sigma$ parameters (see @fig-lognormal-distributions), in particular distributions with less variance, which present a lower degree of skew. 
+
+::: {#fig-lognormal-distributions}
+```{r, echo=FALSE, fig.height=1.3, fig.width = 9, warning=FALSE,  message=FALSE}
+source("effects_plot.R")
+plotEffectsLognormal(nlevels = 2, effectSize = 2)
+```
+Log-normal distributions that we evaluate, shown here for a factor with two levels and a magnitude of effect $a_{i} = 2$. 
+:::
+
+**Main effects**. @fig-lognormal-main presents our results on Type I error rates for main effects. As expected, ART's inflation of error rates is less serious when distributions are closer to normal, while the problem becomes worse as distributions are more skewed.
+
 ::: {#fig-lognormal-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "Appendix_test_lognormal"
 distributions = c("lnorm-0.2", "lnorm-0.4", "lnorm-0.6", "lnorm-0.8", "lnorm-1.0", "lnorm-1.2")
-dnames = c("sdlog= 0.2", "sdlog= 0.4", "sdlog= 0.6", "sdlog= 0.8", "sdlog= 1.0", "sdlog= 1.2")
+dnames = c("sd = 0.2", "sd = 0.4", "sd = 0.6", "sd = 0.8", "sd = 1.0", "sd = 1.2")
 
 df <- readData(prefix, n = 20, alpha = .05, effectType = 1, distributions)
 df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
@@ -165,6 +183,8 @@ plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
 :::
+
+**Interaction effects**. We observe similar patterns for the Type I error rate of the interaction effect in the presence of a single main effect (@fig-lognormal-interaction1) or two parallel main effects (@fig-lognormal-interaction2). As shown in @fig-lognormal-interaction2, any advantage of ART over RNK and INT for testing interaction disappears even when distrubitions exhibit light skew levels. We also observe again that the performance of RNK and INT remains identical across all skew levels.  
 
 ::: {#fig-lognormal-interaction1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -184,8 +204,10 @@ plotlyErrorByDesign2(df, xlab = "magnitude of main effects", var = "rateX1X2", x
 Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as a function of the magnitudes $a_{1}$ and $a_{2}$ of the main effects ($n=20$)
 :::
 
-
 ## Binomial distributions
+We also evaluate a wider range of parameters for the binomial distribution. We focus on the lower range of probabilities $p$. However, we expect results to be identical for their symmetric probabilities $1-p$. Specifically, we test $p=.05$, $.1$, and $.2$, and for each, we consider $k=5$ and $10$ task repetitions (Bernoulli trials). 
+
+**Main effects**. We present our results for the main effect in @fig-binom-main. We observe that ART's Type I error rates increase as the number of repetitions decreases and the probability of success approaches zero, reaching very high levels when $k=5$ and $p=.05$. This trend is consistent across designs. The other methods maintain low error rates. However, their error rates fall below nominal levels when the magnitude of the effect on $X_1$ grows beyond a certain threshold, indicating a loss of power in these cases.
 
 ::: {#fig-binom-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -200,6 +222,8 @@ plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
 :::
+
+**Interaction effects**. @fig-binom-interaction1 shows similar patterns for the Type I error rate of the interaction effect in the presense of a single main effect. When both main effects increase beyond a certain level (see @fig-binom-interaction2), all methods seem to fail to control the error rate. ART demonstrates again the worst behavior, systematically infating error rates even when main effects are absent. 
 
 ::: {#fig-binom-interaction1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -220,6 +244,9 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 :::
 
 ## Ordinal data
+Given the frequent use of ART with ordinal data, we evaluate our complete set of ordinal scales, based on both equidistant and flexible thresholds, with additional experimental designs. 
+
+**Main effects**. @fig-ordinal-designs-main presents Type I error rates for the main effect. ART preserves error rates at nominal levels under the $2 \times 3$ between-subjects design and the $2 \times 3$ mixed design, as long as thresholds are equidistant. Under the two within-subject designs, it inflates error rates, especially when there are fewer ordinal levels with flexible thresholds.    
 
 ::: {#fig-ordinal-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -236,6 +263,8 @@ plotlyErrorByDesign(df, xlab = "magnitude of main effect", var = "rateX2", xvar 
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
+
+**Interaction effects**. @fig-missing-interaction1 and @fig-missing-interaction2 present Type I error rates for the interaction effect in the presence of a single main effect or two parallel main effects. These results lead to similar conclusions. Even in cases where ART keeps error rates close to nominal levels (e.g., under the between-subjects design with equidistance thresholds), the performance of parametric ANOVA is constantly better.
 
 ::: {#fig-ordinal-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -255,16 +284,19 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 
 
 ## ART with median alignment 
+We evaluate a modified implementation of ART (ART-MED), where we use medians instead of means to align ranks. This approach draws inspiration from results by @Salter:1993, showing that median alignment corrects ART's instable behavior under the Cauchy distribution. We only test the $4 \times 3$ within-participants design for sample sizes $n=10$, $20$, and $30$. For this experiment, we omit the RNK method and only present results for non-normal distributions. 
+
+We emphasize that @Salter:1993 only apply mean and median alignment to interactions. Our implementation for main effects is based on the alignment approach of @wobbrock:2011, where we simply replace means by medians.
+
+**Main effects**. Our results presented in @fig-median-main demonstrate that median alignment (ART-MED), or at least our implementation of the method, is not appropriate for testing main effects. Although Type I error rates are now lower for the Cauchy distribution compared to the original method, they are still above nominal levels. In addition, they are significantly higher for all other distributions.  
 
 ::: {#fig-median-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "Appendix_test_4x3_ART-Median"
 alpha <- .05
 
-#methods = c("PAR", "ART-MED", "INT", "ART")
-
 methods = c("PAR", "INT", "ART", "ART-MED")
-palette = c("#888888", "#009E73", "#FF5E00", "#ECB159")
+palette = c("#888888", "#009E73", "#FF5E00", "#FFA27F")
 symbols = c("asterisk",  "star-diamond", "star-triangle-up", "star-triangle-down")
 
 distributions <- c("lnorm", "exp", "cauchy", "poisson", "binom", "likert5B")
@@ -275,6 +307,8 @@ plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effec
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
+
+**Interaction effects**. In contrast, median alignment works surprisingly well for interactions, correcting deficiencies of ART, especially when main effects are absent or weak. @fig-median-interaction-1 and @fig-median-interaction-2 present our results. Despite this improved performance, we cannot recommend using the method because it still cannot compete with INT. Additionally, its advantages over parametric ANOVA are only apparent for the Cauchy distribution.
 
 ::: {#fig-median-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -293,9 +327,10 @@ plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "ef
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::
 
-## Nonparametric tests (single-factor designs)
+## Nonparametric tests in single-factor designs
+We compare PAR, RNK, and INT to nonparamatric tests for within- and between-subjects single-factor designs, where the factor has two, three, or four levels. Depending on the design, we use different nonparametric tests. For within-subjects designs, we use the Wilcoxon sign-rank test if the factor has two levels (*2 within*) and the Friedman test if the factor has three (*3 within*) or four (*4 within*) levels. For between-subjects designs (*2 between*, *3 between*, and *4 between*), we use the Kruskal–Wallis test.
 
-**Power**. 
+**Power**. @fig-nonparametric-power compares the power of the various methods as the magnitude of the main effect increases, where we use the abbreviation *NON* to designate a nonparametric test. We observe that primarily INT, but also RNK, generally exhibit better power than the nonparametric tests. Differences are more pronounced for within-subjects designs, corroborating Conover's[-@Conover:2012] assertion that the rank transformation results in a test that is superior to the Friedman test under certain conditions. 
 
 ::: {#fig-nonparametric-power}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -323,19 +358,21 @@ alpha = 0.05
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 methods = c("PAR", "RNK", "INT", "NON")
-palette = c("#888888", "#E69F00", "#009E73", "#E42256")
+palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
 
 df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods, POWER = TRUE)
 #df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
 df <- df %>% arrange(design,distr,effect,rates)  %>% group_by(design,distr,effect) %>% mutate(rank = rank(rates))
 
 df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effect"))
-plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
+plotlyPowerByDesign_v3(df, xlab = "magnitude of effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
 ```
-Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
+Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitude of effect ($n = 20$). 
 :::
 
-**Type I Error rates under unequal variances**. 
+We expect that the accuracy of ANOVA on rank-transformed values will decrease with smaller samples. However, our tests with smaller samples of $n=10$ show that INT remains robust and still outperforms other nonparametric methods. Although it is possibe to couple INT with permutation testing for higher accuracy [@Beasley:2009], we have not explored this possibility here. 
+
+**Type I error rate under equal and unequal variances**. 
 
 ::: {#fig-nonparametric-unequal-var}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -344,9 +381,9 @@ prefix <- "Appendix_test-One-Factor-Unequal-Var"
 df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
 
-plotlyErrorByDesign_v3(df, xlab = "magnitude of main effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
+plotlyErrorByDesign_v3(df, xlab = "magnitude of effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
 ```
-Positives rates ($\alpha = .05$) as a function of the ratio $r_sd$ of standard deviations ($n = 20$)
+Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
 :::
 
 ## ANOVA-type statistic (ATS)
@@ -366,7 +403,7 @@ alpha = 0.05
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 methods = c("PAR", "RNK", "INT", "ATS")
-palette = c("#888888", "#E69F00", "#009E73", "#E42256")
+palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
 
 df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
@@ -456,7 +493,7 @@ alpha = 0.05
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 methods = c("RNK", "INT", "VDW", "KWF")
-palette = c("#E69F00", "#009E73", "#E42256", "#888888")
+palette = c("#E69F00", "#009E73", "#FF70AB", "#888888")
 
 df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))

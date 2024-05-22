@@ -8,6 +8,8 @@ library(tidyr)
 library(egg)
 library(latex2exp)
 
+source("data-generators.R")
+
 ############################################################################################
 # Data generation for various experimental designs
 
@@ -203,3 +205,42 @@ plotThresholds <- function(){
 		ncol= 2) 
 } 
 
+
+# =======================
+# Ploting the log-normal distributions in the appendix
+plotDensitiesLognormal <- function(distr = "lnorm-0.2", n=10000, nlevels, effectSize, alpha = 0.6, limits = c(-10, 10)) {
+	data <- simulate(n = n, nlevels = nlevels, effectSize = effectSize) %>% toDistribution(distr)
+
+  palette <- c("#888888", "#4E84C4", "red", "#FF5E00")
+
+  plot <- ggplot(data) + geom_density(aes(x = y, fill = x1, color = x1), alpha = alpha) + scale_color_manual(values = rep("#FFFFFF00",nlevels)) + scale_fill_manual(values = palette) + 
+  theme_classic() +
+  theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.position = "none", axis.title.x  = element_blank(), axis.line.y  = element_blank(), axis.line.x  = element_blank(),
+  	axis.title.y = element_blank(), axis.ticks  = element_blank(), axis.text  = element_blank()) +
+  scale_x_continuous(name =element_blank(), breaks = seq(-8, 8, by=4), limits = limits)
+
+  plot
+}
+
+
+plotEffectsLognormal <- function(nlevels = 2, effectSize = 2){
+	set.seed(200)
+
+	plot1 <- plotDensitiesLognormal(distr = "lnorm-0.2", nlevels = nlevels, effectSize = effectSize, limits = c(0.3, 2))
+	plot2 <- plotDensitiesLognormal(distr = "lnorm-0.4", nlevels = nlevels, effectSize = effectSize, limits = c(0,3))
+	plot3 <- plotDensitiesLognormal(distr = "lnorm-0.6", nlevels = nlevels, effectSize = effectSize, limits = c(0,4))
+	plot4 <- plotDensitiesLognormal(distr = "lnorm-0.8", nlevels = nlevels, effectSize = effectSize, limits = c(0,5.5))
+	plot5 <- plotDensitiesLognormal(distr = "lnorm", nlevels = nlevels, effectSize = effectSize, limits = c(0,6.5))
+	plot6 <- plotDensitiesLognormal(distr = "lnorm-1.2", nlevels = nlevels, effectSize = effectSize, limits = c(0,7.5))
+
+	centered <- theme(plot.title = element_text(hjust = 0.5, vjust = -1, size = 12))
+
+	ggarrange(
+	  plot1 + ggtitle(TeX("$sigma = 0.2$")) + centered,
+	  plot2 + ggtitle(TeX("$sigma = 0.4$")) + centered,
+	  plot3 + ggtitle(TeX("$sigma = 0.6$")) + centered,
+	  plot4 + ggtitle(TeX("$sigma = 0.8$")) + centered,
+	  plot5 + ggtitle(TeX("$sigma = 1.0$")) + centered,
+	  plot6 + ggtitle(TeX("$sigma = 1.2$")) + centered,
+			ncol= 6) 
+}

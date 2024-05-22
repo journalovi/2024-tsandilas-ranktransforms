@@ -25,19 +25,20 @@ source("plotting.R")
 library(dplyr)
 library(tidyverse)
 source("plotlying-v3.R")
+source("plotlying.R")
 ```
-
-**Power**. 
 
 ::: {#fig-nonparametric-power}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+source("plotlying-v3.R")
+
 readSingle <- function(prefix, n, alpha, distributions, methods, POWER = FALSE) {
   	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
 	  df$distr <- factor(df$distr, levels=distributions)
 	  df$method <- factor(df$method, levels=methods)
 
     if(POWER) {
-      df <- df[df$effect > 0,]
+      df <- df[df$effect >= 0,]
     }
     else {
       df <- df[df$effect == 0,]
@@ -53,7 +54,7 @@ alpha = 0.05
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 methods = c("PAR", "RNK", "INT", "NON")
-palette = c("#888888", "#E69F00", "#009E73", "#E42256")
+palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
 
 df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods, POWER = TRUE)
 #df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
@@ -65,17 +66,15 @@ plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar
 Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
 :::
 
-**Type I Error rates under unequal variances**. 
-
-::: {#fig-nonparametric-unequal-var}
+::: {#fig-nonparametric-power-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-One-Factor-Unequal-Var"
 
-df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
+df <- readSingle(prefix, n = 10, alpha, distributions, methods = methods, POWER = TRUE)
+#df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
+df <- df %>% arrange(design,distr,effect,rates)  %>% group_by(design,distr,effect) %>% mutate(rank = rank(rates))
 
-plotlyErrorByDesign_v3(df, xlab = "magnitude of main effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
+df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effect"))
+plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
 ```
-Positives rates ($\alpha = .05$) as a function of the ratio $r_sd$ of standard deviations ($n = 20$)
+Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
 :::
-
