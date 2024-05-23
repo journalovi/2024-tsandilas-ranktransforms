@@ -330,7 +330,7 @@ Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as 
 ## Nonparametric tests in single-factor designs
 We compare PAR, RNK, and INT to nonparamatric tests for within- and between-subjects single-factor designs, where the factor has two, three, or four levels. Depending on the design, we use different nonparametric tests. For within-subjects designs, we use the Wilcoxon sign-rank test if the factor has two levels (*2 within*) and the Friedman test if the factor has three (*3 within*) or four (*4 within*) levels. For between-subjects designs (*2 between*, *3 between*, and *4 between*), we use the Kruskal–Wallis test.
 
-**Power**. @fig-nonparametric-power compares the power of the various methods as the magnitude of the main effect increases, where we use the abbreviation *NON* to designate a nonparametric test. We observe that primarily INT, but also RNK, generally exhibit better power than the nonparametric tests. Differences are more pronounced for within-subjects designs, corroborating Conover's[-@Conover:2012] assertion that the rank transformation results in a test that is superior to the Friedman test under certain conditions. 
+**Power**. @fig-nonparametric-power compares the power of the various methods as the magnitude of the main effect increases, where we use the abbreviation *NON* to designate a nonparametric test. We observe that primarily INT, but also RNK, generally exhibit better power than the nonparametric tests. Differences are more pronounced for within-subjects designs, corroborating Conover's [-@Conover:2012] observation that the rank transformation results in a test that is superior to the Friedman test under certain conditions. 
 
 ::: {#fig-nonparametric-power}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -370,9 +370,14 @@ plotlyPowerByDesign_v3(df, xlab = "magnitude of effect", var = "rank", xvar = "e
 Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitude of effect ($n = 20$). 
 :::
 
-We expect that the accuracy of ANOVA on rank-transformed values will decrease with smaller samples. However, our tests with smaller samples of $n=10$ show that INT remains robust and still outperforms other nonparametric methods. Although it is possibe to couple INT with permutation testing for higher accuracy [@Beasley:2009], we have not explored this possibility here. 
+We expect that the accuracy of ANOVA on rank-transformed values will decrease with smaller samples. However, our tests with smaller samples of $n=10$ show that INT remains robust and still outperforms other nonparametric methods. Although it is possibe to couple INT with permutation testing for higher accuracy [@Beasley:2009], we have not explored this possibility here.
 
-**Type I error rate under equal and unequal variances**. 
+**Type I error rate under equal and unequal variances**. @fig-nonparametric-unequal-var presents the rate of positives under conditions of equal ($r_{sd} = 0$) and unequal variances ($r_{sd} > 0$). While this rate can be considered a Type I error rate when variances are equal, interpreting it under other conditions requires special attention because the hypothesis of interest may differ among methods. Parametric ANOVA is particularly sensitive to unequal variances when distributions are skewed because it tests differences among means. While the normal distributions of the latent space have the same means, this is not the case with the skewed distributions of the transformed variable, which have the same median but different means. All nonparametric methods we tested use ranks, which preserve medians and mitigate this problem. However, their rate of positives can still exceed $5\%$ under certain conditions.
+
+For between-subjects designs, we observe that the Kruskal–Wallis test and RNK yield very similar results. This is not surprising, as RNK is known to be a good approximation of the Kruskal–Wallis test [@Conover:2012]. INT's positive rates are similar, although slightly higher under the binomial distribution. For within-subjects designs, differences among methods are more pronounced. The Wilcoxon sign-rank test (*2 within*) inflates rates well above $5\%$, demonstrating that the test is not a pure test of medians. In contrast, the Friedman test (*3 within* and *4 within*) provides the best control among all methods. 
+
+Nevertheless, in addition to their greater power compared to the Friedman test, RNK or INT present other advantages, such as using common ANOVA-based procedures to partly correct issues associated with unequal variances. For instance, 
+by combining a sphericity test on the ranks of RNK and INT with a Greenhouse–Geisser correction, we were able to reduce their positive rates, well below those of the Friedman test.  
 
 ::: {#fig-nonparametric-unequal-var}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -386,14 +391,15 @@ plotlyErrorByDesign_v3(df, xlab = "magnitude of effect", var = "rates", xvar = "
 Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
 :::
 
-## ANOVA-type statistic (ATS)
 
+## ANOVA-type statistic (ATS)
+We compare PAR, RNK, and INT to the ANOVA-type statistic (ATS) [@Brunner_ATS:2001] for two-factor designs. We use its implementation in the R package *nparLD* [@nparLD], which does not support between-subjects designs. Thus, we only evaluate it for the $4 \times 3$ within-subjects and the $2 \times 4$ mixed designs. 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 source("plotlying-v2.R")
 ```
 
-**Type I error rates**. 
+**Type I error rates: Main effects**. @fig-ATS-designs-main presents Type I error rates for the main effect of $X_2$. Under the mixed design, RNK, INT, and ATS exhibit very similar error rates, which are close to nominal levels. In the within-subjects design, the error rates of ATS tend to be slightly above $5\%$. Additionally, unlike the other methods whose error rates drop significantly below $5\%$ when the effect of $X_1$ becomes stronger under binomial and ordinal scales, the power of ATS does not seem to be affected in these cases. 
 
 ::: {#fig-ATS-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -412,6 +418,8 @@ plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX2", xv
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
+
+**Type I error rates: Interactions**. @fig-ATS-designs-interaction-1 presents Type I error rates for the interaction in the presence of a single main effect. Results are again very similar for all three nonparametric methods under the mixed design. In contrast, the error rates of ATS tend to be lower than nominal levels under the within-subjects design, often falling below $4\%$. When two parallel main effects are present, ATS and RNK lead to very similar trends (see @fig-ATS-designs-interaction-2). Overall, INT appears to be a more robust method with the exception of the binomial distribution, for which error rates are higher for this method.  
 
 ::: {#fig-ATS-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -432,8 +440,7 @@ plotlyErrorByDesign_v2(df, xlab = "magnitude of main effects", var = "rateX1X2",
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
 :::
 
-
-**Power**. 
+**Power**. We also evaluate the power of the methods for the two main effects (see @fig-ATS-power-main-1 and @fig-ATS-power-main-2) and the interaction effect (see @fig-ATS-power-interaction). TODO:
 
 ::: {#fig-ATS-power-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -482,6 +489,7 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 
 
 ## Generalizations of nonparametric tests (van der Waerden, Kruskal-Wallis and Friedman)
+Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023]: the generalization of the van der Waerden test (VDW), and the Kruskal-Wallis and Friedman tests (KWF).
 
 **Type I error rates**. 
 
@@ -601,3 +609,8 @@ plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1X2", xv
 Power ($\alpha = .05$) to detect the **interaction effect** ($a_{12} = 1.5$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
 :::
 
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

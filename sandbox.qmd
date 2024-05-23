@@ -24,57 +24,42 @@ source("plotting.R")
 
 library(dplyr)
 library(tidyverse)
-source("plotlying-v3.R")
+source("plotlying-v2.R")
 source("plotlying.R")
 ```
 
-::: {#fig-nonparametric-power}
+::: {#fig-ATS-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-source("plotlying-v3.R")
-
-readSingle <- function(prefix, n, alpha, distributions, methods, POWER = FALSE) {
-  	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
-	  df$distr <- factor(df$distr, levels=distributions)
-	  df$method <- factor(df$method, levels=methods)
-
-    if(POWER) {
-      df <- df[df$effect >= 0,]
-    }
-    else {
-      df <- df[df$effect == 0,]
-    }
-
-    if(is.na(alpha)) return(df)
-    else return(df[df$alpha == alpha,])
-}
-
-prefix <- "Appendix_test-One-Factor"
+prefix <- "Appendix_test-ATS"
 alpha = 0.05
 
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-methods = c("PAR", "RNK", "INT", "NON")
+methods = c("PAR", "RNK", "INT", "ATS")
 palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
 
-df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods, POWER = TRUE)
-#df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
-df <- df %>% arrange(design,distr,effect,rates)  %>% group_by(design,distr,effect) %>% mutate(rank = rank(rates))
+df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effect"))
-plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
+plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 7.1, nticks=8, cbPalette = palette)
 ```
-Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
+Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-::: {#fig-nonparametric-power-2}
+::: {#fig-ATS-designs-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix <- "Appendix_test-ATS"
+alpha = 0.05
 
-df <- readSingle(prefix, n = 10, alpha, distributions, methods = methods, POWER = TRUE)
-#df <- reshapeByDesign(df, dnames, effectvars = c("effect"))
-df <- df %>% arrange(design,distr,effect,rates)  %>% group_by(design,distr,effect) %>% mutate(rank = rank(rates))
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
+methods = c("PAR", "RNK", "INT", "ATS")
+palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
 
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effect"))
-plotlyPowerByDesign_v3(df, xlab = "magnitude of main effect", var = "rank", xvar = "effect", max = 4.3, cbPalette = palette)
+df <- readData(prefix, n = 20, alpha, effectType = 2, distributions, methods = methods)
+df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 7.1, nticks=8, cbPalette = palette)
 ```
-Ranking of methods comparing their power ($\alpha = .05$) as a function of the magnitud of effect ($n = 20$)
+Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as a function of the magnitude $a_2$ of the main effect of $X_2$ ($n = 20$)
 :::
