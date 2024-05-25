@@ -5,7 +5,10 @@
 readData <- function(prefix, n = 20, alpha = .05, effectType = 0, 
 		distributions=c("norm", "lnorm", "exp", "cauchy", "poisson", "binom"),
 		methods = c("PAR", "RNK", "INT", "ART")) {
+
 	df <- read.csv(paste("data/", prefix, "_", n, ".csv" , sep=""), sep=",", header=TRUE, strip.white=TRUE)
+
+	df <- df[df$distr %in% distributions,]
 	df$distr <- factor(df$distr, levels=distributions)
 	df$method <- factor(df$method, levels=methods)
 

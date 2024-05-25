@@ -28,38 +28,46 @@ source("plotlying-v2.R")
 source("plotlying.R")
 ```
 
-::: {#fig-ATS-designs-main}
+::: {#fig-ratio-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-ATS"
-alpha = 0.05
+library(dplyr)
+library(tidyverse)
+source("dataReaders.R")
+source("plotlying.R")
 
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-methods = c("PAR", "RNK", "INT", "ATS")
-palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
+prefix1 <- "1_test_4x3_Ratio"
+alpha <- .01
+distributions1 <- c("norm", "lnorm", "exp", "poisson", "binom")
+dnames1 <- c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial")
+df1 <- readlyData(prefix1, alpha, 1, distributions1, dnames1)
 
-df <- readData(prefix, n = 20, alpha, effectType = 1, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+prefix2 <- "2_test_4x3_Ordinal"
+distributions2 <- c("likert5B")
+dnames2 <- c("Ordinal (5 levels)")
+df2 <- readlyData(prefix2, alpha, 1, distributions2, dnames2)
 
-plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 7.1, nticks=8, cbPalette = palette)
+df <- rbind(df1,df2)
+
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 27.1)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
+Type I error rates ($\alpha = .01$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
 :::
 
-::: {#fig-ATS-designs-main-2}
+
+::: {#fig-ratio-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "Appendix_test-ATS"
-alpha = 0.05
-
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-methods = c("PAR", "RNK", "INT", "ATS")
-palette = c("#888888", "#E69F00", "#009E73", "#FF70AB")
-
-df <- readData(prefix, n = 20, alpha, effectType = 2, distributions, methods = methods)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-
-plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 7.1, nticks=8, cbPalette = palette)
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 27.1)
 ```
-Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as a function of the magnitude $a_2$ of the main effect of $X_2$ ($n = 20$)
+Type I error rates ($\alpha = .01$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
+:::
+
+::: {#fig-ratio-interaction-2}
+```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df1 <- readlyData(prefix1, alpha, 0, distributions1, dnames1)
+df2 <- readlyData(prefix2, alpha, 0, distributions2, dnames2)
+df <- rbind(df1,df2)
+
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 104)
+```
+Type I error rates ($\alpha = .01$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
 :::

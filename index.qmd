@@ -609,7 +609,7 @@ We follow the approach of @DeBruine:2021 and use the R package *faux* v1.2.1 [@f
 To simulate the observed variable $Y'$, we then transform the response values $y_{ijk}$ as described in [Section 3](#approach). A key advantage of this method is that we can generate responses for any distribution, while we control effects on the latent variable in the exact same way.
 
 ### Implementation of rank transformation methods 
-For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as explained earlier.
+For the aligned rank transformation (ART), we use the R implementation of ARTool v0.11.1 [@artool]. For the pure rank transformation (RNK), we use R's *rank()* function. We use the *Rankit* formulation [@Bliss:1956] for the inverse normal transformation (INT), as explained earlier. Unless explicitly mentioned otherwise, we use the formula ``Y' ~ X1*X2 + (1|S)`` with R's *lmer* function, except for the between-subjects design where we use the formula ``Y' ~ X1*X2 + Error(S)`` with R's *aov* function.
 
 ### Evaluation measures
 Significance tests have two types of errors. *Type I errors*, or false positives, are mistaken rejections of the null hypothesis. Type II errors, of false negatives, are failures to reject a null hypothesis that is actually true. In our illustrative example in @fig-example, a Type I error is finding that there is an effect of the choice of the technique on time performance. A *Type II error*, in turn, is finding that the task difficulty has no effect on time performance. 
@@ -1228,7 +1228,7 @@ This is especially evident when distributions are skewed. In these cases, parame
 Finally, while it is still feasible to use common one-factor nonparametric tests (e.g., the Kruskal–Wallis test, the Wilcoxon sign-rank test, and the Friedman test) independently on each factor of a multifactorial design, this approach necessitates data aggregation, which compromises the statistical power of these tests. 
 Nevertheless, we found that even for one-factor designs, INT turns to be more powerful than these nonparametric tests. 
 
-Consequently, our recommendation aligns with Gelman's advice [@gelman2015int_vs_wilcoxon] to use INT as a general nonparametric method, with careful consideration of potential cases of failure and a cautious interpretation of interaction effects. 
+Consequently, our recommendation aligns with Gelman's [-@gelman2015int_vs_wilcoxon] advice to use INT as a general nonparametric method, with careful consideration of potential cases of failure and a cautious interpretation of interaction effects. 
 
 ### Priviledging parametric methods
 The scope of rank-based nonparametric statistics is very limited. @baguley2012 summarizes a fondumental concern regarding their use as follows: 

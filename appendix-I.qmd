@@ -61,7 +61,53 @@ source("plotlying.R")
 </style>
 ```
 
-We present results from experiments that investigate additional scenarios, as well as other nonparametric methods. Unless explicitely mentioned in each section, we follow the experimental methodology presented in the main article. For most experiments, we focus on $n = 20$. At the end of each section, we summarize our main conclusions.
+We present complementary results and new experiments that investigate additional scenarios. We also compare INT and RNK with other nonparametric methods. Unless explicitely mentioned in each section, we follow the experimental methodology presented in the main article. At the end of each section, we summarize our conclusions.
+
+## Results for $\alpha = .01$ {#alpha}
+Although we only presented results for $\alpha = .05$ in the main article, we observe the same trends for other significance levels. The following figures show the Type I error rates of the methods for the $4 \times 3$ within-subjects design when $\alpha = .01$. Note that error rates are not proportional to the $\alpha$ level. 
+
+::: {#fig-ratio-main}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+prefix1 <- "1_test_4x3_Ratio"
+alpha <- .01
+distributions1 <- c("norm", "lnorm", "exp", "poisson", "binom")
+dnames1 <- c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial")
+df1 <- readlyData(prefix1, alpha, 1, distributions1, dnames1)
+
+prefix2 <- "2_test_4x3_Ordinal"
+distributions2 <- c("likert5B")
+dnames2 <- c("Ordinal (5 levels)")
+df2 <- readlyData(prefix2, alpha, 1, distributions2, dnames2)
+
+df <- rbind(df1,df2)
+
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX1", max = 27.1)
+```
+Type I error rates ($\alpha = .01$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$
+:::
+
+::: {#fig-ratio-interaction-1}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+plotlyError(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX1", max = 27.1)
+```
+Type I error rates ($\alpha = .01$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ 
+:::
+
+::: {#fig-ratio-interaction-2}
+```{r, echo=FALSE, message=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df1 <- readlyData(prefix1, alpha, 0, distributions1, dnames1)
+df2 <- readlyData(prefix2, alpha, 0, distributions2, dnames2)
+df <- rbind(df1,df2)
+
+plotlyError(df, xlab = "magnitude of main effects", var = "rateX1X2", xvar = "effectX1", max = 104)
+```
+Type I error rates ($\alpha = .01$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$ 
+:::
+
+For results from different experiments, we refer readers to our raw result files. 
+
+### Conclusion
+Results for $\alpha = .01$ confirm that ART is not a robust method. It only behaves correctly when distributions are normal.
 
 ## Main effects in the presence of interactions {#interactions}
 In all experiments assessing Type I error rates reported in our article, we assumed no interaction effects. However, we also need to understand whether weak or strong interaction effects could affect the sensitivity of the methods in detecting main effects. This experiment evaluates the Type I error rate of the methods in the presence of an interaction effect alone, or alternatively, in the presence of a simultaneous main effect. We focus again on the three two-factor experimental designs we evaluated for our previous experiment, setting the sample size to $n = 20$.
@@ -159,10 +205,10 @@ Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2
 :::
 
 ### Conclusion
-ART is sensitive to the presence of missing data, when at least $10\%$ of the observations are missing. In particular, we found its Type I error rate for main effects increases further, and this issue also concerns normal distributions. The other methods do not seem to be affected by missing data. However, we emhasize that we only tested missing data that are randomly drawn from the complete set of observations. Results might be different if there was systematic bias in the data imbalance structure.
+ART is sensitive to the presence of missing data when at least $10\%$ of the observations are missing. Specifically, we found that its Type I error rate for main effects increases further, even with normal distributions. The other methods do not seem to be affected by missing data. However, we emphasize that we only tested missing data that are randomly drawn from the complete set of observations. Results might be different if there were systematic bias in the data imbalance structure.
 
 ## Log-normal distributions {#log-normal}
-We conduct an experiment to evaluate log-normal distributions with a wider range of $\sigma$ parameters (see @fig-lognormal-distributions), in particular distributions with less variance, which exhibit a lower degree of skew. 
+In a different experiment, we evaluate log-normal distributions with a wider range of $\sigma$ parameters (see @fig-lognormal-distributions), in particular distributions with less variance, which exhibit a lower degree of skew. 
 
 ::: {#fig-lognormal-distributions}
 ```{r, echo=FALSE, fig.height=1.3, fig.width = 9, warning=FALSE,  message=FALSE}
@@ -392,9 +438,6 @@ We expect that the accuracy of ANOVA on rank-transformed values will decrease wi
 
 For between-subjects designs, we observe that the Kruskal–Wallis test and RNK yield very similar results. This is not surprising, as RNK is known to be a good approximation of the Kruskal–Wallis test [@Conover:2012]. INT's positive rates are similar, although slightly higher under the binomial distribution. For within-subjects designs, differences among methods are more pronounced. The Wilcoxon sign-rank test (*2 within*) inflates rates well above $5\%$, demonstrating that the test is not a pure test of medians. In contrast, the Friedman test (*3 within* and *4 within*) provides the best control among all methods. 
 
-Nevertheless, in addition to their greater power compared to the Friedman test, RNK or INT present other advantages, such as using common ANOVA-based procedures to partly correct issues associated with unequal variances. For instance, 
-by combining a sphericity test on the ranks of RNK and INT with a Greenhouse–Geisser correction, we were able to reduce their positive rates, well below those of the Friedman test.  
-
 ::: {#fig-nonparametric-unequal-var}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 prefix <- "Appendix_test-One-Factor-Unequal-Var"
@@ -407,9 +450,20 @@ plotlyErrorByDesign_v3(df, xlab = "magnitude of effect", var = "rates", xvar = "
 Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
 :::
 
-### Conclusion
-Overall, we do not see any benefit in using dedicated nonparametric tests over RNK or INT. INT can replace nonparametric tests even for single-factor designs. If, after transforming the data, the assumptions of homoscedasticity or sphericity are still not met, applying common correction procedures (e.g., a Greenhouse–Geisser correction for sphericity violations) on the transformed data can reduce the risk of Type I errors.
+@fig-nonparametric-unequal-var-alpha01 presents the same results but for $\alpha = .01$. Discrepancies among different methods are now more pronounced, and we notice again that the Friedman test keeps rates closer to the nominal level of $1\%$ compared to INT and RNK. Nevertheless, in addition to their greater power compared to the Friedman test, RNK or INT present other advantages, such as the possibility to use common ANOVA-based procedures to partly correct issues associated with unequal variances. For instance, we ran an experiment, where we applied a Greenhouse–Geisser correction following sphericity violations detected with the Mauchly's sphericity test ($\alpha = .05$). We found that this correction brings the error rates of INT close to nominal levels for continuous distributions, such as the normal and log-normal distributions. In the case of the binomial and ordinal distributions, error rates are also significantly reduced, well below those of the Friedman test, although not reaching nominal levels. 
 
+::: {#fig-nonparametric-unequal-var-alpha01}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df <- readSingle(prefix, n = 20, alpha= 0.01, distributions, methods = methods)
+df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
+
+plotlyErrorByDesign_v3(df, xlab = "magnitude of effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 7.2, nticks=8, cbPalette = palette)
+```
+Positives rates ($\alpha = .01$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
+:::
+
+### Conclusion
+We do not see significant benefits in using dedicated nonparametric tests over RNK or INT. INT can replace nonparametric tests even for single-factor designs. If, after transforming the data, the assumptions of homoscedasticity or sphericity are still not met, applying common correction procedures (e.g., a Greenhouse–Geisser correction for sphericity violations) on the transformed data can reduce the risk of Type I errors.
 
 ## ANOVA-type statistic (ATS) {#ATS}
 We compare PAR, RNK, and INT to the ANOVA-type statistic (ATS) [@Brunner_ATS:2001] for two-factor designs. We use its implementation in the R package *nparLD* [@nparLD], which does not support between-subjects designs. Thus, we only evaluate it for the $4 \times 3$ within-subjects and the $2 \times 4$ mixed designs. 
@@ -438,7 +492,19 @@ plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX2", xv
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-**Type I error rates: Interactions**. @fig-ATS-designs-interaction-1 presents Type I error rates for the interaction in the presence of a single main effect. Results are again very similar for all three nonparametric methods under the mixed design. In contrast, the error rates of ATS tend to be lower than nominal levels under the within-subjects design, often falling below $4\%$. When two parallel main effects are present, ATS and RNK lead to very similar trends (see @fig-ATS-designs-interaction-2). Overall, INT appears to be a more robust method with the exception of the binomial distribution, for which error rates are higher for this method.  
+@fig-ATS-designs-main-2 presents results for the main effect of $X_1$. The error rates of ATS are now slightly inflated under the mixed design. The other methods exhibit the same trends as for the other factor. 
+
+::: {#fig-ATS-designs-main-2}
+```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
+df2 <- readData(prefix, n = 20, alpha, effectType = 2, distributions, methods = methods)
+df2 <- reshapeByDesign(df2, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+
+plotlyErrorByDesign_v2(df2, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", max = 7.1, nticks=8, cbPalette = palette)
+```
+Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as a function of the magnitude $a_2$ of the main effect of $X_2$ ($n = 20$)
+:::
+
+**Type I error rates: Interactions**. @fig-ATS-designs-interaction-1 presents Type I error rates for the interaction in the presence of a single main effect. Results are again very similar for all three nonparametric methods under the mixed design. In contrast, the error rates of ATS tend to be lower than nominal levels under the within-subjects design, often falling below $4\%$.
 
 ::: {#fig-ATS-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -446,6 +512,8 @@ plotlyErrorByDesign_v2(df, xlab = "magnitude of main effect", var = "rateX1X2", 
 ```
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$) 
 :::
+
+ When two parallel main effects are present, ATS and RNK lead to very similar trends (see @fig-ATS-designs-interaction-2). Overall, INT appears to be a more robust method with the exception of the binomial distribution, for which error rates are higher for this method.  
 
 ::: {#fig-ATS-designs-interaction-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -459,7 +527,7 @@ plotlyErrorByDesign_v2(df, xlab = "magnitude of main effects", var = "rateX1X2",
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
 :::
 
-**Power: Main effects**. @fig-ATS-power-main-1 and @fig-ATS-power-main-2 present results on the power of the methods to detect main effects. 
+**Power: Main effects**. As shown in @fig-ATS-power-main-1 and @fig-ATS-power-main-2, ATS appears as the most powerful method for detecting effects of $X_1$ for the mixed design. However, in all other situtations, it has less power than INT and ofter less power than RNK.  
 
 ::: {#fig-ATS-power-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -493,7 +561,7 @@ plotlyPowerByDesign_v2(df, xlab = "magnitude of main effect", var = "rank", hove
 Ranking of methods for their power ($\alpha = .05$) to detect the **main effect of $X_2$** as a function of the magnitude of effect $a_2$ ($n=20$). Hover over the charts to inspect their power ($\%$).
 :::
 
-**Power: Interactions**. @fig-ATS-power-interaction shows results on the power of the methods to detect interactions. INT emerges again as the most powerful method. We observe that the power of ATS is particularly low under the within-subjects design. 
+**Power: Interactions**. @fig-ATS-power-interaction shows results on power for interactions. INT emerges again as the most powerful method. The power of ATS is particularly low under the within-subjects design. 
 
 ::: {#fig-ATS-power-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -509,8 +577,7 @@ Ranking of methods for their power ($\alpha = .05$) to detect the **interaction 
 :::
 
 ### Conclusion
-TODO
-
+Although ATS appears to be a valid alternative, it does not offer clear performance advantages over INT, which is also simpler and more versatile.
 
 ## Generalizations of nonparametric tests {#generalized}
 
