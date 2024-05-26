@@ -43,6 +43,8 @@ library(brms)
 
 
 # And frequentist approach
+library(ordinal)
+
 df$PerceivedPerformance <- factor(df$PerceivedPerformance, ordered = TRUE)
 # Frequentist probit/logit model 
 mprob <- clmm(PerceivedPerformance ~ Difficulty*Technique + (1|SID), link ="probit", threshold = "flexible", data=df)
