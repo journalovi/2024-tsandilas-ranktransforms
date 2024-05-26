@@ -1,5 +1,6 @@
 ---
-title: "Appendix I. Additional experimental results"
+title: "The illusory promise of the Aligned Rank Transform"
+subtitle: "Appendix. Additional experimental results"
 author: 
   - name: Theophanis Tsandilas
     orcid: 0000-0002-0158-228X
