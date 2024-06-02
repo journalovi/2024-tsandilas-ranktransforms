@@ -10,7 +10,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: casiez/joviart
+    container: 
+        image: casiez/joviart
+        options: --user root
 
     steps:
     - uses: actions/checkout@v3
