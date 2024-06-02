@@ -19,6 +19,7 @@ RUN set -e -x && \
     gdebi-core \
     librsvg2-bin \
     python3.8 python3-pip \
+    nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
