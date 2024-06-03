@@ -1,0 +1,55 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    container: 
+        image: casiez/joviart
+        options: --user root
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: build the paper
+      run: |
+        quarto render index.qmd --to html
+    - name: build the appendix
+      run: |
+        quarto render appendix.qmd --to html        
+    - name: copy everything to dist
+      run: |
+        mkdir dist
+        cp index.html dist
+        cp -r index_files dist
+        cp appendix.html dist
+        cp -r appendix_files dist     
+    - name: Archive built files
+      uses: actions/upload-pages-artifact@v3
+      with:
+        name: 'github-pages'
+        path: dist
+
+  deploy:
+    needs: build
+
+    permissions:
+      contents: read
+      pages: write   
+      id-token: write 
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
