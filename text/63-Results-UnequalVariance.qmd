@@ -22,7 +22,7 @@ dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordina
 
 df <- readData(prefix, n = 20, alpha, effectType = 1, distributions)
 df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", var = "rateX1", xvar = "sd_ratio", max = 82, ytitle = 'Positives (%)')
+plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1", xvar = "sd_ratio", max = 82, ytitle = 'Positives (%)')
 ```
 The percentage of positives (i.e., rejecting the null hypothesis) for the **main effect of $X_1$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$). Depending on the hypothesis of interest, these percentages can be interpreted as Type I error rates ($\alpha = .05$).
 :::
@@ -33,7 +33,7 @@ We also investigate the influence of unequal variances among the levels of $X_1$
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", var = "rateX2", xvar = "sd_ratio", max = 52)
+plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX2", xvar = "sd_ratio", max = 52)
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
 :::
@@ -42,7 +42,7 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the rati
 
 ::: {#fig-unequal-interaction}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-plotlyErrorByDesign2(df, xlab = "max ratio of variances between levels of X1", var = "rateX1X2", xvar = "sd_ratio", max = 52)
+plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels of X1", var = "rateX1X2", xvar = "sd_ratio", max = 52)
 ```
 Type I error rates ($\alpha = .05$) for the **interaction effect $X_1 \times X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
 :::

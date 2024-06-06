@@ -121,7 +121,7 @@ To simulate populations in which interactions emerge in the absence of main effe
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 alpha <- .05
 
-prefix <- "7_test_Interactions"
+prefix <- "Appendix_test_growing-interactions"
 distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
@@ -135,12 +135,6 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_1$** as a functi
 
 ::: {#fig-interactions-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "7_test_Interactions"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-df <- readData(prefix, n = 20, alpha, effectType = 0, distributions)
-df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX2", xvar = "effectX1X2", max = 104)
 
 ```
@@ -151,10 +145,6 @@ Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a functi
 
 ::: {#fig-interactions-main-3}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "7_test_Interactions"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
 df <- readData(prefix, n = 20, alpha, effectType = 6, distributions)
 df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 plotlyErrorByDesign2(df, xlab = "magnitude of effects", var = "rateX2", xvar = "effectX1X2", max = 104)
@@ -446,7 +436,7 @@ prefix <- "Appendix_test-One-Factor-Unequal-Var"
 df <- readSingle(prefix, n = 20, alpha, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
 
-plotlyErrorByDesign_v3(df, xlab = "magnitude of effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
+plotlyErrorByDesign_v3(df, xlab = "max ratio of standard deviations", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 24.2, nticks=8, cbPalette = palette)
 ```
 Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
 :::
@@ -458,7 +448,7 @@ Positives rates ($\alpha = .05$) as a function of the maximum ratio $r_{sd}$ of 
 df <- readSingle(prefix, n = 20, alpha= 0.01, distributions, methods = methods)
 df <- reshapeByDesign(df, dnames, effectvars = c("sd_ratio", "effect"))
 
-plotlyErrorByDesign_v3(df, xlab = "magnitude of effect", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 7.2, nticks=8, cbPalette = palette)
+plotlyErrorByDesign_v3(df, xlab = "max ratio of standard deviations", var = "rates", xvar = "sd_ratio", ytitle = 'Positives (%)', max = 7.2, nticks=8, cbPalette = palette)
 ```
 Positives rates ($\alpha = .01$) as a function of the maximum ratio $r_{sd}$ of standard deviations between levels ($n = 20$). 
 :::
