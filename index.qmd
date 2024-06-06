@@ -71,6 +71,7 @@ source("interactions_plot.R")
 
 {{< include text/40-interpretingEffects.qmd >}}
 
+{{< include text/50-ExperimentalMethod.qmd >}}
 
 ## Results {#results}
 Each experiment concentrated on a unique combination of distributions, experimental designs, and evaluation measures. Consequently, we organize our results into several subsections, addressing both main and interaction effects.
