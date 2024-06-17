@@ -98,7 +98,7 @@ For the first (frequentist) analysis, we use the following R code:
 ```{r, eval=FALSE}
 library(ordinal)
 # We make sure that the response variable is treated as ordinal
-ownership <- actor(ownership_data$ownership, ordered = TRUE) 
+ownership_data$ownership <- factor(ownership_data$ownership, ordered = TRUE) 
 
 fit_frequentist <- clmm(
   ownership ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Participant),
@@ -137,7 +137,7 @@ Below, we present parameter estimates from the two methods, where brackets repre
 
 Interpreting these results requires special attention, as the above estimates do not refer to the observed ordinal scale of measurements. All effects are expressed in standard deviation units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. The above results suggest that participants' sense of ownership was $1.85$ (or $1.95$) standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. 
 
-The whole $95\%$ CI for both methods is far below zero, which means that there is overwhelming evidence that this effect is strong. In contrast, we observe that the intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. If we subsequently conduct a likelihood-ratio test with alternative models (or calculate a Bayes factor for the Bayesian approach), the simpler model with ```formula = ownership ~ Coupling + (1|Dyad/Participant)``` will be the winning one.
+The whole $95\%$ CI for both methods is far below zero, which means that there is overwhelming evidence that this effect is strong. In contrast, we observe that the intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. If we subsequently conduct a likelihood-ratio test with alternative models, the simpler model with ```formula = ownership ~ Coupling + (1|Dyad/Participant)``` will be the winning one.
 
 These results are consistent with the results of our *lmer* models using PAR, RNK, and INT. In conclusion, using ART to analyze these data is problematic. Here, the presence of a strong effect on the first factor seems to make ART sensitive in detecting other non-existent effects (or perhaps in amplifying tiny effects). 
 

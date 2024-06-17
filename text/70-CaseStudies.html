@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>casestudies</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="70-CaseStudies_files/libs/clipboard/clipboard.min.js"></script>
+<script src="70-CaseStudies_files/libs/quarto-html/quarto.js"></script>
+<script src="70-CaseStudies_files/libs/quarto-html/popper.min.js"></script>
+<script src="70-CaseStudies_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="70-CaseStudies_files/libs/quarto-html/anchor.min.js"></script>
+<link href="70-CaseStudies_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="70-CaseStudies_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="70-CaseStudies_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="70-CaseStudies_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="70-CaseStudies_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#casestudies" id="toc-casestudies" class="nav-link active" data-scroll-target="#casestudies"><span class="header-section-number">1</span> Case studies</a>
+  <ul class="collapse">
+  <li><a href="#binary-responses" id="toc-binary-responses" class="nav-link" data-scroll-target="#binary-responses">Binary responses</a></li>
+  <li><a href="#likert-items" id="toc-likert-items" class="nav-link" data-scroll-target="#likert-items">Likert items</a></li>
+  <li><a href="#likert-scales" id="toc-likert-scales" class="nav-link" data-scroll-target="#likert-scales">Likert scales</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="casestudies" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="casestudies"><span class="header-section-number">1</span> Case studies</h2>
+<p>In this section, we examine some specific types of data through concrete examples. We focus on recent work (published in 2023) that has used ART and made data publicly available. We identify problems and evaluate possible risks. We also present alternative methods for conducting the analysis and compare their outcomes.</p>
+<section id="binary-responses" class="level3">
+<h3 class="anchored" data-anchor-id="binary-responses">Binary responses</h3>
+<p><span class="citation" data-cites="Martin:2023">@Martin:2023</span> ran two experiments to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. We focus here on their first experiment which evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a <span class="math inline">\(4 \times 2 \times 2\)</span> repeated-measures ANOVA using ART.</p>
+<p>Their design has two particularities. First, the response variable is binary (Detected vs.&nbsp;Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART:</p>
+<blockquote class="blockquote">
+<p><em>“Since we are dealing with <strong>nonparametric, unbalanced data</strong> and multiple factors, we apply the Aligned Rank Transform (ART) for nonparametric factorial ANOVA”</em> <span class="citation" data-cites="Martin:2023">[@Martin:2023]</span>.</p>
+</blockquote>
+<p>In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis to replicate the results presented in Table 1 <span class="citation" data-cites="Martin:2023">[@Martin:2023]</span>. However, we extended the analysis by fitting a linear mixed-effects model (LMER function) without any transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR.</p>
+<p>Below, we present the <em>p</em>-values obtained from each method:</p>
+<table class="table-sm small table">
+<caption><em>p</em>-values keeping two significant digits - Type III hypothesis tests</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th>ART</th>
+<th>PAR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Type</td>
+<td><span class="math inline">\(.92\)</span></td>
+<td><span class="math inline">\(.016\)</span></td>
+</tr>
+<tr class="even">
+<td>Distance</td>
+<td><span class="math inline">\(.031\)</span></td>
+<td><span class="math inline">\(.12\)</span></td>
+</tr>
+<tr class="odd">
+<td>Complexity</td>
+<td><span class="math inline">\(.023\)</span></td>
+<td><span class="math inline">\(.0027\)</span></td>
+</tr>
+<tr class="even">
+<td>Type <span class="math inline">\(\times\)</span> Distance</td>
+<td><span class="math inline">\(.71\)</span></td>
+<td><span class="math inline">\(.13\)</span></td>
+</tr>
+<tr class="odd">
+<td>Type <span class="math inline">\(\times\)</span> Complexity</td>
+<td><span class="math inline">\(.00077\)</span></td>
+<td><span class="math inline">\(.0039\)</span></td>
+</tr>
+<tr class="even">
+<td>Distance <span class="math inline">\(\times\)</span> Complexity</td>
+<td><span class="math inline">\(.0011\)</span></td>
+<td><span class="math inline">\(.0029\)</span></td>
+</tr>
+<tr class="odd">
+<td>Type <span class="math inline">\(\times\)</span> Distance <span class="math inline">\(\times\)</span> Complexity</td>
+<td><span class="math inline">\(.00055\)</span></td>
+<td><span class="math inline">\(.00016\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>There are notable differences among the results obtained from the two methods, but it is important to note that the aforementioned <em>p</em>-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate <span class="citation" data-cites="Smith:2022">[@Smith:2022]</span>, and some experts argue that interpreting main effects in the presence of interactions may not be meaningful <span class="citation" data-cites="Hector:2010">[@Hector:2010]</span>. Thus, the presence of interactions in the above unbalanced design complexifies the detection and intepretation of main effects. In this specific case, the authors decided to create partial models with two factors each time to further evaluate contrasts, and intrestingly, they now used t-tests instead of ART.</p>
+<p>We emphasize that the ARTool raises a warning for such unbalanced designs:</p>
+<blockquote class="blockquote">
+<p><em>F values of ANOVAs on aligned responses not of interest are not all ~0. ART may not be appropriate.</em></p>
+</blockquote>
+<p>Our tests in the <a href="appendix.html">appendix</a> show that ART’s Type I error rates for main effects increase further in unbalanced designs with missing data.</p>
+<p><strong>Monte Carlo simulation.</strong> What if the experimental design were balanced, and such issues did not emerge? What risks would arise from using ART with such binary responses? To delve into this issue, we conduct a new Monte Carlo experiment.</p>
+<p>Like <span class="citation" data-cites="Martin:2023">@Martin:2023</span>, we investigate a <span class="math inline">\(4 \times 2 \times 2\)</span> repeated-measures design and set the number of participants to <span class="math inline">\(n=22\)</span>. However, we now test a perfectly balanced design. We transform the latent variable to a Bernoulli distribution with a success probability parameter <span class="math inline">\(p=.46\)</span> —average success rate found by <span class="citation" data-cites="Martin:2023">@Martin:2023</span>— and then assess the Type I error rate of ART in the absence of any effect. We also assess the Type I error rate of regular ANOVA (LMER model) with no transformation (PAR). Our results over 5000 iterations are as follows:</p>
+<table class="table-sm small table">
+<caption>Type I error rates (%) for <span class="math inline">\(\alpha = .05\)</span> (nominal error rate <span class="math inline">\(=5\%\)</span>) and <span class="math inline">\(p=.46\)</span></caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"></th>
+<th style="text-align: center;"><span class="math inline">\(X_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2 \times X_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">PAR/LMER</td>
+<td style="text-align: center;"><span class="math inline">\(4.4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5.5\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(5.2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.9\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">ART</td>
+<td style="text-align: center;"><span class="math inline">\(22.4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(19.9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(20.2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(22.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(21.8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(19.8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(21.1\)</span></td>
+</tr>
+</tbody>
+</table>
+<table class="table-sm small table">
+<caption>Type I error rates (%) for <span class="math inline">\(\alpha = .01\)</span> (nominal error rate <span class="math inline">\(=1\%\)</span>) and <span class="math inline">\(p=.46\)</span></caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"></th>
+<th style="text-align: center;"><span class="math inline">\(X_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2 \times X_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">PAR/LMER</td>
+<td style="text-align: center;"><span class="math inline">\(0.7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">ART</td>
+<td style="text-align: center;"><span class="math inline">\(10.0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(8.8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9.7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(10.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9.7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(9.9\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>We observe that ART exhibits significant challenges with such binary data, as its error rates escalate to very high levels for all main and interaction effects. In contrast, PAR (LMER) consistently maintains error rates close to nominal levels. We extend our simulation to Bernoulli distributions with a low success (or error) probability parameter <span class="math inline">\(p=.06\)</span>. The results are now as follows:</p>
+<table class="table-sm small table">
+<caption>Type I error rates (%) for <span class="math inline">\(\alpha = .05\)</span> (nominal error rate <span class="math inline">\(=5\%\)</span>) and <span class="math inline">\(p=.06\)</span></caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"></th>
+<th style="text-align: center;"><span class="math inline">\(X_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2 \times X_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">PAR/LMER</td>
+<td style="text-align: center;"><span class="math inline">\(4.9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(6.0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.4\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(4.6\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">ART</td>
+<td style="text-align: center;"><span class="math inline">\(78.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(68.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(68.7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(71.9\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(71.3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(68.8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(70.5\)</span></td>
+</tr>
+</tbody>
+</table>
+<table class="table-sm small table">
+<caption>Type I error rates (%) for <span class="math inline">\(\alpha = .01\)</span> (nominal error rate <span class="math inline">\(=1\%\)</span>) and <span class="math inline">\(p=.06\)</span></caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;"></th>
+<th style="text-align: center;"><span class="math inline">\(X_1\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_2 \times X_3\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(X_1 \times X_2 \times X_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">PAR/LMER</td>
+<td style="text-align: center;"><span class="math inline">\(1.0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.8\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.7\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(1.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(0.9\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">ART</td>
+<td style="text-align: center;"><span class="math inline">\(68.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(60.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(60.2\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(61.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(60.1\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(60.6\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(59.9\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Clearly, ART is completely inappropriate when responses are binary. In contrast, parametric ANOVA demonstrates an excellent behavior even when the success (or error) rate is as low as <span class="math inline">\(6\%\)</span>.</p>
+<p>A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a <em>binomial link function</em>, which essentially performs a logistic regression. Such models are in line with the latent variable approach, where the link function establishes a connection between a normally distributed latent psychological variable (e.g., the human ability to detect changes in a virtual environment) and the observed variable (e.g., successes or failures in sequential change detection tests). Consequently, we expect them to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, inference with such models requires additional steps, such as comparing alternative models using various criteria <span class="citation" data-cites="Bolker2009glm">[@Bolker2009glm]</span>, so we do not incude them in our evaluation here.</p>
+</section>
+<section id="likert-items" class="level3">
+<h3 class="anchored" data-anchor-id="likert-items">Likert items</h3>
+<p><span class="citation" data-cites="Rosso:2023">@Rosso:2023</span> conducted a body-swap experiment, where pairs participants (“dyads”) performed a joint-finger tapping task under four different conditions, structured under two different factors:</p>
+<ul>
+<li><p><em>Coupling</em>. Participants saw either their own hand (<em>Coupled</em>) or their partner’s hand (<em>Uncoupled</em>).</p></li>
+<li><p><em>Perspective</em>. Participants saw the hand from a first person (<em>1P</em>) perspective or from a second person perspective (<em>2P</em>).</p></li>
+</ul>
+<p>Overall, the experiment was structured as a <span class="math inline">\(2 \times 2\)</span> within-participants design with 38 participants (19 dyads). The authors investigated numerous measures. Here, we only revisit their analysis of the sense of ownership of the visually perceived hand, for which they used ART (Page 10). The variable was measured through a self-reported scale with five levels (1 to 5). The authors report:</p>
+<blockquote class="blockquote">
+<p><em>Aligned rank transform (ART) ANOVA revealed significant main effects of Coupling (Df residual = 147, F = 104.353, p &lt; 0.001) and Perspective (Df residual = 147, F = 8.983, p &lt; 0.01) on the self-reported ownership ratings. The former indicates that participants were capable of telling apart their own hand from the partner’s regardless of the visual perspective, whilst the latter indicates that perceiving a hand in 1st person generally resulted in a stronger sense of ownership. Crucially, the interaction effect between Coupling and Perspective (Df residual = 147, F = 5.232, p &lt; 0.05) revealed that the increase in ownership relative to the 2nd person perspective was significantly stronger when participants were coupled.</em> <span class="citation" data-cites="Rosso:2023">[@Rosso:2023]</span></p>
+</blockquote>
+<p>Thus, the authors found supportive statistical evidence for both main effects and the interaction of the two factors. We replicated their analysis and found that the author did not conduct a repeated-measures ANOVA, i.e., they did not treat ratings from the same participant as independent. We re-analyzed the data with a mixed-effects <em>lmer</em> model, treating the participant identifier as a random effect nested under the identifier of participant pairs (dyads). Conclusions do not change since our analysis is more powerful, so <span class="math inline">\(p\)</span>-values are now even smaller for all three effects. However, we also conducted the analysis using the three other methods (PAR, RNK, INT), and unfortunately, conclusions are very different:</p>
+<table class="table-sm small table">
+<caption><em>p</em>-values keeping two significant digits</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ART</th>
+<th>PAR</th>
+<th>RNK</th>
+<th>INT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Coupling</td>
+<td><span class="math inline">\(3.2 \times 10^{-19}\)</span></td>
+<td><span class="math inline">\(4.9 \times 10^{-18}\)</span></td>
+<td><span class="math inline">\(9.5 \times 10^{-20}\)</span></td>
+<td><span class="math inline">\(5.4 \times 10^{-19}\)</span></td>
+</tr>
+<tr class="even">
+<td>Perspective</td>
+<td><span class="math inline">\(.0016\)</span></td>
+<td><span class="math inline">\(.20\)</span></td>
+<td><span class="math inline">\(.25\)</span></td>
+<td><span class="math inline">\(.29\)</span></td>
+</tr>
+<tr class="odd">
+<td>Coupling <span class="math inline">\(\times\)</span> Perspective</td>
+<td><span class="math inline">\(.015\)</span></td>
+<td><span class="math inline">\(.78\)</span></td>
+<td><span class="math inline">\(.90\)</span></td>
+<td><span class="math inline">\(.95\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>All four methods agree that there is strong evidence about the effect of Coupling. Nevertheless, the results of PAR, RNK, and INT for the effects of Perspective and Coupling <span class="math inline">\(\times\)</span> Perspective do not support the authors’ conclusions. The discrepancy between the <span class="math inline">\(p\)</span>-values returned by these methods and the <span class="math inline">\(p\)</span>-values of ART is striking.</p>
+<p>One may notice that a single entry (out of 152 entries) in the above dataset is missing, so the design is slightly unbalanced, and the ARTool again outputs a warning. Could this imbalance explain the above differences? The answer is negative. If we complete the missing row with a neutral value (e.g., a 3 in the 5-level ordinal scale) to dismiss the warning, the resulting <em>p</em>-values will still be very similar to the ones reported above.</p>
+<p><strong>Ordered probit models.</strong> We conducted complementary analyses with ordered probit models, where we used two different methods: (1) ordinal regression as impemented in the <em>ordinal</em> R package <span class="citation" data-cites="Christensen2023ordinal">[@Christensen2023ordinal]</span>; and (2) a Bayesian statistics framework with the <em>brms</em> R package <span class="citation" data-cites="Burkner:2019">[@Burkner:2019]</span>.</p>
+<p>For the first (frequentist) analysis, we use the following R code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ordinal)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We make sure that the response variable is treated as ordinal</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ownership_data<span class="sc">$</span>ownership <span class="ot">&lt;-</span> <span class="fu">factor</span>(ownership_data<span class="sc">$</span>ownership, <span class="at">ordered =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fit_frequentist <span class="ot">&lt;-</span> <span class="fu">clmm</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  ownership <span class="sc">~</span> Coupling <span class="sc">+</span> Perspective <span class="sc">+</span> Coupling<span class="sc">:</span>Perspective <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Dyad<span class="sc">/</span>Participant),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">link =</span> <span class="st">"probit"</span>, </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">threshold =</span> <span class="st">"flexible"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ownership_data</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can build a simpler regression model by setting <code>threshold = "equidistant"</code> and compare the two models by conducting a likelihood-ratio test. For this specific example, the flexible thresholds do not improve the model’s predictive power, so the simpler model is more promising. However, both models lead to almost identical parameter estimates.</p>
+<p>For the Bayesian formulation, we use the the following code in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fit_ownership <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> ownership <span class="sc">~</span> Coupling <span class="sc">+</span> Perspective <span class="sc">+</span> Coupling<span class="sc">:</span>Perspective </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Dyad<span class="sc">/</span>Participant),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> ownership_data,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">cumulative</span>(<span class="st">"probit"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Notice that we do not use informative priors in the above model, although this is possible. For an extensive discussion about why using a Bayesian framework for this type of analysis, we refer interested readers to <span class="citation" data-cites="Liddell:2018">@Liddell:2018</span>. <span class="citation" data-cites="Burkner:2019">@Burkner:2019</span> provide an excellent introductory tutorial to this approach. Its main shortcoming is the substantial computational resources it demands, whereas fitting a model with the frequentist approach is extremely fast.</p>
+<p>Below, we present parameter estimates from the two methods, where brackets represent either <span class="math inline">\(95\%\)</span> confidence intervals (frequentist method), or <span class="math inline">\(95\%\)</span> credible intervals (Bayesian method):</p>
+<table class="table-sm small table">
+<caption>Effect estimates and their <span class="math inline">\(95\%\)</span> confidence or credible intervals, expressed as standard deviations of the latent variable</caption>
+<colgroup>
+<col style="width: 37%">
+<col style="width: 31%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Frequentist <span class="citation" data-cites="Christensen2023ordinal">[@Christensen2023ordinal]</span></th>
+<th>Bayesian <span class="citation" data-cites="Burkner:2019">[@Burkner:2019]</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Coupling (Coupled <span class="math inline">\(-\)</span> Uncoupled)</td>
+<td><span class="math inline">\(-1.85\)</span> <span class="math inline">\([-2.46, -1.24]\)</span></td>
+<td><span class="math inline">\(-1.95\)</span> <span class="math inline">\([-2.58, -1.35]\)</span></td>
+</tr>
+<tr class="even">
+<td>Perspective (1P <span class="math inline">\(-\)</span> 2P)</td>
+<td><span class="math inline">\(\quad 0.29\)</span> <span class="math inline">\([-0.37, 0.94]\)</span></td>
+<td><span class="math inline">\(\quad 0.28\)</span> <span class="math inline">\([-0.39, 0.95]\)</span></td>
+</tr>
+<tr class="odd">
+<td>Coupling <span class="math inline">\(\times\)</span> Perspective</td>
+<td><span class="math inline">\(-0.11\)</span> <span class="math inline">\([-0.93, 0.70]\)</span></td>
+<td><span class="math inline">\(-0.09\)</span> <span class="math inline">\([-0.89, 0.75]\)</span></td>
+</tr>
+</tbody>
+</table>
+<!--Credible intervals are analogous to the confidence intervals of frequential statistics, but unlike confidence intervals, they allow for a probabilistic interpretation. For example, we can conclude that the above credible intervals contains the true differences in people's sense of ownership with a $95\%$ probability. -->
+<p>Interpreting these results requires special attention, as the above estimates do not refer to the observed ordinal scale of measurements. All effects are expressed in standard deviation units over the latent variable, so they are analogous to Cohen’s <span class="math inline">\(d\)</span> standardized effect sizes. The above results suggest that participants’ sense of ownership was <span class="math inline">\(1.85\)</span> (or <span class="math inline">\(1.95\)</span>) standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership.</p>
+<p>The whole <span class="math inline">\(95\%\)</span> CI for both methods is far below zero, which means that there is overwhelming evidence that this effect is strong. In contrast, we observe that the intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects. If we subsequently conduct a likelihood-ratio test with alternative models (or calculate a Bayes factor for the Bayesian approach), the simpler model with <code>formula = ownership ~ Coupling + (1|Dyad/Participant)</code> will be the winning one.</p>
+<p>These results are consistent with the results of our <em>lmer</em> models using PAR, RNK, and INT. In conclusion, using ART to analyze these data is problematic. Here, the presence of a strong effect on the first factor seems to make ART sensitive in detecting other non-existent effects (or perhaps in amplifying tiny effects).</p>
+</section>
+<section id="likert-scales" class="level3">
+<h3 class="anchored" data-anchor-id="likert-scales">Likert scales</h3>
+<p>Other authors have used ART to analyze Likert scales that group several items together. For example, <span class="citation" data-cites="Karolus:2023">@Karolus:2023</span> investigate different methods (referred to as “gamification types”) for communicating feedback on users’ task proficiency, such as during a writing task. The authors used a <span class="math inline">\(3 \times 2\)</span> between-participants design to structure the study, testing the following two factors:</p>
+<ul>
+<li><p><em>Gamification type</em>. Each participant was presented with one of the following elements providing feedback: (i) a <em>progress bar</em> (ii) an <em>Emoji</em>, or (iii) <em>none</em>.</p></li>
+<li><p><em>Feedback type</em>. Feedback was either <em>continuous</em> or <em>revision</em>-based (provided at the end of the task to help participants revise).</p></li>
+</ul>
+<p>The authors collected responses from 147 participants through the Amazon Mechanical Turk Service. They analyzed a range of measures, but here we focus on their analysis of participants’ responses to the Situational Motivation Scale (SIMS) <span class="citation" data-cites="Blanchard_SIMS:2000">[@Blanchard_SIMS:2000]</span>. The scale consists of four subscales (intrinsic motivation, identified regulation, external regulation, and amotivation), where each contains four 7-level Likert items. For each subscale, the authors conducted an ANOVA using ART on the average score. Below, we present the results of the same analysis with all four methods for intrinsic motivation and identified regulation:</p>
+<table class="table-sm small table">
+<caption>Intrinsic motivation: <em>p</em>-values keeping two significant digits (partial <span class="math inline">\(\eta^2\)</span> in parentheses when <span class="math inline">\(p &lt; .05\)</span>)</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ART</th>
+<th>PAR</th>
+<th>RNK</th>
+<th>INT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Gamification</td>
+<td><span class="math inline">\(.0057\)</span> <span class="math inline">\((0.07)\)</span></td>
+<td><span class="math inline">\(.010\)</span> <span class="math inline">\((0.06)\)</span></td>
+<td><span class="math inline">\(.0058\)</span> <span class="math inline">\((0.07)\)</span></td>
+<td><span class="math inline">\(.0062\)</span> <span class="math inline">\((0.07)\)</span></td>
+</tr>
+<tr class="even">
+<td>Feedback</td>
+<td><span class="math inline">\(.77\)</span></td>
+<td><span class="math inline">\(.59\)</span></td>
+<td><span class="math inline">\(.56\)</span></td>
+<td><span class="math inline">\(.55\)</span></td>
+</tr>
+<tr class="odd">
+<td>Gamification <span class="math inline">\(\times\)</span> Feedback</td>
+<td><span class="math inline">\(.94\)</span></td>
+<td><span class="math inline">\(.69\)</span></td>
+<td><span class="math inline">\(.94\)</span></td>
+<td><span class="math inline">\(.86\)</span></td>
+</tr>
+</tbody>
+</table>
+<table class="table-sm small table">
+<caption>Identified regulation: <em>p</em>-values keeping two significant digits (partial <span class="math inline">\(\eta^2\)</span> in parentheses when <span class="math inline">\(p &lt; .05\)</span>)</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ART</th>
+<th>PAR</th>
+<th>RNK</th>
+<th>INT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Gamification</td>
+<td><span class="math inline">\(.019\)</span> <span class="math inline">\((0.05)\)</span></td>
+<td><span class="math inline">\(.011\)</span> <span class="math inline">\((0.06)\)</span></td>
+<td><span class="math inline">\(.013\)</span> <span class="math inline">\((0.06)\)</span></td>
+<td><span class="math inline">\(.0085\)</span> <span class="math inline">\((0.07)\)</span></td>
+</tr>
+<tr class="even">
+<td>Feedback</td>
+<td><span class="math inline">\(.55\)</span></td>
+<td><span class="math inline">\(.74\)</span></td>
+<td><span class="math inline">\(.42\)</span></td>
+<td><span class="math inline">\(.55\)</span></td>
+</tr>
+<tr class="odd">
+<td>Gamification <span class="math inline">\(\times\)</span> Feedback</td>
+<td><span class="math inline">\(.99\)</span></td>
+<td><span class="math inline">\(.86\)</span></td>
+<td><span class="math inline">\(.98\)</span></td>
+<td><span class="math inline">\(.93\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Overall, differences among the results of the four methods are reasonably small and support the authors’ conclusions. We omit results for external regulation and amotivation for which all <em>p</em>-values are greater than <span class="math inline">\(.05\)</span> — again, results are consistent among the four methods.</p>
+<p>In many situations, the above methods will behave correctly and produce similar results. However, it is difficult to know in advance when problems will arise. In a different experiment, <span class="citation" data-cites="Siestrup:2023">@Siestrup:2023</span> investigated how different types of modifications in video sequences describing a story affect people’s episodic memory. The experiment included a rating task, asking participants to rate how much the storyline of modified episodes deviated from an original version (from <span class="math inline">\(1 = 0\%\)</span> different to <span class="math inline">\(6 = 100\%\)</span> different). The authors used ART to analyze aggregated scores from multiple ratings per condition. Below, we present the results of our re-analysis with the four different methods:</p>
+<table class="table-sm small table">
+<caption><em>p</em>-values keeping two significant digits</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ART</th>
+<th>PAR</th>
+<th>RNK</th>
+<th>INT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Version</td>
+<td><span class="math inline">\(4.5 \times 10^{-20}\)</span></td>
+<td><span class="math inline">\(2.7 \times 10^{-30}\)</span></td>
+<td><span class="math inline">\(4.7 \times 10^{-20}\)</span></td>
+<td><span class="math inline">\(2.0 \times 10^{-17}\)</span></td>
+</tr>
+<tr class="even">
+<td>Modification</td>
+<td><span class="math inline">\(.034\)</span></td>
+<td><span class="math inline">\(.11\)</span></td>
+<td><span class="math inline">\(.23\)</span></td>
+<td><span class="math inline">\(.40\)</span></td>
+</tr>
+<tr class="odd">
+<td>Version <span class="math inline">\(\times\)</span> Modification</td>
+<td><span class="math inline">\(.19\)</span></td>
+<td><span class="math inline">\(.17\)</span></td>
+<td><span class="math inline">\(.18\)</span></td>
+<td><span class="math inline">\(.058\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>We see now that results from different methods can lead to different conclusions. In particular, the authors’ statement that <em>“modified videos that had already been presented during the fMRI session received lower story-change ratings than those that had been presented in the original version before”</em> <span class="citation" data-cites="Siestrup:2023">[@Siestrup:2023]</span>, based on the observed effect of the second factor (Modification), is only supported by their analysis with ART. Effect size estimates for this factor also vary among methods, although their wide confidence intervals indicate that those estimates are highly uncertain:</p>
+<table class="table-sm small table">
+<caption>effect size estimates for Modification and their <span class="math inline">\(95\%\)</span> confidence intervals</caption>
+<colgroup>
+<col style="width: 23%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ART</th>
+<th>PAR</th>
+<th>RNK</th>
+<th>INT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>partial <span class="math inline">\(\eta^2\)</span></td>
+<td><span class="math inline">\(0.12\)</span> <span class="math inline">\([.01, 1.0]\)</span></td>
+<td><span class="math inline">\(0.07\)</span> <span class="math inline">\([.00, 1.0]\)</span></td>
+<td><span class="math inline">\(0.04\)</span> <span class="math inline">\([.00, 1.0]\)</span></td>
+<td><span class="math inline">\(0.02\)</span> <span class="math inline">\([.00, 1.0]\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ordered probit models.</strong> Alternatively, we can use ordered probit models <span class="citation" data-cites="Burkner:2019 Christensen2023ordinal">[@Burkner:2019;@Christensen2023ordinal]</span>, as we did for the analysis of individual Likert items. To this end, we do not average the individual Likert items of the scale but treat instead items and participants as a random effects. For example, to analyze participants’ responses for intrinsic motivation <span class="citation" data-cites="Karolus:2023">[@Karolus:2023]</span>, we can use the following formula:</p>
+<p><code>formula = intrinsic_motivation ~ 1 + Gamification:Feedback + (1|Item) + (1|Participant)</code></p>
+<p>Interested readers can refer to our supplementary material for additional details.</p>
+<!--
+ @Burkner:2019 further demonstrate how to fit such models. Here, we apply their approach to analyze participants' responses for intrinsic motivation [@Karolus:2023]. To this end, we do not average the individual Likert items of the scale. We treat instead items and participants as a random effects through the following mixed-effects model:  
+
+::: {.cell}
+
+```{.r .cell-code}
+library(brms)
+fit_intrinsic_motivation <- brm(
+  formula = intrinsic_motivation ~ 1 + Gamification:Feedback  
+    + (1|Item) + (1|Participant),
+  data = sims_data,
+  family = cumulative("probit")
+)
+```
+:::
+Fitting this model allows us, for instance, to estimate the difference between the progresive bar and the Emoji representation to be $1.08$, $95\%$ Credible Interval $= [0.10, 2.06]$, where units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
+
+Despite the theoretical advantages and flexibility of this method, its use in practice presents certain challenges. For example, the above model assumes that thresholds are common across all items of the scale. Although it is possible to dispense with this assumption and consider variable threholds [@kurz2021probit], doing so increases the model complexity and introduces convergance issues that are hard to solve without using effective priors. Overall, fine-tuning these models still demands substantial expertise, while the effect of such tuning is difficult to assess through Monte Carlo experiments due to the method's substantial computational overhead.
+-->
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,6 +1,6 @@
-## Raw results
+## Experimental results
 
-This folder presents the raw files generated from our experimental scripts and used for the analysis of the jovi article and the Appendix. The suffix *_10*, *_20*, and *_30* in the filenames corresponds to the sample size (size of experimental cell) used, as we ran the experiments separately for each sample size. 
+This folder presents the raw files generated from our experimental scripts and used for the analysis of our JoVI article and appendix. The suffix *_10*, *_20*, and *_30* in the filenames corresponds to the sample size (size of experimental cell) used, as we ran the experiments separately for each sample size. 
 
 The log files generally contain the following columns: 
 - The sample size *n*.

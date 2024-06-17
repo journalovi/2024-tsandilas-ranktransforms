@@ -1,0 +1,130 @@
+---
+title: "Binary responses - Martin et al. (2023)"
+author: "Theophanis Tsandilas and Géry Casiez"
+#date: "2024-06-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We detail here our analysis of the dataset of [Martin et al. (2023)](https://doi.org/10.1109/TVCG.2023.3247102) presented in our article as a case study. 
+
+### Context
+We focus on the first experiment of Martin et al. (2023), which evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART.   
+
+The response variable we are interested in is binary: Detected vs. Not Detected.
+
+### Reading the dataset
+We start by reading the [data provided by the authors](completed_data.csv): 
+
+```{r, warning=FALSE}
+data <- read.csv("completed_data.csv", sep=";", header = TRUE)
+
+data = data[data$Type != "FOV", ]
+data <- data[c(2, 3, 4, 8, 12, 13, 14, 15)] # Choose the relevant columns
+
+data$UserID<- as.factor(data$UserID)
+data$TrialID <- as.factor(data$TrialID)
+
+data$Type <- (as.factor(data$Type))
+data$Complexity <- factor(data$Complexity, order=TRUE)
+data$Distance <- factor(data$Distance, order=TRUE)
+
+data$Detected <- as.logical(data$Detected)
+``` 
+
+### Analysis
+We conduct an analysis using both ART and a linear mixed-effects model (PAR). We use the authors' original model formulation, where ```UserID``` and ```TrialID``` are both treated as random effects: 
+
+```{r, warning=FALSE, message = FALSE, warning=FALSE}
+library(ARTool)
+library(lmerTest)
+
+m_art <- art(Detected ~ 1 + Type*Distance*Complexity + (1|UserID) + (1|TrialID), data = data)
+m_lmer <- lmer(Detected ~ 1 + Type*Complexity*Distance + (1|UserID) + (1|TrialID), data = data)
+``` 
+
+Results are as follows:
+
+```{r, message = FALSE, warning=FALSE}
+printAnalysis <- function(num, method, model) {
+  cat(num, ". Analysis using ", method, "\n\n", sep="")
+  print(anova(model))
+}
+
+printAnalysis(1, "LMER model (Parametric)", m_lmer)
+printAnalysis(2, "ART", m_art)
+``` 
+
+We observe significant discrepancies between the results of the two methods. A problem with the above experimental design is that it is highly unbalanced. Given the strong interaction effects, interpreting main effects can be problematic. 
+
+It is also important to note that ARTool's test of aligned responses indicates an issues, since there are non-zero *"F values of ANOVAs on aligned responses:"*
+
+```{r, message = FALSE, warning=FALSE}
+print(m_art)
+``` 
+
+### Fictional dataset
+Let us consider a [different dataset](binary-example.csv) that we randomly generated from a population with no effect on any of the three factors (```Type```, ```Distance```, and ```Complexity```) and no interaction. To simplify our analysis, we assume that each user completed a single detection task per combination of the three factors, thus our data do not have a ```TrialID``` factor. Our design is fully balanced, while the average detection rate is $46\%$, which is very similar to the detection rate observed by Martin et al. (2023).   
+
+We repeat our analysis with the two methods:
+
+```{r, warning=FALSE, message = FALSE, warning=FALSE}
+data2 <- read.csv("binary-example.csv", sep=",", header = TRUE)
+
+data2$UserID <- as.factor(data2$UserID)
+data2$Type <- (as.factor(data2$Type))
+data2$Complexity <- factor(data2$Complexity, order=TRUE)
+data2$Distance <- factor(data2$Distance, order=TRUE)
+data2$Detected <- as.logical(data2$Detected)
+
+m2_art <- art(Detected ~ 1 + Type*Distance*Complexity + (1|UserID), data = data2)
+m2_lmer <- lmer(Detected ~ 1 + Type*Complexity*Distance + (1|UserID), data = data2)
+``` 
+
+Results are as follows:
+
+```{r, message = FALSE, warning=FALSE}
+printAnalysis(1, "LMER model (Parametric)", m2_lmer)
+printAnalysis(2, "ART", m2_art)
+``` 
+
+The difference between the results of the two methods are striking. As we show in the article, the Type I error rate of ART for binary data is extremely high, so its results cannot be trusted. 
+
+An alternative method for conducting an analysis with such data is to use generalized linear models with a binomial link function: 
+
+```{r, warning=FALSE, message = FALSE, warning=FALSE}
+m1_glmer <- glmer(Detected ~ 1 + Type*Complexity*Distance + (1|UserID), data = data2, family = "binomial")
+``` 
+
+A problem now is how to test main and interaction effects. A possible way is to conduct Wald tests:
+
+```{r, warning=FALSE, message = FALSE, warning=FALSE}
+library(car)
+Anova(m1_glmer)
+``` 
+
+We observe that the $p$-values are similar to those obtained with our linear model, showing no evidence for any main or interaction effects. [Additional methods for testing effects](https://www.ssc.wisc.edu/sscc/pubs/MM/MM_TestEffects.html) include the comparison of alternative models. We build a range of hypothetical models below:
+
+```{r, warning=FALSE, message = FALSE, warning=FALSE}
+m2_glmer <- glmer(Detected ~ 1 + Type*Complexity + (1|UserID), data = data2, family = "binomial")
+m3_glmer <- glmer(Detected ~ 1 + Type*Distance + (1|UserID), data = data2, family = "binomial")
+m4_glmer <- glmer(Detected ~ 1 + Complexity*Distance + (1|UserID), data = data2, family = "binomial")
+m5_glmer <- glmer(Detected ~ 1 + Type + (1|UserID), data = data2, family = "binomial")
+m6_glmer <- glmer(Detected ~ 1 + Complexity + (1|UserID), data = data2, family = "binomial")
+m7_glmer <- glmer(Detected ~ 1 + Distance + (1|UserID), data = data2, family = "binomial")
+m8_glmer <- glmer(Detected ~ 1 + (1|UserID), data = data2, family = "binomial")
+``` 
+
+We can now compare them as follows:
+```{r, warning=FALSE, message = FALSE, warning=FALSE}
+anova(m1_glmer, m2_glmer, m3_glmer, m4_glmer, m5_glmer, m6_glmer, m7_glmer, m8_glmer)
+``` 
+
+The results indicate that the simplest model (```m8_glmer```) appears as the most promising one based on all criteria. 
+
+
+
+

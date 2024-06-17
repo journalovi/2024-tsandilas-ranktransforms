@@ -1,0 +1,60 @@
+---
+title: "Background - ART explained"
+author: "Theophanis Tsandilas and Géry Casiez"
+#date: "2024-06-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We detail our derivation of the Aligned Rank Transform (ART) for the example of Figure 2. 
+
+We use a small [dataset](ART-explained-data.csv) from a hypothetical within-subjects experiment. The dataset includes measurements $Y$ from two subjects $S$ when varying factors $A$ and $B$.  
+
+The following code describes the construction of the aligned rank transformation for the two main effects $A$ and $B$ and the interaction $A \times B$.
+
+```{r, echo = TRUE, message = FALSE}
+library(dplyr)
+
+# Read the dataset
+df <- read.csv("ART-explained-data.csv", sep=",", header=TRUE, strip.white=TRUE)
+df$S <- factor(df$S)
+df$A <- factor(df$A)
+df$B <- factor(df$B)
+
+# Derive the terms for ART 
+df <- df %>% 
+    group_by(A) %>% mutate(Ai = mean(Y)) %>% # mean for A = Ai
+    group_by(B) %>% mutate(Bj = mean(Y)) %>% # mean for B = Bj
+    # mean for A=Ai, B=Bj and cell mean
+    group_by(A,B) %>% mutate(AiBj = mean(Y)) %>% mutate(Cell = mean(Y)) 
+
+df$m <- mean(df$Y) # the grand mean
+
+# Aligned observations
+alignedA <- df$Y - df$Cell + df$Ai - df$m
+alignedB <- df$Y - df$Cell + df$Bj - df$m
+alignedAB <- df$Y - df$Cell + df$AiBj - df$Ai - df$Bj + df$m 
+
+# Ranks of aligned observations
+df$artA <- rank(round(alignedA, digits = 7))
+df$artB <- rank(round(alignedB, digits = 7))
+df$artAB <- rank(round(alignedAB, digits = 7))
+```
+
+We also calculate the rank transform and the inverse normal transform:
+```{r, echo = TRUE, message = FALSE}
+df$rnk <- rank(df$Y) # Simple rank transform
+df$int <- round(qnorm((rank(df$Y) - 0.5)/length(df$Y)), 2) # Inverse normal transform
+```
+
+We present the table with all the columns:
+```{r, warning=FALSE, message = FALSE}
+# Additional libraries for plotting and reporting
+library(kableExtra) 
+kbl(df) %>% kable_paper(position = "center") %>% scroll_box(height = "170px")
+``` 
+
+The above table shows the ranks of ART (different for each effect), RNK, and INT.  

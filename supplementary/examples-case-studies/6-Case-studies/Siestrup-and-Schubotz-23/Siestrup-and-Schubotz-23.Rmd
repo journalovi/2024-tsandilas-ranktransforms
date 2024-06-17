@@ -1,0 +1,202 @@
+---
+title: "Ordinal and binomial scales - Siestrup and Schubotz (2023)"
+author: "Theophanis Tsandilas and Géry Casiez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We detail here our analysis of the data of [Siestrup and Schubotz (2023)](https://doi.org/10.1162/jocn_a_02047) partly presented in our article as a case study. 
+
+### Context
+Siestrup and Schubotz (2023) investigated how different types of modifications in video sequences describing a story affect people’s episodic memory. During a first session (*encoding*), participants encoded episodes (filmed stories acted by manipulating PLAYMOBIL toys) by watching each video several times. On the day after the encoding, participants went through two experimental parts: 
+
+1. An incomplete reminder of each video, interrupted at the moment preceding the modification of interest. 
+2. An fMRI session, where videos were presented either in their original version, or modified. 
+
+A post-fMRI memory test on the day after evaluated participants' recall of which of the videos seen was the original episode encoded during the first session. The authors studied the effects of two factors:
+
+- *Version*. The modified version of the video. It was either *surface*, i.e., the modification did not affect the storyline of the episode, or *gist*, i.e., modification affected the storyline (or gist) of the episode. 
+
+- *Modification*. It was either *yes* or *no*, depending on whether a modified version of the eposide was presented during the fMRI session.    
+
+The authors used ART for the analysis of various measures that we revisit below. 
+Although the authors have shared their data with us, the data are not publicly available. Thus, we do not include them in our supplementary materials.    
+
+### Rating task
+The experiment included a rating task, asking participants to rate how much the storyline of modified episodes deviated from an original version in a scale from 1 (0% different) to 6 (100% different). The authors used ART to analyze aggregated scores from multiple ratings per condition. We replicate their analysis but also conduct the analysis with alternative methods.   
+
+We start by reading and reformatting the data:
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+
+ratings <- read.csv("ratings.csv", sep=",", header = TRUE)
+
+df <- gather(ratings, modversion, rating, no_surface:yes_gist, factor_key=TRUE)
+df$modification <- ifelse(df$modversion %in% c('yes_surface', 'yes_gist'), 'yes', 'no')
+df$version <- ifelse(df$modversion %in% c('yes_surface', 'no_surface'), 'surface', 'gist')
+df <- df[c(1,4,5,3)]
+
+df$participant_id <- factor(df$participant_id)
+df$version <- factor(df$version)
+df$modification <- factor(df$modification)
+``` 
+
+The following plot shows the distributions of individual ratings per group, where the thick lines represent group means. 
+
+```{r, warning=FALSE, message = FALSE}
+library("yarrr")
+pirateplot(rating ~ modification+version, data = df, theme = 1,            
+    inf.f.o = 0, # Turn off inf fill
+    inf.b.o = 0, # Turn off inf border
+    bean.b.o = 0,
+    avg.line.fun = mean,
+    bar.f.col = gray(.8), # bar filling color
+    bar.b.col = gray(.4), # bar border color
+    bar.f.o = .5, # bar filling opacity
+    bar.b.o = .7 # bar border opacity
+)
+``` 
+
+We conduct an analysis with four different methods: ART, PAR, RNK, and INT.
+```{r, warning=FALSE, message=FALSE}
+library(ARTool)
+library(effectsize) 
+
+# Implementation of the Inverse Normal Transform
+int = function(x){
+   qnorm((rank(x) - 0.5)/length(x))
+}
+
+# We use here the aov function to be consistent with the authors' analysis, also considering slope random effects 
+mr_art <- art(rating ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+mr_par <- aov(rating ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+mr_rnk <- aov(rank(rating) ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+mr_int <- aov(int(rating) ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+``` 
+
+The results obtained with ART are as follows:
+```{r, warning=FALSE}
+# Function for printing the results for each method
+printAnalysis <- function(num, method, model) {
+  cat(num, ". Analysis using ", method, "\n\n", sep="")
+
+  if(method == "ART") print(anova(model))
+  else print(summary(model))
+  
+  print(eta_squared(model))
+  print(cohens_f(model))
+}
+
+printAnalysis(1, "ART", mr_art)
+``` 
+
+We observe that in addition to a clear strong effect of the ```version``` factor, ART shows a statistically significant effect ($p = .034$) effect of the ```modification``` factor, which leads the authors to conclude that *"modified videos that had already been presented during the fMRI session received lower story-change ratings than those that had been presented in the original version before"* [(Siestrup and Schubotz, 2023)](https://doi.org/10.1162/jocn_a_02047).
+
+The results of the other methods, however, do not support this conclusion:
+
+```{r, warning=FALSE}
+printAnalysis(2, "PAR", mr_par)
+printAnalysis(3, "RNK", mr_rnk)
+printAnalysis(4, "INT", mr_int)
+``` 
+
+### Rate of false alarms
+The authors also measured the rate of false alarms for modified videos, which can be thought off as a variable following a binomial distribution. 
+For this dataset, the average probabilty of a false alarm was approximately 15%. 
+
+We start again by reading the data:
+
+```{r, warning=FALSE, message=FALSE}
+alarm_rates <- read.csv("False_Alarm_Rate.csv", sep=",", header = TRUE)
+
+df <- gather(alarm_rates, modversion, arate, no_surface:yes_gist, factor_key=TRUE)
+df$modification <- ifelse(df$modversion %in% c('yes_surface', 'yes_gist'), 'yes', 'no')
+df$version <- ifelse(df$modversion %in% c('yes_surface', 'no_surface'), 'surface', 'gist')
+df <- df[c(1,4,5,3)]
+
+df$participant_id <- factor(df$participant_id)
+df$version <- factor(df$version)
+df$modification <- factor(df$modification)
+``` 
+
+The authors used again ART for the analysis of the false alarm rate.
+Here, we compare the results of ART with the results of the three other methods.
+
+```{r, warning=FALSE, message=FALSE}
+# We use here the aov function to be consistent with the authors' analysis, also considering slope random effects 
+ma_art <- art(arate ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+ma_par <- aov(arate ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+ma_rnk <- aov(rank(arate) ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+ma_int <- aov(int(arate) ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+
+printAnalysis(1, "ART", ma_art)
+printAnalysis(2, "PAR", ma_par)
+printAnalysis(3, "RNK", ma_rnk)
+printAnalysis(4, "INT", ma_int)
+``` 
+
+We notice that all methods show statistically significant effects for both factors as well as we their interaction. However, ART results in small $p$-values and finds larger effect sizes. 
+
+The following figure summarizes the results. 
+
+```{r, warning=FALSE, message = FALSE}
+pirateplot(arate ~ modification+version, data = df, theme = 2,            
+     inf.f.o = 0, # Turn off inf fill
+     inf.b.o = 0, # Turn off inf border
+     point.o = .2,   # Turn up points
+     bar.f.o = .3, # Turn up bars
+     bean.f.o = 0, # Light bean filling
+     bean.b.o = 0, # Light bean border
+     avg.line.o = 1, # Turn off average line
+     point.col = "black"
+)
+``` 
+
+As we discuss in the paper, statistically significant interactions in the presence of strong main effects may not be trusted. Although the difference between the *yes* and *no* modification conditions is clearly larger for surface modifications, this trend does not necessarily imply an intrinsic interaction effect. We observe that the interaction does not cross over, and the fact that the difference is smaller for gist modifications can be simply attributed to the fact that the measure is bounded by zero.
+
+### AUC measure
+Another measure of memory performance that the authors studied using ART is the *Area Under the ROC Curve*, or AUC, which takes values between 0 and 1.
+We first read and plot the data:
+
+```{r, warning=FALSE, message=FALSE}
+auc_data <- read.csv("AUC.csv", sep=",", header = TRUE)
+df <- gather(auc_data, modversion, auc, no_surface:yes_gist, factor_key=TRUE)
+df$modification <- ifelse(df$modversion %in% c('yes_surface', 'yes_gist'), 'yes', 'no')
+df$version <- ifelse(df$modversion %in% c('yes_surface', 'no_surface'), 'surface', 'gist')
+df <- df[c(1,4,5,3)]
+
+df$participant_id <- factor(df$participant_id)
+df$version <- factor(df$version)
+df$modification <- factor(df$modification)
+
+pirateplot(auc ~ modification+version, data = df, theme = 1,            
+    inf.f.o = 0, # Turn off inf fill
+    inf.b.o = 0, # Turn off inf border
+    bean.b.o = 0,
+    avg.line.fun = mean,
+    bar.f.col = gray(.8), # bar filling color
+    bar.b.col = gray(.4), # bar border color
+    bar.f.o = .5, # bar filling opacity
+    bar.b.o = .7 # bar border opacity
+)
+``` 
+
+We then present our analysis with the four different methods. We observe again that altough all methods lead to the same conclusions, ART finds larger effect sizes. 
+Discrepencies are more pronounced for the interaction effect, which should again be interpreted with caution.  
+
+```{r, warning=FALSE, message=FALSE}
+# We use here the aov function to be consistent with the authors' analysis, also considering slope random effects 
+mauc_art <- art(auc ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+mauc_par <- aov(auc ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+mauc_rnk <- aov(rank(auc) ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+mauc_int <- aov(int(auc) ~ 1 + modification*version + Error(participant_id/(1+modification*version)), data = df)
+
+printAnalysis(1, "ART", mauc_art)
+printAnalysis(2, "PAR", mauc_par)
+printAnalysis(3, "RNK", mauc_rnk)
+printAnalysis(4, "INT", mauc_int)
+``` 

@@ -1,0 +1,155 @@
+---
+title: "Removable interactions"
+author: "Theophanis Tsandilas and Géry Casiez"
+#date: "2024-06-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We present here our analysis of removable interactions, where our [dataset](removable_interactions.csv) comes from a fictional experiment (within-participants design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). 
+
+We assume that the researchers measure two dependent variables: task-completion time and perceived performance, which is measured through a five-level ordinal scale (from "very quick" to "very slow"). 
+
+### Reading the dataset
+We read our dataset:
+
+```{r, warning=FALSE, message = FALSE}
+df <- read.csv("removable_interactions.csv", sep=",", header=TRUE, strip.white=TRUE)
+df$SID <- factor(df$SID)
+df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal
+df$Technique <- factor(df$Technique)
+``` 
+
+We present our dataset in a table:
+```{r, warning=FALSE, message = FALSE}
+library(kableExtra) 
+library(tidyverse)
+kbl(df) %>% kable_paper(position = "center") %>% scroll_box(height = "170px")
+``` 
+
+
+### Analysis of task-completion time
+We conduct an analysis for the Time measure, using the methods PAR, LOG, RNK, ART, and INT: 
+
+```{r, warning=FALSE, message = FALSE}
+# Implementation of the Inverse Normal Transform
+library(lmerTest) # Lmer functions
+library(ARTool)  # ARTool library
+
+# Inverse normal transform
+int = function(x){
+   qnorm((rank(x) - 0.5)/length(x))
+}
+
+mt_par <- lmer(Time ~ Difficulty*Technique + (1|SID), data = df)
+mt_rnk <- lmer(rank(Time) ~ Difficulty*Technique + (1|SID), data = df)
+mt_int <- lmer(int(Time) ~ Difficulty*Technique + (1|SID), data = df)
+mt_art <- art(Time ~ Difficulty*Technique + (1|SID), data = df)
+mt_log <- lmer(log(Time) ~ Difficulty*Technique + (1|SID), data = df)
+``` 
+
+Let us now report the results of our analysis. Observe the very low $p$-value for interaction obtained with ART and compare it to the $p$-values obtained with the other methods.
+
+```{r, warning=FALSE, message = FALSE}
+# Function for printing the results for each method
+printAnalysis <- function(num, method, model, anova = TRUE) {
+  cat(num, ". Analysis using ", method, "\n\n", sep="")
+  if(anova) print(anova(model))
+  else print(model)
+}
+
+printAnalysis(1, "No Transformation", mt_par)
+printAnalysis(2, "Logarithmic Transformation", mt_log)
+printAnalysis(3, "ART", mt_art)
+printAnalysis(4, "Rank Transformation", mt_rnk)
+printAnalysis(5, "Inverse Normal Transformation", mt_int)
+``` 
+
+### Analysis of perceived performance
+We then conduct an analysis of perceived performance using the following methods: PAR, RNK, ART, INT, and ATS (Anova-Type Statistic).
+
+```{r, warning=FALSE, message = FALSE}
+# Perceived Performance
+mp_par <- lmer(PerceivedPerformance ~ Difficulty*Technique + (1|SID), data = df)
+mp_rnk <- lmer(rank(PerceivedPerformance) ~ Difficulty*Technique + (1|SID), data = df)
+mp_int <- lmer(int(PerceivedPerformance) ~ Difficulty*Technique + (1|SID), data = df)
+mp_art <- art(PerceivedPerformance ~ Difficulty*Technique + (1|SID), data = df)
+
+# Also try the ANOVA-type statistic (ATS)
+library(nparLD) # https://www.quantargo.com/help/r/latest/packages/nparLD/2.1/nparLD
+mp_ats <- nparLD(PerceivedPerformance ~ Difficulty*Technique, data=df, subject="SID", description=FALSE, order.warning = FALSE)
+``` 
+
+Let us now report the results of our analysis. We observe that all methods detect a statistically significant interaction effect ($p$-value $< .01$)
+
+```{r, warning=FALSE, message = FALSE}
+
+printAnalysis(1, "No Transformation", mp_par)
+printAnalysis(2, "ART", mp_art)
+printAnalysis(3, "Rank Transformation", mp_rnk)
+printAnalysis(4, "Inverse Normal Transformation", mp_int)
+printAnalysis(5, "Anova-Type Statistic (ATS)", mp_ats$ANOVA.test, anova = FALSE)
+``` 
+
+### Ordered probit models
+We conduct an analysis using a ordered probit models.
+
+We will first follow a frequentist approach, using the [```ordinal``` package](https://cran.r-project.org/web/packages/ordinal/). We assume flexible ordinal thresholds:
+
+```{r, warning=FALSE, message = FALSE}
+library(ordinal)
+
+df$PerceivedPerformance <- factor(df$PerceivedPerformance, ordered = TRUE)
+# Frequentist probit/logit model 
+mp_prob <- clmm(PerceivedPerformance ~ Difficulty*Technique + (1|SID), 
+                link ="probit", 
+                threshold = "flexible", 
+                data=df)
+```
+
+Let's print the estimates with their 95% confidence intervals, where the first four lines correspond to estimates of the thresholds:
+
+```{r, warning=FALSE, message = FALSE}
+confint(mp_prob)
+``` 
+
+ We observe that the confidence interval of the interaction term includes zero, showing no evidence for interaction. 
+ 
+ We can also create a model with no interaction term, and then compare the two models:
+ 
+```{r, warning=FALSE, message = FALSE}
+mp_prob_2 <- clmm(PerceivedPerformance ~ Difficulty + Technique + (1|SID), 
+                link ="probit", 
+                threshold = "flexible", 
+                data=df)
+
+anova(mp_prob, mp_prob_2) # This is to compare the two models
+``` 
+ 
+We observe that the AIC is lower for the simpler model with no interaction, while the $\chi^2$ test provides no support for including the interaction term. 
+ 
+We also conduct the analysis with a [Bayesian probit model](https://osf.io/preprints/psyarxiv/x8swp). We assume equal variances and do not provide any priors:
+
+```{r, warning=FALSE, message = FALSE, results='hide'}
+# We based our analysis on a Bayesian approach.
+# See: https://osf.io/preprints/psyarxiv/x8swp
+library(brms)
+
+# The mo(Difficulty) formulation treats difficultly as an ordered variable
+# but you could omit this formulation
+ mp_brm <- brm(
+   formula = PerceivedPerformance ~ Difficulty*Technique + (1|SID),
+   data = df,
+   family = cumulative("probit", threshold="flexible")
+ )
+```
+
+If we print a summary of the results, we see again that the credible interval for the interaction term includes zero, showing no evidence for an interaction effect:
+```{r, warning=FALSE, message = FALSE}
+summary(mp_brm)
+```
+
+

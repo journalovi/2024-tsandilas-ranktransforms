@@ -1,0 +1,202 @@
+---
+title: "Likert items - Rosso et al. (2023)"
+author: "Theophanis Tsandilas and Géry Casiez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We detail here our analysis of the dataset of [Rosso et al. (2023)](https://doi.org/10.1016/j.isci.2023.108099) presented in our article as a case study. 
+
+### Context
+Rosso et al. (2023) conducted a body-swap experiment, where pairs participants (“dyads”) performed a joint-finger tapping task under four different conditions, structured under two different factors:
+
+- *Coupling.* Participants saw either their own hand (Coupled) or their partner’s hand (Uncoupled).
+
+- *Perspective.* Participants saw the hand from a first-person (1P) perspective or from a second-person perspective (2P).
+
+Overall, the experiment was structured as a within-participants design with 38 participants (19 dyads). The authors investigated numerous measures. Here, we only revisit their analysis of the sense of ownership of the visually perceived hand, for which they used ART (Page 10). The variable was measured through a self-reported scale with five levels (1 to 5). 
+
+### Reading the dataset
+We start by reading the [data provided by the authors](TapSwap_all-Individual.xlsx): 
+
+```{r, warning=FALSE}
+# We reuse here code from the script the authors provide. 
+library(readxl) # To read Excel files
+
+singleData <- read_excel('TapSwap_all-individual.xlsx')   # include path in name
+singleData$Perspective <- as.factor(singleData$Perspective) # convert Perspective to factor
+singleData$Coupling <- as.factor(singleData$Coupling)       # convert Coupling to factor  
+singleData$Subject <- as.factor(singleData$Subject)
+
+# Re-order factors, for interpretation
+singleData$Coupling <- relevel(singleData$Coupling , 'Uncoupled')
+singleData$Perspective <- relevel(singleData$Perspective , '2P')
+
+# Remove nan: subject 22
+singleData <- subset(singleData, !is.na(Ownership_visuotactile))
+# Remove Outlier who could not complete the task: dyad #7
+singleData <- subset(singleData, Dyad != 7)
+
+singleData$Dyad <- as.factor(singleData$Dyad) 
+
+ownership_data <- singleData[1:5] # Only keep the columns that are relevant to our analysis
+``` 
+
+### Original analysis with ART
+The authors used ART to conduct their analysis using the following model: 
+
+```{r, warning=FALSE}
+library(ARTool)
+artmodel_original = art(Ownership_visuotactile ~  Coupling + Perspective + Coupling:Perspective, 
+                        data = ownership_data)
+``` 
+
+Their results were as follows:
+
+```{r, warning=FALSE}
+anova(artmodel_original)
+``` 
+
+Given these results, the authors report that they found statistically significant main effects of both ```Coupling``` and ```Perspective```, as well as a statistically significant interaction effect.  
+
+### Analysis with a corrected ART model
+The above model does not take into consideration that responses from the same participant or from participants of the same dyad were not independent. A more correct model is the following one: 
+
+```{r, warning=FALSE}
+artmodel = art(Ownership_visuotactile ~  Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject), 
+                        data = ownership_data)
+``` 
+
+The results are now as follows:
+
+```{r, warning=FALSE}
+anova(artmodel)
+``` 
+
+We observe that $p$-values for all effects are now even smaller, so the conclusions do not change.
+
+### Analysis with the other methods
+We also conduct the analysis with three other methods: PAR, RNK, and INT:
+
+```{r, warning=FALSE, message = FALSE}
+library(lmerTest)
+
+# Implementation of inverse normal transformation (INT)
+int <- function(x){
+    qnorm((rank(x) - 0.5)/length(x))
+}
+
+parmodel = lmer(Ownership_visuotactile ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject), 
+                data = ownership_data)
+rnkmodel = lmer(rank(Ownership_visuotactile) ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject), 
+                data = ownership_data)
+intmodel = lmer(int(Ownership_visuotactile) ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject), 
+                data = ownership_data)
+
+anova(parmodel)
+anova(rnkmodel)
+anova(intmodel)
+``` 
+
+We observe a large discrepancy between the results of these methods and the results of ART. All other methods show no evidence for an effect of ```Perspective``` or an interaction effect.
+
+### Dealing with the design imbalance
+A single entry (out of 152) in the above dataset is missing. Could this imbalance justify ART's sensitivity? 
+To verify this possibility we can replace the missing observation by the group median and redo the analysis. 
+We compare the new results with ART and INT: 
+
+```{r, warning=FALSE, message = FALSE}
+library(tidyverse)
+
+# Complete the missing value with the group median
+ownership_data_balanced <- ownership_data %>% 
+  add_row(Dyad = factor(2), Subject = factor(22), Coupling = factor("Coupled"), Perspective = factor("1P")) %>%
+  group_by(Coupling, Perspective) %>% 
+  mutate(across(3,~ ifelse(is.na(.),median(.,na.rm=TRUE), .)))
+
+artmodel = art(Ownership_visuotactile ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject), 
+               data = ownership_data_balanced)
+intmodel = lmer(int(Ownership_visuotactile) ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject), 
+               data = ownership_data_balanced)
+
+anova(artmodel)
+anova(intmodel)
+``` 
+
+We observe that results only sligthly changle. ART's failure is not due to the imbalance caused by the missing observation.  
+
+### Ordered probit models - Frequentist approach
+We conduct an additional analysis using ordered probit models, which are more appropriate for this type of data. 
+We start with a frequentist implementation using the [```ordinal``` package](https://cran.r-project.org/web/packages/ordinal/).
+
+```{r, warning=FALSE, message = FALSE}
+library(ordinal)
+# We make sure that the response variable is treated as ordinal
+ownership_data$Ownership_visuotactile <- factor(ownership_data$Ownership_visuotactile, ordered = TRUE) 
+
+fit_clmm <- clmm(
+  Ownership_visuotactile ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject),
+  link = "probit", 
+  threshold = "flexible",
+  data = ownership_data
+)
+```
+
+We can assess the 95% confidence intervals of the model parameters, as follows: 
+
+```{r, warning=FALSE, message = FALSE}
+confint(fit_clmm)
+```
+
+The first four rows show the estimates for the thresholds of the ordinal scale. Note that all estimates are expressed in standard deviation units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. We observe that the intervals for Perspective and the interaction term extend from negative to positive values. Thus, there is no sufficient statistical evidence for these effects.
+
+In the above model, we used flexible thresholds, but we could also fit a model with equidistant thresholds as follows:
+```{r, warning=FALSE, message = FALSE}
+fit_clmm_equidistant <- clmm(
+  Ownership_visuotactile ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject),
+  link = "probit", 
+  threshold = "equidistant",
+  data = ownership_data
+)
+
+confint(fit_clmm_equidistant)
+```
+
+The first row in the above output presents an estimate of the first threshold, while the second row presents an estimate of the distance between thresholds. We find that estimates of the three effects are similar to the ones we get with the previous model.
+
+We can conduct a likelihood-ratio test to compare the two models:
+
+```{r, warning=FALSE, message = FALSE}
+anova(fit_clmm, fit_clmm_equidistant)
+```
+
+Keeping the simpler model with equidistant thresholds seems to be a better choice here. 
+
+### Ordered probit models - Bayesian approach
+We can also opt for a Bayesian approach to conduct our analysis, following the tutorial of [Bürkner and Vuorre (2019)](https://osf.io/preprints/psyarxiv/x8swp):
+
+```{r, warning=FALSE, message = FALSE, results='hide'}
+library(brms)
+
+fit_brms <- brm(
+  formula = Ownership_visuotactile ~ Coupling + Perspective + Coupling:Perspective + (1|Dyad/Subject),
+  data = ownership_data,
+  family = cumulative("probit", threshold="flexible")
+)
+```
+
+Results are consistent with the results of the frequentist approach:
+```{r, warning=FALSE, message = FALSE}
+summary(fit_brms)
+```
+
+We can also plot *conditional effects* indicating the posterior mean estimates of the probability of each rating for each ```Perspective``` condition (1P vs. 2P):
+
+```{r, warning=FALSE, message = FALSE}
+plot(conditional_effects(fit_brms, "Perspective", categorical = TRUE), theme = theme_bw()) 
+```
+
+The error bars represent 95% credible intervals. The plot allows to visually verify that there are no clear differences in participants' ratings between the two conditions.

@@ -1,0 +1,149 @@
+---
+title: "Likert scales - Karolus et al. (2023)"
+author: "Theophanis Tsandilas and Géry Casiez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We detail here our analysis of the dataset of [Karolus et al. (2023)](https://dl.acm.org/doi/10.1145/3563657.3596052) presented in our article as a case study. 
+
+### Context
+Karolus et al. (2023) investigate different methods (referred to as "gamification types") for communicating feedback on users' task proficiency, such as during a writing task. The authors used a $3 \times 2$ between-participants design to structure the study, testing the following two factors:
+
+- *Gamification type*. Each participant was presented with one of the following elements providing feedback: (i) a *progress bar* (ii) an *Emoji*, or (iii) *none*. 
+
+- *Feedback type*. Feedback was either *continuous* or *revision*-based (provided at the end of the task to help participants revise). 
+
+The authors collected responses from 147 participants through the Amazon Mechanical Turk Service. They analyzed a range of measures, but here we focus on their analysis of participants' responses to the Situational Motivation Scale (SIMS). The scale consists of four subscales (intrinsic motivation, identified regulation, external regulation, and amotivation), where each contains four 7-level Likert items. For each subscale, the authors conducted an ANOVA using ART on the average score. 
+
+Below, we present the same analysis with all four methods for intrinsic motivation and identified regulation:
+
+### Intrinsic motivation
+We start by reading and formatting the [data provided by the authors](data_cleaned_s2.csv): 
+
+```{r, warning=FALSE, message=FALSE}
+source('S2_setup.R') # This loads the author's code for reading the dataset
+
+# SIMS scale (see https://selfdeterminationtheory.org/SDT/documents/2000_GuayVallerandBlanchard_MO.pdf)
+# Intrinsic motivation: Q83_1, Q83_5, Q83_9, Q83_13
+df_instrinsic <- df[c('p_id', 'coarse_condition', 'game_condition', 'Q83_1', 'Q83_5', 'Q83_9', 'Q83_13')]
+df_instrinsic$p_id <- factor(df_instrinsic$p_id)
+df_instrinsic$feedback_type <- factor(df_instrinsic$coarse_condition)
+df_instrinsic$gamification_type <- factor(df_instrinsic$game_condition, levels=c("Slider", "Emoji", "A_None"))
+
+df_instrinsic$score <- rowMeans(df[c('Q83_1', 'Q83_5', 'Q83_9', 'Q83_13')]) # Take the average score
+``` 
+
+We conduct an analysis using ART, PAR, RNK, and INT: 
+
+```{r, warning=FALSE, message = FALSE}
+library(ARTool)
+# Implementation of inverse normal transformation (INT)
+int <- function(x){
+    qnorm((rank(x) - 0.5)/length(x))
+}
+
+mi_art <- ARTool::art(score ~ 1 + feedback_type*gamification_type, data = df_instrinsic)
+mi_par <- lm(score ~ 1 + feedback_type*gamification_type, data = df_instrinsic)
+mi_rnk <- lm(rank(score) ~ 1 + feedback_type*gamification_type, data = df_instrinsic)
+mi_int <- lm(int(score) ~ 1 + feedback_type*gamification_type, data = df_instrinsic)
+``` 
+
+Results are as follows:
+
+```{r, message = FALSE, warning=FALSE}
+library(effectsize) 
+printAnalysis <- function(num, method, model) {
+  cat(num, ". Analysis using ", method, "\n\n", sep="")
+  print(anova(model))
+  print(eta_squared(model))
+  print(cohens_f(model))
+}
+
+printAnalysis(1, "ART", mi_art)
+printAnalysis(2, "PAR", mi_par)
+printAnalysis(3, "RNK", mi_rnk)
+printAnalysis(4, "INT", mi_int)
+``` 
+
+We obtain similar results with all four methods. We emphasize that in many situations, ART may exhibit a good behavior.
+
+### Identified regulation
+We repeat the same analysis for identified regulation. Again, we reach the same conclusions with all methods.
+
+```{r, warning=FALSE, message=FALSE}
+#Start by reformatting the data
+# Identified regulation: Q83_2, Q83_6, Q83_10, Q83_14
+df_regulation <- df[c('p_id', 'coarse_condition', 'game_condition', 'Q83_2', 'Q83_6', 'Q83_10', 'Q83_14')]
+df_regulation$p_id <- factor(df_regulation$p_id)
+df_regulation$feedback_type <- factor(df_regulation$coarse_condition)
+df_regulation$gamification_type <- factor(df_regulation$game_condition, levels=c("Slider", "Emoji", "A_None"))
+df_regulation$score <- rowMeans(df[c('Q83_2', 'Q83_6', 'Q83_10', 'Q83_14')])
+
+# Build the models
+mr_art <- ARTool::art(score ~ 1 + feedback_type*gamification_type, data = df_regulation)
+mr_par <- lm(score ~ 1 + feedback_type*gamification_type, data = df_regulation)
+mr_rnk <- lm(rank(score) ~ 1 + feedback_type*gamification_type, data = df_regulation)
+mr_int <- lm(int(score) ~ 1 + feedback_type*gamification_type, data = df_regulation)
+
+# And print the results
+printAnalysis(1, "ART", mr_art)
+printAnalysis(2, "PAR", mr_par)
+printAnalysis(3, "RNK", mr_rnk)
+printAnalysis(4, "INT", mr_int)
+``` 
+
+### Ordered probit models (intrinsic motivation)
+An alternative approach is to use ordered probit models to conduct the analysis. Here, we show the approach for the intrinsic motivation measure.
+
+We first transform the data from a wide to a long format, where responses are organized with respect to different aspects:  
+```{r, warning=FALSE, message=FALSE}
+df_instrinsic_long <- df_instrinsic %>% gather(aspect, score, -c(p_id, feedback_type, gamification_type))
+df_instrinsic_long$score  <- factor(df_instrinsic_long$score, ordered = TRUE) 
+``` 
+
+We build three alternative models:
+```{r, warning=FALSE, message=FALSE}
+library(ordinal) 
+
+# Complete model
+mi.prob1 <- clmm(score ~ 1 + feedback_type*gamification_type + (1|p_id) + (1|aspect), 
+                 link ="probit", 
+                 threshold = "flexible", 
+                 data = df_instrinsic_long)
+
+# Only consider the Gamification Type factor
+mi.prob2 <- clmm(score ~ 1 + gamification_type + (1|p_id) + (1|aspect), 
+                 link ="probit", 
+                 threshold = "flexible", 
+                 data = df_instrinsic_long)
+
+# Model with no fixed effect
+mi.prob3 <- clmm(score ~ 1 + (1|p_id) + (1|aspect), 
+                 link ="probit", 
+                 threshold = "flexible", 
+                 data = df_instrinsic_long)
+``` 
+
+We compare these models:
+```{r, warning=FALSE, message=FALSE}
+anova(mi.prob1, mi.prob2, mi.prob3)
+``` 
+
+We observe that the second model with Gamification Type as the only fixed factor is the best alternative. 
+We then compare it with a simpler model with equidistant thresholds:
+```{r, warning=FALSE, message=FALSE}
+# Equidistant thresholds
+mi.prob4 <- clmm(score ~ 1 + gamification_type + (1|p_id) + (1|aspect), 
+                 link ="probit", 
+                 threshold = "equidistant", 
+                 data = df_instrinsic_long)
+
+anova(mi.prob2, mi.prob4)
+``` 
+
+We conclude that flexible thresholds lead to a better predictive model in this case. 
+
