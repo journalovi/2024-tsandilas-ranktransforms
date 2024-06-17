@@ -3,7 +3,7 @@ In this section, we examine some specific types of data through concrete example
 
 ### Binary responses
 
-@Martin:2023 ran two experiments to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. We focus here on their first experiment which evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
+@Martin:2023 ran two experiments to investigate the psychological phenomenon of change blindness, that is, how humans fail to detect certain changes in a scene. We focus here on their first experiment, which evaluated how 22 participants succeeded in observing object manipulations in an immersive environment. The authors studied the influence of four different factors, namely the Type of manipulation (4 levels), its Distance from the observer (2 levels), the Complexity of the manipulated item (2 levels), and the field of view (not examined here). To analyze the effect of the first three factors, the authors used a $4 \times 2 \times 2$ repeated-measures ANOVA using ART. 
 
 Their design has two particularities. First, the response variable is binary (Detected vs. Not Detected). Second, the design is unbalanced; each participant did not complete the same tasks, so their types and complexities did not appear with the same frequency among participants. The authors pointed to these issues to justify the use of ART: 
 
@@ -24,7 +24,7 @@ Below, we present the *p*-values obtained from each method:
 | Type $\times$ Distance $\times$ Complexity | $.00055$ | $.00016$ |
 : *p*-values keeping two significant digits - Type III hypothesis tests {.sm}
 
-There are notable differences among the results obtained from the two methods, but it is important to note that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Thus, the presence of interactions in the above unbalanced design complexifies the detection and intepretation of main effects. In this specific case, the authors decided to create partial models with two factors each time to further evaluate contrasts, and intrestingly, they now used t-tests instead of ART.   
+There are notable differences between the results obtained from the two methods, but it is important to note that the aforementioned *p*-values are outcomes of Type III hypothesis tests. While these tests are deemed more suitable for unbalanced data when interaction effects emerge, their use remains a subject of debate [@Smith:2022], and some experts argue that interpreting main effects in the presence of interactions may not be meaningful [@Hector:2010]. Thus, the presence of interactions in the above unbalanced design complexifies the detection and intepretation of main effects. In this specific case, the authors decided to create partial models with two factors each time to further evaluate contrasts, and interestingly, they now used t-tests instead of ART.   
 
 We emphasize that the ARTool raises a warning for such unbalanced designs:
 
@@ -64,7 +64,7 @@ We observe that ART exhibits significant challenges with such binary data, as it
 
 Clearly, ART is completely inappropriate when responses are binary. In contrast, parametric ANOVA demonstrates an excellent behavior even when the success (or error) rate is as low as $6\%$. 
 
-A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. Such models are in line with the latent variable approach, where the link function establishes a connection between a normally distributed latent psychological variable (e.g., the human ability to detect changes in a virtual environment) and the observed variable (e.g., successes or failures in sequential change detection tests). Consequently, we expect them to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, inference with such models requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not incude them in our evaluation here.
+A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. Such models are in line with the latent variable approach, where the link function establishes a connection between a normally distributed latent psychological variable (e.g., the human ability to detect changes in a virtual environment) and the observed variable (e.g., successes or failures in sequential change detection tests). Consequently, we expect them to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, inference with such models requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not include them in our evaluation here.
 
 ### Likert items 
 
@@ -91,7 +91,7 @@ All four methods agree that there is strong evidence about the effect of Couplin
 
 One may notice that a single entry (out of 152 entries) in the above dataset is missing, so the design is slightly unbalanced, and the ARTool again outputs a warning. Could this imbalance explain the above differences? The answer is negative. If we complete the missing row with a neutral value (e.g., a 3 in the 5-level ordinal scale) to dismiss the warning, the resulting *p*-values will still be very similar to the ones reported above.  
 
-**Ordered probit models.** We conducted complementary analyses with ordered probit models, where we used two different methods: (1) ordinal regression as impemented in the *ordinal* R package [@Christensen2023ordinal]; and (2) a Bayesian statistics framework with the *brms* R package [@Burkner:2019]. 
+**Ordered probit models.** We conducted complementary analyses with ordered probit models, where we used two different methods: (1) ordinal regression as implemented in the *ordinal* R package [@Christensen2023ordinal]; and (2) a Bayesian statistics framework with the *brms* R package [@Burkner:2019]. 
 
 For the first (frequentist) analysis, we use the following R code:
 
@@ -110,7 +110,7 @@ fit_frequentist <- clmm(
 
 We can build a simpler regression model by setting ```threshold = "equidistant"``` and compare the two models by conducting a likelihood-ratio test. For this specific example, the flexible thresholds do not improve the model's predictive power, so the simpler model is more promising. However, both models lead to almost identical parameter estimates. 
 
-For the Bayesian formulation, we use the the following code in R:
+For the Bayesian formulation, we use the following code in R:
 
 ```{r, eval=FALSE}
 library(brms)
@@ -165,7 +165,7 @@ The authors collected responses from 147 participants through the Amazon Mechani
 | Gamification $\times$ Feedback | $.99$ | $.86$ | $.98$  | $.93$ |
 : Identified regulation: *p*-values keeping two significant digits (partial $\eta^2$ in parentheses when $p < .05$) {.sm}
 
-Overall, differences among the results of the four methods are reasonably small and support the authors' conclusions. We omit results for external regulation and amotivation for which all *p*-values are greater than $.05$ --- again, results are consistent among the four methods. 
+Overall, differences between the results of the four methods are reasonably small and support the authors' conclusions. We omit results for external regulation and amotivation for which all *p*-values are greater than $.05$ --- again, results are consistent among the four methods. 
 
 In many situations, the above methods will behave correctly and produce similar results. However, it is difficult to know in advance when problems will arise. In a different experiment, @Siestrup:2023 investigated how different types of modifications in video sequences describing a story affect people's episodic memory. The experiment included a rating task, asking participants to rate how much the storyline of modified episodes deviated from an original version (from $1 = 0\%$ different to $6 = 100\%$ different). The authors used ART to analyze aggregated scores from multiple ratings per condition. Below, we present the results of our re-analysis with the four different methods:
 
@@ -201,8 +201,8 @@ fit_intrinsic_motivation <- brm(
   family = cumulative("probit")
 )
 ```
-Fitting this model allows us, for instance, to estimate the difference between the progresive bar and the Emoji representation to be $1.08$, $95\%$ Credible Interval $= [0.10, 2.06]$, where units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
+Fitting this model allows us, for instance, to estimate the difference between the progressive bar and the Emoji representation to be $1.08$, $95\%$ Credible Interval $= [0.10, 2.06]$, where units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
 
-Despite the theoretical advantages and flexibility of this method, its use in practice presents certain challenges. For example, the above model assumes that thresholds are common across all items of the scale. Although it is possible to dispense with this assumption and consider variable threholds [@kurz2021probit], doing so increases the model complexity and introduces convergance issues that are hard to solve without using effective priors. Overall, fine-tuning these models still demands substantial expertise, while the effect of such tuning is difficult to assess through Monte Carlo experiments due to the method's substantial computational overhead.
+Despite the theoretical advantages and flexibility of this method, its use in practice presents certain challenges. For example, the above model assumes that thresholds are common across all items of the scale. Although it is possible to dispense with this assumption and consider variable thresholds [@kurz2021probit], doing so increases the model complexity and introduces convergence issues that are hard to solve without using effective priors. Overall, fine-tuning these models still demands substantial expertise, while the effect of such tuning is difficult to assess through Monte Carlo experiments due to the method's substantial computational overhead.
 -->
  

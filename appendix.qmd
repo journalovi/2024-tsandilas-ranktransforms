@@ -62,7 +62,7 @@ source("plotlying.R")
 </style>
 ```
 
-We present complementary results and new experiments that investigate additional scenarios. We also compare INT and RNK with other nonparametric methods. Unless explicitely mentioned in each section, we follow the experimental methodology presented in the main article. At the end of each section, we summarize our conclusions.
+We present complementary results and new experiments that investigate additional scenarios. We also compare INT and RNK with other nonparametric methods. Unless explicitly mentioned in each section, we follow the experimental methodology presented in the main article. At the end of each section, we summarize our conclusions.
 
 ## Results for $\alpha = .01$ {#alpha}
 Although we only presented results for $\alpha = .05$ in the main article, we observe the same trends for other significance levels. The following figures show the Type I error rates of the methods for the $4 \times 3$ within-subjects design when $\alpha = .01$. Note that error rates are not proportional to the $\alpha$ level. 
@@ -225,7 +225,7 @@ plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_{1}$ of the main effect of $X_1$ ($n=20$)
 :::
 
-**Interaction effects**. We observe similar patterns for the Type I error rate of the interaction effect in the presence of a single main effect (@fig-lognormal-interaction1) or two parallel main effects (@fig-lognormal-interaction2). As shown in @fig-lognormal-interaction2, any advantage of ART over RNK and INT for testing interaction disappears even when distrubitions exhibit light skew levels. We also observe again that the performance of RNK and INT remains identical across all skew levels.  
+**Interaction effects**. We observe similar patterns for the Type I error rate of the interaction effect in the presence of a single main effect (@fig-lognormal-interaction1) or two parallel main effects (@fig-lognormal-interaction2). As shown in @fig-lognormal-interaction2, any advantage of ART over RNK and INT for testing interaction disappears even when distributions exhibit light skew levels. We also observe again that the performance of RNK and INT remains identical across all skew levels.  
 
 ::: {#fig-lognormal-interaction1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -518,7 +518,7 @@ plotlyErrorByDesign_v2(df, xlab = "magnitude of main effects", var = "rateX1X2",
 Type I error rates ($\alpha = .05$) for the **interaction** $X_1 \times X_2$ as a function of the magnitudes $a_1 = a_2$ of the main effects of $X_1$ and $X_2$  ($n = 20$)
 :::
 
-**Power: Main effects**. As shown in @fig-ATS-power-main-1 and @fig-ATS-power-main-2, ATS appears as the most powerful method for detecting effects of $X_1$ for the mixed design. However, in all other situtations, it has less power than INT and ofter less power than RNK.  
+**Power: Main effects**. As shown in @fig-ATS-power-main-1 and @fig-ATS-power-main-2, ATS appears as the most powerful method for detecting effects of $X_1$ for the mixed design. However, in all other situations, it has less power than INT and offer less power than RNK.  
 
 ::: {#fig-ATS-power-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -572,7 +572,7 @@ Although ATS appears to be a valid alternative, it does not offer clear performa
 
 ## Generalizations of nonparametric tests {#generalized}
 
-Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his *np.anova* function [@luepsen_R]. Specificlly, we evaluate the the generalization of the van der Waerden test (VDW), and the generalization of the Kruskal-Wallis and Friedman test (KWF). Their implementation uses R's *aov* function and requires considering random slopes in the error term of the model, that is, using ``Error(s/(x1*x2))`` for the two-factor within-participants design and ``Error(s/x2)`` for the mixed design, where ``s`` is the subject identifier variable. We also used the *aov* function and the same formulation of the error term for all other methods.
+Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his *np.anova* function [@luepsen_R]. Specifically, we evaluate the generalization of the van der Waerden test (VDW), and the generalization of the Kruskal-Wallis and Friedman test (KWF). Their implementation uses R's *aov* function and requires considering random slopes in the error term of the model, that is, using ``Error(s/(x1*x2))`` for the two-factor within-participants design and ``Error(s/x2)`` for the mixed design, where ``s`` is the subject identifier variable. We also used the *aov* function and the same formulation of the error term for all other methods.
 
 **Type I error rates: Main effects**. @fig-vdWaerden-designs-main presents Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop drastically as the effect of $X_1$ grows. We will see below that the power of these methods evaporates in these cases.  
 
@@ -594,7 +594,7 @@ plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as a function of the magnitude $a_1$ of the main effect of $X_1$ ($n = 20$)
 :::
 
-**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents Type I error rates for the interaction, in the presence of a single main effect. Again, the error rates of VDW and KWF drop quickly for both the between-subjects and mixed design @fig-vdWaerden-designs-interaction-1 presents results when both main effects are present. Under the within-subjects design, KWF is the worst performing techique. VDW performs better than RNK but still lags behind INT. For the other two designs, KFW and VDW yield lower or zero error rates when main effects are large, which can be explained by their extreme loss power in these cases.
+**Type I error rates: Interactions**. @fig-vdWaerden-designs-interaction-1 presents Type I error rates for the interaction, in the presence of a single main effect. Again, the error rates of VDW and KWF drop quickly for both the between-subjects and mixed design @fig-vdWaerden-designs-interaction-1 presents results when both main effects are present. Under the within-subjects design, KWF is the worst performing technique. VDW performs better than RNK but still lags behind INT. For the other two designs, KFW and VDW yield lower or zero error rates when main effects are large, which can be explained by their extreme loss power in these cases.
 
 ::: {#fig-vdWaerden-designs-interaction-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
