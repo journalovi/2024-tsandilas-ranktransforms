@@ -1,0 +1,1 @@
+The [example on ART's construction](https://statransform.github.io/jovi/supplementary/examples-case-studies/2-Background/ART-explained.html) in Section 2 (Background).

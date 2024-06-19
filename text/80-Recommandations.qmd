@@ -25,8 +25,8 @@ We also explained that nonparametric tests are not free of assumptions, while ra
 
 Several papers we reviewed, citing ARTool [@wobbrock:2011], justify their use of ART based on the presence of *"nonparametric data."* 
 However, it is important to clarify that terms like "parametric" or "nonparametric" refer to properties of the statistical model, not inherent characteristics of the collected data.
-Even when ANOVA is clearly unsuitable, there are often alternative parametric methods for addressing violations of common statistical assumptions. 
-For example, one can log-transform data with positively skewed distributions [I also use Box-Cox transform https://www.rdocumentation.org/packages/forecast/versions/8.22.0/topics/BoxCox]{.g}, or use generalized mixed-effects models, which provide support for a broader set of data distributions. 
+Even when ANOVA is clearly unsuitable, there are often alternative parametric methods for addressing violations of common statistical assumptions and still ensure that results can be easily communicated and interpreted. 
+For example, one can log-transform positively skewed data following log-normal distributions or use generalized mixed-effects models, which provide support for a broader set of data distributions. 
 Finally, employing simulations, as we did in this article, is an excellent method for evaluating the impact and risks of assumption violations and determine which data analysis procedures to use. 
 
 ### Analyzing Likert-type data

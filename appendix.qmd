@@ -574,7 +574,7 @@ Although ATS appears to be a valid alternative, it does not offer clear performa
 
 Finally, we evaluate the generalizations of nonparametric tests recommended by Lüpsen [-@luepsen:2018; -@luepsen:2023] as implemented in his *np.anova* function [@luepsen_R]. Specifically, we evaluate the generalization of the van der Waerden test (VDW), and the generalization of the Kruskal-Wallis and Friedman test (KWF). Their implementation uses R's *aov* function and requires considering random slopes in the error term of the model, that is, using ``Error(s/(x1*x2))`` for the two-factor within-participants design and ``Error(s/x2)`` for the mixed design, where ``s`` is the subject identifier variable. We also used the *aov* function and the same formulation of the error term for all other methods.
 
-**Type I error rates: Main effects**. @fig-vdWaerden-designs-main presents Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop drastically as the effect of $X_1$ grows. We will see below that the power of these methods evaporates in these cases.  
+**Type I error rates: Main effects**. @fig-vdWaerden-designs-main presents Type I error rates for the main effect of $X_2$. While all methods perform well under the within-subjects and mixed designs, the error rates of VDW and KWF drop drastically as the effect of $X_1$ grows under the between-subjects design. We will see below that the power of these methods evaporates in these cases. 
 
 ::: {#fig-vdWaerden-designs-main}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}

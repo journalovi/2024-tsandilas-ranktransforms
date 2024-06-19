@@ -22,30 +22,27 @@ In addition, our results show that testing interactions in the presence of multi
 We conclude that ART is a flawed statistical method and should be abandoned. We recommend prioritizing parametric methods, including linear models and their generalizations. While we propose the inverse normal transformation as a generic nonparametric alternative, we caution researchers about risks and limitations of rank transformation methods.
 
 ###### Materials
-Link to repositories containing raw data, open source code or (pre-)registration number/links.
-
+We provide [supplementary materials](https://github.com/statransform/jovi/tree/main/supplementary) with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article.
 :::
-
 
 ::: {.callout-note appearance="simple" icon=false collapse=true}
 ## Materials, Authorship, License, Conflicts
 
-Fill in the following sections in this infobox per the [JoVI Author Guide](https://www.journalovi.org/author-guide.html#sections), then delete this line.
-
 ###### Research materials
 
-See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#research-material-statements).
+We provide [supplementary materials](https://github.com/statransform/jovi/tree/main/supplementary) with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article.
 
 ###### Authorship
 
-See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#authorship).
+**Theophanis Tsandilas:** Conceptualization, Methodology, Resources, Software, Formal Analysis, Investigation, Validation, Data Curation, Vizualization, Writing - Original Draft, Writing - Review & Editing.
+**Géry Casiez:** Conceptualization, Investigation, Writing - Review & Editing.
 
 ###### License
 
-See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#license).
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 
 ###### Conflicts of interest
 
-See [the corresponding section in the author guide](https://www.journalovi.org/author-guide.html#conflicts-of-interest).
+The authors declare that there are no competing interests.
 
 :::
