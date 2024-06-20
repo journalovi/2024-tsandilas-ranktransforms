@@ -91,7 +91,7 @@ mrnk <- lmer(rank(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Ran
 mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
 ``` 
 
-### Reporting the results
+### Main and interaction effects
 We finally report the results of our analysis:
 ```{r, warning=FALSE}
 # Function for printing the results for each method
@@ -109,3 +109,26 @@ printAnalysis(3, "Rank Transformation", mrnk)
 printAnalysis(4, "Inverse Normal Transformation", mint)
 printAnalysis(5, "No Transformation", mpar)
 ``` 
+
+### Contrasts
+Finally, we conduct an analysis of pairwise differences between the three techniques *A*, *B*, and *C*, using a Bonferroni correction. For ART, we use the ```art.con``` function.
+
+```{r, warning=FALSE}
+library("emmeans")
+
+# Function for printing the results for each method
+printContrasts <- function(num, method, expr, model) {
+  cat(num, ". Contrasts using ", method, "\n\n", sep="")
+
+  if(method == "ART") art.con(model, expr, adjust = "bonferroni")
+  else contrast(emmeans(model, expr), method="pairwise", adjust = "bonferroni")
+}
+
+printContrasts(1, "Logarithmic Transformation", ~Technique, mlog)
+printContrasts(2, "ART", ~Technique, mart)
+printContrasts(3, "Rank Transformation", ~Technique, mrnk)
+printContrasts(4, "Inverse Normal Transformation", ~Technique, mint)
+printContrasts(5, "No Transformation", ~Technique, mpar)
+``` 
+
+We observe again a significant divergence between the results of ART and the results of the other methods. 
