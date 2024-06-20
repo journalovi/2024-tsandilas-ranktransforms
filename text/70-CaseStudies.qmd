@@ -133,7 +133,6 @@ Below, we present parameter estimates from the two methods, where brackets repre
 | Coupling $\times$ Perspective | $-0.11$ $[-0.93, 0.70]$| $-0.09$ $[-0.89, 0.75]$ |
 : Effect estimates and their $95\%$ confidence or credible intervals, expressed as standard deviations of the latent variable {.sm}
 
-<!--Credible intervals are analogous to the confidence intervals of frequential statistics, but unlike confidence intervals, they allow for a probabilistic interpretation. For example, we can conclude that the above credible intervals contains the true differences in people's sense of ownership with a $95\%$ probability. --> 
 
 Interpreting these results requires special attention, as the above estimates do not refer to the observed ordinal scale of measurements. All effects are expressed in standard deviation units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. The above results suggest that participants' sense of ownership was $1.85$ (or $1.95$) standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. 
 
@@ -188,21 +187,3 @@ We see now that results from different methods can lead to different conclusions
 ```formula = intrinsic_motivation ~ 1 + Gamification:Feedback + (1|Item) + (1|Participant)```
 
 Interested readers can refer to our supplementary material for additional details.
-
-<!--
- @Burkner:2019 further demonstrate how to fit such models. Here, we apply their approach to analyze participants' responses for intrinsic motivation [@Karolus:2023]. To this end, we do not average the individual Likert items of the scale. We treat instead items and participants as a random effects through the following mixed-effects model:  
-
-```{r, eval=FALSE}
-library(brms)
-fit_intrinsic_motivation <- brm(
-  formula = intrinsic_motivation ~ 1 + Gamification:Feedback  
-    + (1|Item) + (1|Participant),
-  data = sims_data,
-  family = cumulative("probit")
-)
-```
-Fitting this model allows us, for instance, to estimate the difference between the progressive bar and the Emoji representation to be $1.08$, $95\%$ Credible Interval $= [0.10, 2.06]$, where units represent again standard deviations of the latent psychological variable of intrinsic motivation. 
-
-Despite the theoretical advantages and flexibility of this method, its use in practice presents certain challenges. For example, the above model assumes that thresholds are common across all items of the scale. Although it is possible to dispense with this assumption and consider variable thresholds [@kurz2021probit], doing so increases the model complexity and introduces convergence issues that are hard to solve without using effective priors. Overall, fine-tuning these models still demands substantial expertise, while the effect of such tuning is difficult to assess through Monte Carlo experiments due to the method's substantial computational overhead.
--->
- 
