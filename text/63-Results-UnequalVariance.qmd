@@ -29,7 +29,7 @@ The percentage of positives (i.e., rejecting the null hypothesis) for the **main
 
 The performance of RNK and INT remains unchanged across continuous distributions, a result expected due to the preservation of medians in such scales. Conversely, mean differences grow with increasing $r_{sd}$, which explains why PAR's ratio of positives reaches high levels under these distributions. However, this trend is not consistent across all three designs. The behavior of ART is less clear, further supporting our argument that its null hypothesis of interest is ill-defined. Under discrete distributions, the trends of positives vary across designs, with PAR and ART exhibiting the highest rates. 
 
-We also investigate the influence of unequal variances among the levels of $X_1$ on positive rates for $X_2$, as depicted in @fig-unequal-main-2. Those can be reliably considered as Type I errors because source populations defined by $X_2$ are identical. The error rates of PAR, RNK, and INT do not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields notably high error rates, surpassing acceptable levels even in the case of normal distributions (check results for the $2 \times 4$ mixed design). The observed error rates are comparatively lower for the $2 \times 3$ between-subjects design.
+We also investigate the influence of unequal variances among the levels of $X_1$ on positive rates for $X_2$, as depicted in @fig-unequal-main-2. These can be reliably considered as Type I errors because source populations defined by $X_2$ are identical. The error rates of PAR, RNK, and INT do not seem to be affected by an increase of $r_{sd}$. In contrast, ART yields high error rates, surpassing acceptable levels even in the case of normal distributions (check results for the $2 \times 4$ mixed design). Thus, the problem of unequal variance is more serious for ART than for other methods, as the method's sensitivity propagates across factors. This further demonstrates that ART's alignment procedure causes the method to confound effects.
 
 ::: {#fig-unequal-main-2}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -37,6 +37,7 @@ plotlyErrorByDesign2(df, xlab = "max ratio of standard deviations between levels
 ```
 Type I error rates ($\alpha = .05$) for the **main effect of $X_2$** as the ratio of standard deviations $r_{sd}$ on $X_1$ increases ($n=20$)
 :::
+
 
 **Interaction effects**. Finally, we measure Type I error rates for the interaction effect $X_1 \times X_2$, shown in @fig-unequal-interaction. The error rates of ART exhibit similar trends, with a somewhat lower level under the $4 \times 3$ within-subjects design (compared to @fig-unequal-main-2). Additionally, for this design, we observe error inflation for the three other methods, albeit to a significantly lesser degree.
 
