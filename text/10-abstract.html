@@ -61,17 +61,17 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="objectives" class="level6">
 <h6 class="anchored" data-anchor-id="objectives">Objectives</h6>
-<p>This research aims to clarify the contradictory findings from previous studies by reevaluating the robustness and effectiveness of ART. A complementary goal is to investigate the performance of alternative nonparametric methods.</p>
+<p>This research aims to clarify the contradictory findings from previous studies by reevaluating the robustness and effectiveness of ART. Its complementary goal is to investigate the performance of alternative nonparametric methods.</p>
 </section>
 <section id="methods" class="level6">
 <h6 class="anchored" data-anchor-id="methods">Methods</h6>
 <p>We conducted a series of Monte Carlo experiments to systematically evaluate ART across various data distributions and experimental designs. Our comparative analysis includes two alternative transformation methods: the simple rank transformation and the inverse normal transformation, along with parametric ANOVA without transformation. Additionally, we present supplementary experiments involving other competitive nonparametric methods in the <a href="appendix.html">appendix</a>.</p>
-<p>Our experimental methodology builds upon a latent variable modeling approach, enabling the simulation of main and interaction effects across distributions and addressing interpretation issues related to these effects. In addition to Monte Carlo experiments, we explore the behavior of ART through concrete examples and reanalyze data from previous user studies.</p>
+<p>Our experimental methodology builds upon a latent variable modeling approach, enabling us to simulate main and interaction effects across diverse distributions and address interpretation issues related to these effects. In addition to Monte Carlo experiments, we explore the behavior of ART through illustrative examples and reanalyze data from previous user studies.</p>
 </section>
 <section id="results" class="level6">
 <h6 class="anchored" data-anchor-id="results">Results</h6>
-<p>Our results indicate that ART systematically confounds effects across all experimental designs we examined. Specifically, an effect on one factor may cause ART to incorrectly detect effects on other factors or their interactions. We show that the method fails under various conditions, incuding skewed distributions, binomal distributions, Likert-type data with five or seven ordinal levels, distributions with unequal variances, and experimental designs with missing data.</p>
-<p>Overall, ART operates as expected only under normal distributions with equal variances. In all other scenarios, it performs less effectively than simpler rank transformations and, in many instances, such as with ordinal data, significantly worse than parametric ANOVA. Our analysis of real-world data further demonstrates that using ART often leads to incorrect conclusions. Conversely, the inverse normal transformation emerges as the most versatile and robust nonparametric method, although we identify situations in which this method can also inflate errors or distort effects.</p>
+<p>Our results indicate that ART systematically confounds effects across all the experimental designs we examined. Specifically, an effect on one factor may cause ART to incorrectly detect effects on other factors or their interactions. We show that the method fails under various conditions, including skewed distributions, binomial distributions, Likert-type data with five or seven ordinal levels, distributions with unequal variances, and experimental designs with missing data.</p>
+<p>Surprisingly, ART operates as expected only under normal distributions with equal variances. In all other scenarios, it performs less effectively than simpler rank transformations and, in many situations, such as with ordinal data, it is significantly worse than parametric ANOVA. Our analysis of real-world data further demonstrates that using ART often leads to incorrect conclusions. Conversely, the inverse normal transformation emerges as the most versatile and robust nonparametric method, although we identify situations in which this method can also inflate errors or distort effects.</p>
 <p>In addition, our results show that testing interactions in the presence of multiple main effects is challenging for all methods. We raise awareness about previous warnings regarding the interpretation of <em>removable interactions</em>.</p>
 </section>
 <section id="conclusion" class="level6">
@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="materials" class="level6">
 <h6 class="anchored" data-anchor-id="materials">Materials</h6>
-<p>We provide <a href="https://github.com/statransform/jovi/tree/main/supplementary">supplementary materials</a> with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. :::</p>
+<p>We provide <a href="https://github.com/statransform/jovi/tree/main/supplementary">supplementary materials</a> with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. Source files of our article, appendix, and supplementary materials can also be found on OSF at <a href="https://osf.io/hs7j8">https://osf.io/hs7j8</a>. :::</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -92,10 +92,12 @@ Materials, Authorship, License, Conflicts
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<section id="research-materials" class="level6">
+<section id="research-materials" class="level6 callout-body-container callout-body">
 <h6 class="anchored" data-anchor-id="research-materials">Research materials</h6>
-<p>We provide <a href="https://github.com/statransform/jovi/tree/main/supplementary">supplementary materials</a> with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article.</p>
+<p>We provide <a href="https://github.com/statransform/jovi/tree/main/supplementary">supplementary materials</a> with experimental code, raw experimental results, and detailed analyses of examples and case studies presented throughout the article. Source files of our article, appendix, and supplementary materials can also be found on OSF at <a href="https://osf.io/hs7j8">https://osf.io/hs7j8</a>.</p>
+</section>
+</div>
+</div>
 </section>
 <section id="authorship" class="level6">
 <h6 class="anchored" data-anchor-id="authorship">Authorship</h6>
@@ -108,10 +110,7 @@ Materials, Authorship, License, Conflicts
 <section id="conflicts-of-interest" class="level6">
 <h6 class="anchored" data-anchor-id="conflicts-of-interest">Conflicts of interest</h6>
 <p>The authors declare that there are no competing interests.</p>
-</section>
-</div>
-</div>
-</div>
+<p>:::</p>
 </section>
 </section>
 
