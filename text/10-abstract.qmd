@@ -1,7 +1,7 @@
 ## Abstract {.unnumbered}
 
 ###### Introduction
-The Aligned Rank Transform (ART) has been popular statistical method, regularly used when the statistical assumptions of parametric procedures, e.g., normality assumptions, are not met. Its popularity stems from several Monte Carlo experiments showing that the method is robust and powerful. However, contrary experimental findings suggest that ART may be less robust compared to simpler rank transformation methods, failing to adequately control Type I error rates across various scenarios, including discrete data, skewed distributions, and distributions with unequal variances. These results have not gained attention within the Human-Computer Interaction community, where ART is routinely used.
+The Aligned Rank Transform (ART) is a popular statistical method, commonly used when the statistical assumptions of parametric procedures, such as normality assumptions, are not met. Its popularity stems from several Monte Carlo experiments demonstrating that the method is robust and powerful. However, contrary experimental findings suggest that ART may be less robust compared to simpler rank transformation methods, failing to adequately control Type I error rates across various scenarios, including discrete data, skewed distributions, and distributions with unequal variances. These results have not gained attention within the Human-Computer Interaction community, where ART is routinely used.
 
 ###### Objectives
 This research aims to clarify the contradictory findings from previous studies by reevaluating the robustness and effectiveness of ART. Its complementary goal is to investigate the performance of alternative nonparametric methods.
