@@ -3,8 +3,10 @@ project:
 
 format:
   html:
-    theme: lumen
     toc: true
+    fig-responsive: true
+    embed-resources: true
+    theme: accessible.scss
 
 number-sections: true
 number-depth: 2

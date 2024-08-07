@@ -127,11 +127,11 @@ Notice that we do not use informative priors in the above model, although this i
 Below, we present parameter estimates from the two methods, where brackets represent either $95\%$ confidence intervals (frequentist method), or $95\%$ credible intervals (Bayesian method):
 
 | | Frequentist [@Christensen2023ordinal] | Bayesian [@Burkner:2019] |
-|------|-----|-----|
+|-----|-----|------|
 | Coupling (Coupled $-$ Uncoupled) | $-1.85$ $[-2.46, -1.24]$ | $-1.95$ $[-2.58, -1.35]$  |
 | Perspective (1P $-$ 2P) |  $\quad 0.29$ $[-0.37, 0.94]$  | $\quad 0.28$ $[-0.39, 0.95]$ |
 | Coupling $\times$ Perspective | $-0.11$ $[-0.93, 0.70]$| $-0.09$ $[-0.89, 0.75]$ |
-: Effect estimates and their $95\%$ confidence or credible intervals, expressed as standard deviations of the latent variable {.sm}
+: Effect estimates and their $95\%$ confidence or credible intervals. They are expressed as standard deviations of the latent variable {.sm}
 
 
 Interpreting these results requires special attention, as the above estimates do not refer to the observed ordinal scale of measurements. All effects are expressed in standard deviation units over the latent variable, so they are analogous to Cohen's $d$ standardized effect sizes. The above results suggest that participants' sense of ownership was $1.85$ (or $1.95$) standard deviations lower in the Coupled condition, where standard deviations refer to the continuous latent scale of sense of ownership. 

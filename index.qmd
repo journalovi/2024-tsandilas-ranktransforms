@@ -49,21 +49,6 @@ source("interactions_plot.R")
 .math.inline .MathJax  {
   font-size: 105% !important;
 }
-
-.g::before {
-  content: "[G: ";
-}
-
-.g::after {
-  content: "]";
-}
-.g {
-  color: #F28C28;
-}
-
-.f {
-  color: #d62b1c;
-}
 </style>
 ```
 

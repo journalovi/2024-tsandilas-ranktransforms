@@ -2,3 +2,6 @@
 .DS_Store
 
 /.quarto/
+.Rproj.user
+.Rhistory
+.RData
