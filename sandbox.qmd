@@ -28,21 +28,4 @@ source("plotlying-v2.R")
 source("plotlying.R")
 ```
 
-::: {#fig-ratio-main}
-```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "5_test-Power"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
-dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
-
-data <- readData(prefix, n = 20, alpha = .05, effectType = 3, distributions)
-df <- reshapeByDesign(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
-
-df <- data %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power (%) - ranking')
-```
-Power ($\alpha = .05$) for the **main effect of $X_1$** as a function of the magnitude of effect $a_1$ ($n=20$). The bottom graphs show the ranking of the four methods based on the power. 
-:::
-
-
+Used for quick testing...
