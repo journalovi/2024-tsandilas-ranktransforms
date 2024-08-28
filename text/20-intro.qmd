@@ -60,7 +60,7 @@ We opt for a multiverse analysis [@Dragicevic:2019] to analyze the data, where w
 
 2. *Aligned rank transformation (ART).* Data are transformed and analyzed with the ARTool [@wobbrock:2011;@elkin:2021].
 
-3. *Pure rank transformation (RNK).* Data are transformed with the original rank transformation [@conover:1981], which does not require any data alignment.
+3. *Pure rank transformation (RNK).* Data are transformed with the original rank transformation [@conover:1981], which does not perform any data alignment.
 
 4. *Inverse normal transformation (INT).* The data are transformed by using their normal scores. This rank-based method is simple to implement and has been commonly used in some disciplines. However, it has also received criticism [@Beasley:2009].  
 
