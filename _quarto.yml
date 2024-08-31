@@ -5,7 +5,7 @@ format:
   html:
     toc: true
     fig-responsive: true
-    embed-resources: true
+    embed-resources: false
     theme: accessible.scss
 
 number-sections: true
