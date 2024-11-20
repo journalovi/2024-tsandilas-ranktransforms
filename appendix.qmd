@@ -15,6 +15,7 @@ author:
       - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
         country: France
 bibliography: bibliography.bib
+csl: canadian-journal-of-philosophy.csl
 
 tbl-cap-location: top
 ---
@@ -100,7 +101,7 @@ In all experiments assessing Type I error rates reported in our article, we assu
 
 To simulate populations in which interactions emerge in the absence of main effects, we examine perfectly symmetric cross-interactions. To this end, we slightly change the method we use to encode the levels of each factor, such that levels are uniformly positioned around 0. For a factor with three levels, we numerically encode the levels as $\{-0.5, 0, 0.5\}$. For a factor with four levels, we encode them as $\{-0.5, -0.1667, 0.1667, 0.5\}$. 
 
-**Interaction effect only**. We first test how the interaction effect alone influences the Type I error rate on $X_2$. @fig-interactions-main-2 presents our results. We observe that both PAR and ART fail for many configurations. Error rates are especially high in the case of the $4 \times 3$ within-subjects design and the $2\times 4$ mixed design under the log-normal and exponential distribution. ART exhibits the worst performance. In constrast, RNK and INT keep error rates close to nominal levels. However, when interaction effects become sufficiently large ($a_{12} > 4$), we observe that under the binomial and ordinal scale, they also start inflating errors.
+**Interaction effect only**. We first test how the interaction effect alone influences the Type I error rate on $X_2$. @fig-interactions-main-2 presents our results. We observe that both PAR and ART fail for many configurations. Error rates are especially high in the case of the $4 \times 3$ within-subjects design and the $2\times 4$ mixed design under the log-normal and exponential distribution. ART exhibits the worst performance. In contrast, RNK and INT keep error rates close to nominal levels. However, when interaction effects become sufficiently large ($a_{12} > 4$), we observe that under the binomial and ordinal scale, they also start inflating errors.
 
 ::: {#fig-interactions-main-1}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
