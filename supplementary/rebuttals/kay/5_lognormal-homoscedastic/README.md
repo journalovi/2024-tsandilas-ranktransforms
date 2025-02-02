@@ -1,16 +1,13 @@
-## Additional code with simplified simulations 
+## Simple tests to evaluate ART on lognormal distributions with equal variances on the scale of the observed responses
 
-This code is created in response to [Matthew Kay's post](https://github.com/journalovi/2024-tsandilas-ranktransforms/issues/2#issuecomment-2628756195) to help him confirm our results, by following an alternative experimental approach.
+For this simulations, we control the mean and standard deviation of the observed responses [as explained here](https://en.wikipedia.org/wiki/Log-normal_distribution#Generation_and_parameters):
 
-Each folder contains simplified code for evaluating ART, along with results for PAR, RNK, and INT. We consider a single 4x3 within-subjects design, with factors x1, x2, and responses y.
+The template file provides a dataset structure for a 4x3 within-subjects design with ``n=20``. 
 
-As a first step, we created two data templates—one for ``n=20`` subjects and another for ``n=1000`` subjects. The larger sample size is used exclusively for discrete distributions to demonstrate the asymptotic breakdown of ART in discrete data as sample sizes increase.
+The test files read the template and replace the response variable with observations drawn from lognormal distributions. They, then evaluate the Type I error rate of ART, PAR, RNK, and INT. 
 
-We then use these templates to test the following scenarios:
+``test-20-x1.R``: evaluates populations with a non-null effect on factor x1. Notice that the data simulation process is blind to the levels of x2.  
 
-1. *Binary* responses (0s and 1s) when all effects are null. 
-2. *Binomial* responses when all effects are null.
-3. *Ordinal* responses when all effects are null.
-4. *Lognormal* responses, with a strong effect on a single factor (ether x1 or x2).
-5. *Homoscedastic lognormal* responses, where we control the mean and standard deviation of the response variable (rather than the latent normal variable). Again, there is a strong effect on a single factor (ether x1 or x2).
+``test-20-x2.R``: evaluates populations with a non-null effect on factor x2. Notice that the data simulation process is blind to the levels of x1.  
 
+The ``/log`` directory shows our outputs for 3000 iterations.
