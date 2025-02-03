@@ -1,5 +1,6 @@
 # author: Theophanis Tsandilas
-# This code reads a template of a 4x3 repeated-measures design and makes the response variable take random binary values 
+# This code reads a template of a 4x3 repeated-measures design and makes the response variable take random binary values
+# by assuming a between-subjects design 
 # It then evaluates the Type I error rate of ART
 
 rm(list=ls())
@@ -17,29 +18,21 @@ library(doParallel)
 
 # This method takes the template and randomly assign 0s or 1s to the response variable y 
 # The parameter prob determines the occurence probability of 1s (by default, we test equal probabilities)
-# shape1 is a parameter for the beta distribution for individual participant differences
-createRandomSample <- function(df, prob = 0.5, shape1 = 2){
-	# I add subject-level effects. For each subject, I randomly pick a different probabily drawn from a beta distribution with shape1 = 2
-	# See: https://en.wikipedia.org/wiki/Beta_distribution
-	# I derive the second parameter of the beta distribution from the desired mean probability
-	shape2 = shape1/prob - shape1
-	df <- df %>% group_by(s) %>% mutate(probs = rbeta(1, shape1 = 1, shape2))
-
-	# from that, generate responses from a binomial distribution
-	df$y <- rbinom(nrow(df), size = 1, df$probs)
+createRandomSample <- function(df, prob = 0.5){
+	df$y <- rbinom(nrow(df), size = 1, prob)
 	
 	df
 }
 
 # Analysis with two methods: PAR and ART (note that RNK and INT are identical to PAR for binary responses)
 analyze <- function(df) {
-	m.par <- suppressMessages(lmer(y ~ x1*x2 + (1|s), data=df)) # Parametric
-	m.art <- suppressMessages(art(y ~ x1*x2 + (1|s), data=df)) # ARTool
+	m.par <- suppressMessages(aov(y ~ x1*x2, data=df)) # Parametric
+	m.art <- suppressMessages(art(y ~ x1*x2, data=df)) # ARTool
 
 	vars <- c("x1", "x2", "x1:x2")
 	c(# Return the p-values for the three effects 
-		suppressMessages(anova(m.par)[vars, 6]), 
-		suppressMessages(anova(m.art)[vars, 5])
+		suppressMessages(anova(m.par)[vars, 5]), 
+		suppressMessages(anova(m.art)[vars, 7])
 	) 
 }
 
@@ -85,6 +78,6 @@ res <- results %>% unnest_wider(rates, names_sep = "_")
 colnames(res)[1:4]=c("method", "rateX1","rateX2","rateX1X2")
 
 # Store the results
-csvfile <- paste("log/results-20", format(Sys.time(), "_%s"), ".csv", sep="")
+csvfile <- paste("log/results-independent-20", format(Sys.time(), "_%s"), ".csv", sep="")
 write.csv(res, file = csvfile, row.names=FALSE, quote=F)
 

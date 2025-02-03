@@ -48,10 +48,14 @@ toOrdinalDistr = function(values, nlevels, equidistant = FALSE) {
 # This method takes the template and randomly assigns ordinal values to the response variable y 
 # We set the number of levels in the ordinal scale
 createRandomSample <- function(df, nlevels = 5){
-	# We first draw values from a standard normal distribution
-	df$y <- rnorm(nrow(template), mean = 0, sd = 1) 
+	# We first create some random subject-level intercepts (drawn from normal ditribution)
+	# You can vary the sd expressing individual variability
+	df <- df %>% group_by(s) %>% mutate(intercept = rnorm(1, mean = 0, sd = 0.3))
 
-	# We then descretize these values usign either equidistant or flexible thresholds	
+	# We then generate responses from a normal again distribution
+	df$y <- rnorm(nrow(df), mean = df$intercept, sd = 1) 
+
+	# We finally descretize these values usign either equidistant or flexible thresholds	
 	df$y <- toOrdinalDistr(df$y, nlevels, equidistant = FALSE)
 
 	df

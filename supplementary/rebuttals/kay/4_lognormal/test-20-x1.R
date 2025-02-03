@@ -21,16 +21,23 @@ library(doParallel)
 # sdlog: the common variance parameters of the distributions
 # Here, we fix the meanslog parameters to specific values, but you can try different combinations
 createRandomSample <- function(df, meanslog = c(-0.5, -0.25, 0.25, 0.5), sdlog = 1){
-	#  I know that x1 has four levels: A1, A2, A3, A4
 
+	# We first create some random subject-level intercepts (drawn from normal distribution)
+	# You can vary the sd expressing individual variability
+	df <- df %>% group_by(s) %>% mutate(intercept = rnorm(1, mean = 0, sd = 0.3))
+
+	#  I know that x1 has four levels: A1, A2, A3, A4
 	ncell <- nrow(df) / 4 # This is the number of observations for each level of x1
+
+	# Make sure that the response is double precision	
+	df <- df %>% mutate(y = as.double(y))
 
 	# Let's now draw ncell1 observations for each level but from a different lognormal distribution.  
 	# This sampling process does not make any distinction among the different levels of x2!
-	df[df$x1 == "A1",]$y <- rlnorm(ncell, meanlog = meanslog[1], sdlog)
-	df[df$x1 == "A2",]$y <- rlnorm(ncell, meanlog = meanslog[2], sdlog)
-	df[df$x1 == "A3",]$y <- rlnorm(ncell, meanlog = meanslog[3], sdlog)
-	df[df$x1 == "A4",]$y <- rlnorm(ncell, meanlog = meanslog[4], sdlog)
+	df[df$x1 == "A1",]$y <- rlnorm(ncell, meanlog = meanslog[1] + df[df$x1 == "A1",]$intercept, sdlog)
+	df[df$x1 == "A2",]$y <- rlnorm(ncell, meanlog = meanslog[2] + df[df$x1 == "A2",]$intercept, sdlog)
+	df[df$x1 == "A3",]$y <- rlnorm(ncell, meanlog = meanslog[3] + df[df$x1 == "A3",]$intercept, sdlog)
+	df[df$x1 == "A4",]$y <- rlnorm(ncell, meanlog = meanslog[4] + df[df$x1 == "A4",]$intercept, sdlog)
 
 	df
 }

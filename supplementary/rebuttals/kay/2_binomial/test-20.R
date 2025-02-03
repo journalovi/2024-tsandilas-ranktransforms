@@ -17,9 +17,16 @@ library(doParallel)
 
 # This method takes the template and randomly assigns values drawn from a binomial distribution to the response variable y 
 # The parameter prob determines the probability of error (or succes), and size the number of Bernoulli trials
-createRandomSample <- function(df, size = 10, prob = 0.05){
-	df$y <- rbinom(nrow(template), size, prob)
-	
+# shape1 is a parameter for the beta distribution for individual participant differences
+createRandomSample <- function(df, size = 10, prob = 0.05, shape1 = 2){
+	# I add subject-level effects. For each subject, I randomly pick a different probabily drawn from a beta distribution with shape1 = 2
+	# See: https://en.wikipedia.org/wiki/Beta_distribution
+	# I derive the second parameter of the beta distribution from the desired mean probability
+	shape2 = shape1/prob - shape1
+	df <- df %>% group_by(s) %>% mutate(probs = rbeta(1, shape1 = 1, shape2))
+
+	# from that, generate responses from a binomial distribution
+	df$y <- rbinom(nrow(df), size, df$probs)
 	df
 }
 
@@ -44,6 +51,7 @@ analyze <- function(df) {
 		suppressMessages(anova(m.int)[vars, 6])
 	) 
 }
+
 
 # Performs repetitive tests and assess Type I error rates 
 test <- function(template, repetitions = 3000) {

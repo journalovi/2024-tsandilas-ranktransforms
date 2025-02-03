@@ -1,5 +1,6 @@
 # author: Theophanis Tsandilas
 # This code reads a template of a 4x3 repeated-measures design and makes the response variable take values from an ordinal scale
+# by assuming a between-subjects design
 # It then evaluates the Type I error rate of ART
 
 rm(list=ls())
@@ -48,14 +49,10 @@ toOrdinalDistr = function(values, nlevels, equidistant = FALSE) {
 # This method takes the template and randomly assigns ordinal values to the response variable y 
 # We set the number of levels in the ordinal scale
 createRandomSample <- function(df, nlevels = 5){
-	# We first create some random subject-level intercepts (drawn from normal ditribution)
-	# You can vary the sd expressing individual variability
-	df <- df %>% group_by(s) %>% mutate(intercept = rnorm(1, mean = 0, sd = 0.3))
+	# We first draw values from a standard normal distribution
+	df$y <- rnorm(nrow(df), mean = 0, sd = 1) 
 
-	# We then generate responses from a normal again distribution
-	df$y <- rnorm(nrow(df), mean = df$intercept, sd = 1) 
-
-	# We finally descretize these values usign either equidistant or flexible thresholds	
+	# We then descretize these values usign either equidistant or flexible thresholds	
 	df$y <- toOrdinalDistr(df$y, nlevels, equidistant = FALSE)
 
 	df
@@ -67,19 +64,19 @@ INT <- function(x){
 }
 
 
-# Analysis with two methods: PAR and ART
+# Analysis with PAR, ART, RNK, and INT
 analyze <- function(df) {
-	m.par <- suppressMessages(lmer(y ~ x1*x2 + (1|s), data=df)) # Parametric
-	m.art <- suppressMessages(art(y ~ x1*x2 + (1|s), data=df)) # ARTool
-	m.rnk <- suppressMessages(lmer(rank(y) ~ x1*x2 + (1|s), data=df)) # RNK
-	m.int <- suppressMessages(lmer(INT(y) ~ x1*x2 + (1|s), data=df)) # INT
+	m.par <- suppressMessages(aov(y ~ x1*x2, data=df)) # Parametric
+	m.art <- suppressMessages(art(y ~ x1*x2, data=df)) # ARTool
+	m.rnk <- suppressMessages(aov(rank(y) ~ x1*x2, data=df)) # RNK
+	m.int <- suppressMessages(aov(INT(y) ~ x1*x2, data=df)) # INT
 
 	vars <- c("x1", "x2", "x1:x2")
 	c(# Return the p-values for the three effects 
-		suppressMessages(anova(m.par)[vars, 6]), 
-		suppressMessages(anova(m.art)[vars, 5]),
-		suppressMessages(anova(m.rnk)[vars, 6]), 
-		suppressMessages(anova(m.int)[vars, 6])
+		suppressMessages(anova(m.par)[vars, 5]), 
+		suppressMessages(anova(m.art)[vars, 7]),
+		suppressMessages(anova(m.rnk)[vars, 5]), 
+		suppressMessages(anova(m.int)[vars, 5])
 	) 
 }
 
@@ -114,19 +111,19 @@ CoresNum <- 4
 registerDoParallel(CoresNum)  # use multicore, set to the number of our cores
 
 # Read the data template and fix the type of the factors, as required by the ARTool
-template <- read.csv("template-1000.csv", sep=",", header=TRUE, strip.white=TRUE)
+template <- read.csv("template-20.csv", sep=",", header=TRUE, strip.white=TRUE)
 template$s = factor(template$s)
 template$x1 = factor(template$x1)
 template$x2 = factor(template$x2)
 
 # Call the simulation
-results <- test(template, repetitions = 100) # Increase the number of repetitions for higher precision
+results <- test(template, repetitions = 3000)
 
 # Format the results
 res <- results %>% unnest_wider(rates, names_sep = "_")
 colnames(res)[1:4]=c("method", "rateX1","rateX2","rateX1X2")
 
 # Store the results
-csvfile <- paste("log/results-1000", format(Sys.time(), "_%s"), ".csv", sep="")
+csvfile <- paste("log/results-independent-20", format(Sys.time(), "_%s"), ".csv", sep="")
 write.csv(res, file = csvfile, row.names=FALSE, quote=F)
 

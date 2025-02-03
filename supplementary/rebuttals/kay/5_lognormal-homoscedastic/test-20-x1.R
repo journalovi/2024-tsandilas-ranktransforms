@@ -33,16 +33,23 @@ meanlog <- function(mean, sd) {
 # Here, we fix the meanslog parameters to specific values, but you can try different combinations: 
 # (ART's errors will further increase if you choose a larger sd) 
 createRandomSample <- function(df, means = c(0.5, 1, 1.5, 2), sd = 1.5){
-	#  I know that x1 has four levels: A1, A2, A3, A4
+	# We first create some random subject-level intercepts (drawn from normal ditribution)
+	# You can vary the sd expressing individual variability
+	df <- df %>% group_by(s) %>% mutate(intercept = rnorm(1, mean = 0, sd = 0.3))
 
+	#  I know that x1 has four levels: A1, A2, A3, A4
 	ncell <- nrow(df) / 4 # This is the number of observations for each level of x1
+
+	# Make sure that the response is double precision	
+	df <- df %>% mutate(y = as.double(y))
 
 	# Let's now draw ncell1 observations for each level but from a different lognormal distribution.  
 	# This sampling process does not make any distinction among the different levels of x2
-	df[df$x1 == "A1",]$y <- rlnorm(ncell, meanlog = meanlog(means[1], sd), sdlog(means[1], sd))
-	df[df$x1 == "A2",]$y <- rlnorm(ncell, meanlog = meanlog(means[2], sd), sdlog(means[2], sd))
-	df[df$x1 == "A3",]$y <- rlnorm(ncell, meanlog = meanlog(means[3], sd), sdlog(means[3], sd))
-	df[df$x1 == "A4",]$y <- rlnorm(ncell, meanlog = meanlog(means[4], sd), sdlog(means[4], sd))
+	df[df$x1 == "A1",]$y <- rlnorm(ncell, meanlog = meanlog(means[1], sd) + df[df$x1 == "A1",]$intercept, sdlog(means[1], sd))
+	df[df$x1 == "A2",]$y <- rlnorm(ncell, meanlog = meanlog(means[2], sd) + df[df$x1 == "A2",]$intercept, sdlog(means[2], sd))
+	df[df$x1 == "A3",]$y <- rlnorm(ncell, meanlog = meanlog(means[3], sd) + df[df$x1 == "A3",]$intercept, sdlog(means[3], sd))
+	df[df$x1 == "A4",]$y <- rlnorm(ncell, meanlog = meanlog(means[4], sd) + df[df$x1 == "A4",]$intercept, sdlog(means[4], sd))
+	# Notice that I add the intercept to the meanlog term -- not to the means of the responses (this avoids negative values and other issues)
 
 	df
 }

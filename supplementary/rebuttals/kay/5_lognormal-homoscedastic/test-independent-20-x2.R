@@ -33,22 +33,15 @@ meanlog <- function(mean, sd) {
 # Here, we fix the meanslog parameters to specific values, but you can try different combinations: 
 # (ART's errors will further increase if you choose a larger sd) 
 createRandomSample <- function(df, means = c(0.5, 1, 2), sd = 1.5){
-	# We first create some random subject-level intercepts (drawn from normal ditribution)
-	# You can vary the sd expressing individual variability
-	df <- df %>% group_by(s) %>% mutate(intercept = rnorm(1, mean = 0, sd = 0.3))
-
 	#  I know that x2 has three levels: B1, B2, B3
-	ncell <- nrow(df) / 3 # This is the number of observations for each level of x2
 
-	# Make sure that the response is double precision	
-	df <- df %>% mutate(y = as.double(y))
+	ncell <- nrow(df) / 3 # This is the number of observations for each level of x2
 
 	# Let's now draw ncell1 observations for each level but from a different lognormal distribution.  
 	# This sampling process does not make any distinction among the different levels of x1
-	df[df$x2 == "B1",]$y <- rlnorm(ncell, meanlog = meanlog(means[1], sd) + df[df$x2 == "B1",]$intercept, sdlog(means[1], sd))
-	df[df$x2 == "B2",]$y <- rlnorm(ncell, meanlog = meanlog(means[2], sd) + df[df$x2 == "B2",]$intercept, sdlog(means[2], sd))
-	df[df$x2 == "B3",]$y <- rlnorm(ncell, meanlog = meanlog(means[3], sd) + df[df$x2 == "B3",]$intercept, sdlog(means[3], sd))
-	# Notice that I add the intercept to the meanlog term -- not to the means of the responses (this avoids negative values and other issues)
+	df[df$x2 == "B1",]$y <- rlnorm(ncell, meanlog = meanlog(means[1], sd), sdlog(means[1], sd))
+	df[df$x2 == "B2",]$y <- rlnorm(ncell, meanlog = meanlog(means[2], sd), sdlog(means[2], sd))
+	df[df$x2 == "B3",]$y <- rlnorm(ncell, meanlog = meanlog(means[3], sd), sdlog(means[3], sd))
 
 	df
 }
@@ -59,21 +52,22 @@ INT <- function(x){
 }
 
 
-# Analysis with two methods: PAR and ART
+# Analysis with PAR, ART, RNK, and INT
 analyze <- function(df) {
-	m.par <- suppressMessages(lmer(y ~ x1*x2 + (1|s), data=df)) # Parametric
-	m.art <- suppressMessages(art(y ~ x1*x2 + (1|s), data=df)) # ARTool
-	m.rnk <- suppressMessages(lmer(rank(y) ~ x1*x2 + (1|s), data=df)) # RNK
-	m.int <- suppressMessages(lmer(INT(y) ~ x1*x2 + (1|s), data=df)) # INT
+	m.par <- suppressMessages(aov(y ~ x1*x2, data=df)) # Parametric
+	m.art <- suppressMessages(art(y ~ x1*x2, data=df)) # ARTool
+	m.rnk <- suppressMessages(aov(rank(y) ~ x1*x2, data=df)) # RNK
+	m.int <- suppressMessages(aov(INT(y) ~ x1*x2, data=df)) # INT
 
 	vars <- c("x1", "x2", "x1:x2")
 	c(# Return the p-values for the three effects 
-		suppressMessages(anova(m.par)[vars, 6]), 
-		suppressMessages(anova(m.art)[vars, 5]),
-		suppressMessages(anova(m.rnk)[vars, 6]), 
-		suppressMessages(anova(m.int)[vars, 6])
+		suppressMessages(anova(m.par)[vars, 5]), 
+		suppressMessages(anova(m.art)[vars, 7]),
+		suppressMessages(anova(m.rnk)[vars, 5]), 
+		suppressMessages(anova(m.int)[vars, 5])
 	) 
 }
+
 
 # Performs repetitive tests and assess Type I error rates 
 test <- function(template, repetitions = 3000) {
@@ -119,6 +113,6 @@ res <- results %>% unnest_wider(rates, names_sep = "_")
 colnames(res)[1:4]=c("method", "rateX1","rateX2","rateX1X2")
 
 # Store the results
-csvfile <- paste("log/results-20-x2", format(Sys.time(), "_%s"), ".csv", sep="")
+csvfile <- paste("log/results-independent-20-x2", format(Sys.time(), "_%s"), ".csv", sep="")
 write.csv(res, file = csvfile, row.names=FALSE, quote=F)
 

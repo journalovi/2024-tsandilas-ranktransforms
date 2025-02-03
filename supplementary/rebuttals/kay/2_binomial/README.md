@@ -5,3 +5,5 @@ The template files provide a structure for the sampled datasets. We provide temp
 The test files read the corresponding templates and replace the response variable with observations drawn from a binomial distribution. They then evaluate the Type I error rate of ART, PAR, RNK, and INT. 
 
 The ``/log`` directory shows our outputs for binomial distributions with parameters ``size = 10`` and ``prob = 0.05``. For *n=20*, we used 3000 iterations but only 100 iterations for *n=1000*, because ART's Type I error rates are clearly huge in this case. 
+
+**Independent samples:** We provide additional scripts for 4x3 between-subjects designs (see files containing *-independent*). Those are much faster to run.
