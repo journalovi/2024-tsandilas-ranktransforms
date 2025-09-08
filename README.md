@@ -1,3 +1,13 @@
+```diff
+! This paper is under review on the experimental track of the Journal of Visualization and Interaction.
+Authors: @ephanis, @casiez
+OC: TBD
+AE: TBD
+R1: TBD
+R2: TBD
+R3: TBD
+```
+
 ## The illusory promise of the Aligned Rank Transform
 
 ##### Theophanis Tsandilas and Géry Casiez, 2024
