@@ -1,8 +1,8 @@
 ```diff
 ! This paper is under review on the experimental track of the Journal of Visualization and Interaction.
 Authors: @ephanis, @casiez
-OC: TBD
-AE: TBD
+OC: @lonnibesancon
+AE: @nacenta
 R1: TBD
 R2: TBD
 R3: TBD
