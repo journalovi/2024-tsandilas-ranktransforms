@@ -3,7 +3,7 @@
 Authors: @ephanis, @casiez
 OC: @lonnibesancon
 AE: @nacenta
-R1: TBD
+R1: CLeyrat
 R2: TBD
 R3: TBD
 ```
