@@ -1,0 +1,284 @@
+---
+title: "The illusory promise of the Aligned Rank Transform"
+subtitle: "Appendix II. Analytical derivations and mathematical proofs"
+author: 
+  - name: Theophanis Tsandilas
+    orcid: 0000-0002-0158-228X
+    email: theophanis.tsandilas@inria.fr
+    affiliations:
+      - name: Université Paris-Saclay, CNRS, Inria, LISN
+        country: France
+  - name: Géry Casiez
+    orcid: 0000-0003-1905-815X
+    email: gery.casiezuniv-lille.fr
+    affiliations:
+      - name: Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
+        country: France
+bibliography: bibliography.bib
+csl: canadian-journal-of-philosophy.csl
+
+tbl-cap-location: top
+---
+
+## On spurious effects when $a_2=0$ and $a_{12} = 0${#effects-proof}
+Let $x_1$ and $x_2$ be two independent variables, and suppose the conditional distribution of the response $Y | (x_1, x_2)$ depends on these variables only through the linear predictor:
+$$
+\ell(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
+$$
+
+Assume that the conditional mean can be written as:
+$$
+\mu(x_1, x_2) = E[Y|x_1, x_2] = h(\ell(x_1, x_2))
+$$
+where $h$ is a monotone function. This function may coincide with the inverse link function $g^{-1}$ in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.
+
+**Proposition.** Suppose $a_2 = 0$ and $a_{12} = 0$. Then:
+
+1. The independent variable $x_2$ has no effect on the response scale.
+2. There is no interaction between $x_1$ and $x_2$ on the response scale.
+
+Thus, whether Type I errors are defined in terms of the model coefficients $a_2$ (when $a_{12} = 0$) or $a_{12}$ (when $a_2 = 0$) or in terms of the patterns of observed means (and alternatively medians or other quantiles) on the response scale makes no difference.
+
+### Proof
+Under $a_2 = a_{12} = 0$, the linear predictor reduces to
+
+$$\ell(x_1, x_2) = a_0 + a_1x_1$$
+
+which does not depend on $x_2$. Hence, the conditional distribution $Y | (x_1, x_2)$, including its mean, median, and all quantiles, is invariant to $x_2$. This establishes the absence of a main effect of $x_2$ or an effect of its interaction $x_2$. 
+
+We further explain this results for special cases, where we largely rely on the relevant discussions of @Ai:2003, @Greene:2010, and @McCabe:2022.
+
+#### Main effect of $x_2$
+If $x_2$ is continuous and $h$ is differentiable, the effect of $x_2$ on the response can be defined as:
+
+$$\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = h'(\ell) \frac{\partial \ell}{\partial x_2} = 0$$
+where $h'$ denotes the first derivative of $h$.
+
+If $x_2$ is categorical, all contrasts across its levels are zero because the mean response is identical at each level:
+$$\Delta_{u,\nu}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \nu) = h(a_0 + a_1 x_1) - h(a_0 + a_1 x_1) = 0$$
+where $u, \nu$ are any two levels of $x_2$.
+
+#### Interaction between $x_1$ and $x_2$
+An interaction on the response scale is present if the marginal effect of $x_1$ depends on $x_2$. For continuous predictors and assuming that $h$ is twice differentiable, this is characterized by the mixed partial derivative $\frac{\partial^2 \mu}{\partial x_2 \partial x_1}$.
+
+Using the chain rule:
+
+$$\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1} = h''(\ell) \frac{\partial \ell}{\partial x_2} \frac{\partial \ell}{\partial x_1} + h'(\ell)\frac{\partial^2\ell}{\partial x_2 \partial x_1} = 0$$
+
+Thus the marginal effect of $x_1$ does not vary with $x_2$, and there is no interaction.
+  
+For categorical predictors, the analogue of a mixed partial derivative is the double difference:
+
+$$\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]=$$ 
+$$= [h(a_0 + a_1 u_1) - h(a_0 + a_1 u_1)] - [h(a_0 + a_1 \nu_2) - h(a_0 + a_1 \nu_1)] = 0$$
+
+for any levels $u_1, \nu_1$ of $x_1$ and $u_2, \nu_2$ of $x_2$. Again, there is no observed interaction.
+
+### Examples
+We discuss two examples.
+
+#### Log-normal distributions
+Let $x_1$ and $x_2$ be two experimental factors. Suppose the true model of the data is
+$$
+\begin{aligned}
+log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)
+\end{aligned} 
+$$
+so that 
+$$Y | (x_1, x_2) \sim \mathcal{LogN}(a_0 + a_1 x_1, \sigma^2)$$
+
+Since the conditional distribution of $Y$ does not depend on $x_2$, there is no main effect of $x_2$ on the mean, median, or any quantile of the response distribution. In particular, the conditional mean
+$$\mu(x_1,x_2) = E[Y|x_1, x_2] = \text{exp}(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)$$
+remains identical across all levels of $x_2$. 
+
+For the same reasons, there is no interaction on the response scale.
+
+#### Ordinal responses
+Suppose there exists a latent continuous variable:
+
+$$Y^* = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)$$
+
+and the observed response $Y$ is obtained by applying fixed thresholds: 
+$$
+\begin{aligned}
+Y = d\ \ \text{if}\ \ \tau_{d-1} < Y^* \leq \tau_d, 
+\qquad d = 1,2 ... D
+\end{aligned} 
+$$ 
+Again, the conditional distribution $Y| (x_1, x_2)$ depends on the independent variables only through $\ell(x_1, x_2)=a_0+a_1 x_1$, and there is no effect of $x_2$ on either the latent or the observed ordinal scale. 
+
+In this case, the mapping from $\ell$ to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of $x_2$ on the latent variable (i.e., $a_2 \neq 0$) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale because discretizing the original values leads to loss of information.
+
+### Invariance under monotone transformations 
+Suppose we apply a monotone transformation $T$ directly to the observed responses --- such as the rank transformation (RNK) or the inverse normal transformation (INT). Because $T$ is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution $T(Y) | (x_1, x_2)$ therefore depends on the independent variables only through $\ell(x_1, x_2) = a_0+a_1 x_1$. Consequently, the mean, median, and all quantiles of $T(Y) | (x_1, x_2)$ remain invariant to $x_2$, and marginal effects of $x_1$ do not depend on $x_2$. 
+
+We emphasize that ART is not a monotone transformation. Instead of transforming $Y$ directly, ART first constructs aligned responses by subtracting and adding sample means on the response scale. These alignment terms can vary across levels of $x_2$ or combinations of $(x_1, x_2)$. Therefore, ART is not invariant to nonlinear mean–response relationships.
+
+## Calculation of location parameters {#mu}
+
+We explain how we compute the intercept $\mu$ of the linear component of our models, given our  target distribution parameters on the response scale. We emphasize that we have empirically validated the correctness of the equations presented here. 
+
+We recall the linear predictor used to model nonlinear relationships (see the [article](index.html#statistical-modeling)):
+
+$$ 
+\ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
+$$
+where $s_k \sim \mathcal{N}(0, \sigma_s^2)$. Our goal is to determine $\mu$ such as the expected value of the response equals a pre-specified target value $E[Y_{ijk}] = M$.
+
+To simplify notation, we define the fixed-effects component
+$$\phi_{ij} = a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}$$
+
+so that
+
+$$ 
+\ell_{ijk} = \mu + s_k + \phi_{ij}
+$$
+
+**A useful identity.** Let $X$ be a continuous random variable with probability density function $f_X(x)$. For any function $g$, its expectation is defined as
+
+$$
+E[g(X)] = \int\limits_{-\infty}^\infty g(x) f_X(x) dx
+$$
+
+If $g(x) = e^x$, then
+
+$$
+E[e^X] = \int\limits_{-\infty}^\infty e^x f_X(x) dx
+$$
+
+When $X \sim \mathcal{N}(0, \sigma^2)$, substituting the normal probability density function yields
+
+$$
+E[e^X] = \int\limits_{-\infty}^\infty e^x \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx = e^{\frac{1}{2}\sigma^2}
+$$ {#eq-useful}
+
+### Log-normal model
+When responses are log-normally distributed, 
+
+$$
+\begin{aligned}
+log(Y_{ijk}) = \ell_{ijk} + \varepsilon_{ijk},
+\qquad \varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)
+\end{aligned} 
+$$
+
+so that
+
+$$ 
+Y_{ijk} = e^{\ell_{ijk} + \varepsilon_{ijk}} = e^{\mu + s_k + e_{ij} + \varepsilon_{ijk}} = e^{\mu} \cdot e^{\phi_{ij}} \cdot e^{s_k} \cdot e^{\varepsilon_{ijk}} 
+$$
+
+Taking expectations and using independence of components,
+
+$$
+E[Y_{ijk}] = e^\mu \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}] \cdot E[e^{\varepsilon_{ijk}}] = M   
+$$
+
+Solving for $\mu$ gives
+
+$$
+\mu = log\ M - log\ E[e^{\phi_{ij}}] - log\ E[e^{s_k}] - log\ E[e^{\varepsilon_{ijk}}]
+$$
+
+Because $s_k \sim \mathcal{N}(0, \sigma_s^2)$ and $\epsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)$, @eq-useful implies
+
+$$
+\begin{aligned}
+E[e^{s_k}] = e^{\frac{1}{2}\sigma_s^2},
+\qquad E[e^{\varepsilon_{ijk}}] = e^{\frac{1}{2}\sigma^2}
+\end{aligned} 
+$$
+
+Furthermore, since $\phi_{ij}$ is deterministic, 
+
+$$E[e^{\phi_{ij}}] = \frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}$$
+where $m_1$ and $m_2$ are the number of levels of $X_1$ and $X_2$, respectively.
+
+Therefore,
+
+$$
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2 - \frac{1}{2}\sigma^2
+$$ {#eq-mu-lognornal}
+
+### Exponential model
+For exponential responses with a log link,
+
+$$
+Y_{ijk} \sim \text{Exp}(\lambda_{ijk} = e^{-\ell_{ijk}})
+$$
+
+The expected value is
+
+$$
+E[Y_{ijk}] = E[1/\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+$$
+
+which, as before, it leads to the solution
+
+$$
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+$$ {#eq-mu-exp}
+
+### Poisson model
+For Poisson responses with a log link,
+$$
+Y_{ijk} \sim \mathcal{Pois}(\lambda_{ijk} = e^{\ell_{ijk}})
+$$
+
+The expected value is
+
+$$
+E[Y_{ijk}] = E[\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+$$
+which leads to the same solution as for the exponential distribution:
+$$
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+$$ {#eq-mu-poisson}
+
+### Binomial model
+For binomial responses with a logit link,
+
+$$
+Y_{ijk} \sim \mathcal{B}(\kappa, p_{ijk} = \frac{1}{1 + e^{-\ell_{ijk}}})
+$$
+
+The expected value is now
+
+$$E[Y_{ijk}] = \kappa \cdot E[p_{ijk}] = 
+\frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+= M
+$$ {#eq-mu-binomial}
+because we cannot separate the sums from the integral. As no close form exists to analytically derive $\mu$, we create the function
+
+$$F(\mu) = \frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+- M$$
+
+and numerically find its root using R's ``uniroot()`` function.
+
+### Cauchy model
+Since the Cauchy distribution has no finite mean, we target the median instead:
+
+$$\text{Median}(Y_{ijk}) = \ell_{ijk} = \mu + \phi_{ij} = M$$
+
+Because our coding is centered, $\sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} \phi_{ij} = 0$. Therefore,
+
+$$
+\mu  = M
+$$
+
+## References {.unnumbered}
+
+::: {#refs}
+:::

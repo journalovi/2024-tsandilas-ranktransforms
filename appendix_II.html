@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Theophanis Tsandilas">
+<meta name="author" content="Géry Casiez">
+
+<title>The illusory promise of the Aligned Rank Transform</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="appendix_II_files/libs/clipboard/clipboard.min.js"></script>
+<script src="appendix_II_files/libs/quarto-html/quarto.js"></script>
+<script src="appendix_II_files/libs/quarto-html/popper.min.js"></script>
+<script src="appendix_II_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="appendix_II_files/libs/quarto-html/anchor.min.js"></script>
+<link href="appendix_II_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="appendix_II_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="appendix_II_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="appendix_II_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="appendix_II_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#effects-proof" id="toc-effects-proof" class="nav-link active" data-scroll-target="#effects-proof"><span class="header-section-number">1</span> On spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></a>
+  <ul class="collapse">
+  <li><a href="#proof" id="toc-proof" class="nav-link" data-scroll-target="#proof">Proof</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#invariance-under-monotone-transformations" id="toc-invariance-under-monotone-transformations" class="nav-link" data-scroll-target="#invariance-under-monotone-transformations">Invariance under monotone transformations</a></li>
+  </ul></li>
+  <li><a href="#mu" id="toc-mu" class="nav-link" data-scroll-target="#mu"><span class="header-section-number">2</span> Calculation of location parameters</a>
+  <ul class="collapse">
+  <li><a href="#log-normal-model" id="toc-log-normal-model" class="nav-link" data-scroll-target="#log-normal-model">Log-normal model</a></li>
+  <li><a href="#exponential-model" id="toc-exponential-model" class="nav-link" data-scroll-target="#exponential-model">Exponential model</a></li>
+  <li><a href="#poisson-model" id="toc-poisson-model" class="nav-link" data-scroll-target="#poisson-model">Poisson model</a></li>
+  <li><a href="#binomial-model" id="toc-binomial-model" class="nav-link" data-scroll-target="#binomial-model">Binomial model</a></li>
+  <li><a href="#cauchy-model" id="toc-cauchy-model" class="nav-link" data-scroll-target="#cauchy-model">Cauchy model</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The illusory promise of the Aligned Rank Transform</h1>
+<p class="subtitle lead">Appendix II. Analytical derivations and mathematical proofs</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Theophanis Tsandilas <a href="https://orcid.org/0000-0002-0158-228X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Université Paris-Saclay, CNRS, Inria, LISN
+          </p>
+      </div>
+      <div class="quarto-title-meta-contents">
+    <p class="author">Géry Casiez <a href="https://orcid.org/0000-0003-1905-815X" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Univ. Lille, CNRS, Inria, Centrale Lille, UMR 9189 CRIStAL
+          </p>
+      </div>
+    </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="effects-proof" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="effects-proof"><span class="header-section-number">1</span> On spurious effects when <span class="math inline">\(a_2=0\)</span> and <span class="math inline">\(a_{12} = 0\)</span></h2>
+<p>Let <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> be two independent variables, and suppose the conditional distribution of the response <span class="math inline">\(Y | (x_1, x_2)\)</span> depends on these variables only through the linear predictor: <span class="math display">\[
+\ell(x_1, x_2) = a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2
+\]</span></p>
+<p>Assume that the conditional mean can be written as: <span class="math display">\[
+\mu(x_1, x_2) = E[Y|x_1, x_2] = h(\ell(x_1, x_2))
+\]</span> where <span class="math inline">\(h\)</span> is a monotone function. This function may coincide with the inverse link function <span class="math inline">\(g^{-1}\)</span> in a GLM, but it may also arise from other frameworks, including transformation models or latent-variable constructions. Thus it does not necessarily need to be smooth or invertible; for example, this assumption is not required for the ordinal example discussed later.</p>
+<p><strong>Proposition.</strong> Suppose <span class="math inline">\(a_2 = 0\)</span> and <span class="math inline">\(a_{12} = 0\)</span>. Then:</p>
+<ol type="1">
+<li>The independent variable <span class="math inline">\(x_2\)</span> has no effect on the response scale.</li>
+<li>There is no interaction between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> on the response scale.</li>
+</ol>
+<p>Thus, whether Type I errors are defined in terms of the model coefficients <span class="math inline">\(a_2\)</span> (when <span class="math inline">\(a_{12} = 0\)</span>) or <span class="math inline">\(a_{12}\)</span> (when <span class="math inline">\(a_2 = 0\)</span>) or in terms of the patterns of observed means (and alternatively medians or other quantiles) on the response scale makes no difference.</p>
+<section id="proof" class="level3">
+<h3 class="anchored" data-anchor-id="proof">Proof</h3>
+<p>Under <span class="math inline">\(a_2 = a_{12} = 0\)</span>, the linear predictor reduces to</p>
+<p><span class="math display">\[\ell(x_1, x_2) = a_0 + a_1x_1\]</span></p>
+<p>which does not depend on <span class="math inline">\(x_2\)</span>. Hence, the conditional distribution <span class="math inline">\(Y | (x_1, x_2)\)</span>, including its mean, median, and all quantiles, is invariant to <span class="math inline">\(x_2\)</span>. This establishes the absence of a main effect of <span class="math inline">\(x_2\)</span> or an effect of its interaction <span class="math inline">\(x_2\)</span>.</p>
+<p>We further explain this results for special cases, where we largely rely on the relevant discussions of <span class="citation" data-cites="Ai:2003">Ai and Norton (<a href="#ref-Ai:2003" role="doc-biblioref">2003</a>)</span>, <span class="citation" data-cites="Greene:2010">Greene (<a href="#ref-Greene:2010" role="doc-biblioref">2010</a>)</span>, and <span class="citation" data-cites="McCabe:2022">McCabe et al. (<a href="#ref-McCabe:2022" role="doc-biblioref">2022</a>)</span>.</p>
+<section id="main-effect-of-x_2" class="level4">
+<h4 class="anchored" data-anchor-id="main-effect-of-x_2">Main effect of <span class="math inline">\(x_2\)</span></h4>
+<p>If <span class="math inline">\(x_2\)</span> is continuous and <span class="math inline">\(h\)</span> is differentiable, the effect of <span class="math inline">\(x_2\)</span> on the response can be defined as:</p>
+<p><span class="math display">\[\frac{\partial \mu(x_1, x_2)}{\partial x_2}  = h'(\ell) \frac{\partial \ell}{\partial x_2} = 0\]</span> where <span class="math inline">\(h'\)</span> denotes the first derivative of <span class="math inline">\(h\)</span>.</p>
+<p>If <span class="math inline">\(x_2\)</span> is categorical, all contrasts across its levels are zero because the mean response is identical at each level: <span class="math display">\[\Delta_{u,\nu}\mu(x_1, x_2) = \mu(x_1, u) - \mu(x_1, \nu) = h(a_0 + a_1 x_1) - h(a_0 + a_1 x_1) = 0\]</span> where <span class="math inline">\(u, \nu\)</span> are any two levels of <span class="math inline">\(x_2\)</span>.</p>
+</section>
+<section id="interaction-between-x_1-and-x_2" class="level4">
+<h4 class="anchored" data-anchor-id="interaction-between-x_1-and-x_2">Interaction between <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span></h4>
+<p>An interaction on the response scale is present if the marginal effect of <span class="math inline">\(x_1\)</span> depends on <span class="math inline">\(x_2\)</span>. For continuous predictors and assuming that <span class="math inline">\(h\)</span> is twice differentiable, this is characterized by the mixed partial derivative <span class="math inline">\(\frac{\partial^2 \mu}{\partial x_2 \partial x_1}\)</span>.</p>
+<p>Using the chain rule:</p>
+<p><span class="math display">\[\frac{\partial^2 \mu(x_1, x_2)}{\partial x_2 \partial x_1} = h''(\ell) \frac{\partial \ell}{\partial x_2} \frac{\partial \ell}{\partial x_1} + h'(\ell)\frac{\partial^2\ell}{\partial x_2 \partial x_1} = 0\]</span></p>
+<p>Thus the marginal effect of <span class="math inline">\(x_1\)</span> does not vary with <span class="math inline">\(x_2\)</span>, and there is no interaction.</p>
+<p>For categorical predictors, the analogue of a mixed partial derivative is the double difference:</p>
+<p><span class="math display">\[\Delta_{u_1, \nu_1} \Delta_{u_2, \nu_2}\mu(x_1, x_2) = [\mu(u_1,u_2) - \mu(u_1, \nu_2)] - [\mu(\nu_1,u_2) - \mu(\nu_1, \nu_2)]=\]</span> <span class="math display">\[= [h(a_0 + a_1 u_1) - h(a_0 + a_1 u_1)] - [h(a_0 + a_1 \nu_2) - h(a_0 + a_1 \nu_1)] = 0\]</span></p>
+<p>for any levels <span class="math inline">\(u_1, \nu_1\)</span> of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(u_2, \nu_2\)</span> of <span class="math inline">\(x_2\)</span>. Again, there is no observed interaction.</p>
+</section>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<p>We discuss two examples.</p>
+<section id="log-normal-distributions" class="level4">
+<h4 class="anchored" data-anchor-id="log-normal-distributions">Log-normal distributions</h4>
+<p>Let <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> be two experimental factors. Suppose the true model of the data is <span class="math display">\[
+\begin{aligned}
+log Y = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)
+\end{aligned}
+\]</span> so that <span class="math display">\[Y | (x_1, x_2) \sim \mathcal{LogN}(a_0 + a_1 x_1, \sigma^2)\]</span></p>
+<p>Since the conditional distribution of <span class="math inline">\(Y\)</span> does not depend on <span class="math inline">\(x_2\)</span>, there is no main effect of <span class="math inline">\(x_2\)</span> on the mean, median, or any quantile of the response distribution. In particular, the conditional mean <span class="math display">\[\mu(x_1,x_2) = E[Y|x_1, x_2] = \text{exp}(a_0 + a_1 x_1 + \frac{1}{2}\sigma^2)\]</span> remains identical across all levels of <span class="math inline">\(x_2\)</span>.</p>
+<p>For the same reasons, there is no interaction on the response scale.</p>
+</section>
+<section id="ordinal-responses" class="level4">
+<h4 class="anchored" data-anchor-id="ordinal-responses">Ordinal responses</h4>
+<p>Suppose there exists a latent continuous variable:</p>
+<p><span class="math display">\[Y^* = a_0 + a_1 x_1 + \varepsilon, \qquad
+\varepsilon \sim \mathcal{N}(0, \sigma^2)\]</span></p>
+<p>and the observed response <span class="math inline">\(Y\)</span> is obtained by applying fixed thresholds: <span class="math display">\[
+\begin{aligned}
+Y = d\ \ \text{if}\ \ \tau_{d-1} &lt; Y^* \leq \tau_d,
+\qquad d = 1,2 ... D
+\end{aligned}
+\]</span> Again, the conditional distribution <span class="math inline">\(Y| (x_1, x_2)\)</span> depends on the independent variables only through <span class="math inline">\(\ell(x_1, x_2)=a_0+a_1 x_1\)</span>, and there is no effect of <span class="math inline">\(x_2\)</span> on either the latent or the observed ordinal scale.</p>
+<p>In this case, the mapping from <span class="math inline">\(\ell\)</span> to the observed response is monotone but not strictly monotone and is therefore non-invertible. As a result, a true effect of <span class="math inline">\(x_2\)</span> on the latent variable (i.e., <span class="math inline">\(a_2 \neq 0\)</span>) may be attenuated or entirely unobservable on the ordinal response scale. This does not affect Type I error rates, provided the null hypothesis is defined on the latent scale and the thresholds are fixed, because the absence of a latent effect implies the absence of an effect on the observed scale. However, power and effect sizes can be reduced when effects are assessed on the ordinal scale because discretizing the original values leads to loss of information.</p>
+</section>
+</section>
+<section id="invariance-under-monotone-transformations" class="level3">
+<h3 class="anchored" data-anchor-id="invariance-under-monotone-transformations">Invariance under monotone transformations</h3>
+<p>Suppose we apply a monotone transformation <span class="math inline">\(T\)</span> directly to the observed responses — such as the rank transformation (RNK) or the inverse normal transformation (INT). Because <span class="math inline">\(T\)</span> is monotone, it preserves the ordering of observations within each condition. The transformed conditional distribution <span class="math inline">\(T(Y) | (x_1, x_2)\)</span> therefore depends on the independent variables only through <span class="math inline">\(\ell(x_1, x_2) = a_0+a_1 x_1\)</span>. Consequently, the mean, median, and all quantiles of <span class="math inline">\(T(Y) | (x_1, x_2)\)</span> remain invariant to <span class="math inline">\(x_2\)</span>, and marginal effects of <span class="math inline">\(x_1\)</span> do not depend on <span class="math inline">\(x_2\)</span>.</p>
+<p>We emphasize that ART is not a monotone transformation. Instead of transforming <span class="math inline">\(Y\)</span> directly, ART first constructs aligned responses by subtracting and adding sample means on the response scale. These alignment terms can vary across levels of <span class="math inline">\(x_2\)</span> or combinations of <span class="math inline">\((x_1, x_2)\)</span>. Therefore, ART is not invariant to nonlinear mean–response relationships.</p>
+</section>
+</section>
+<section id="mu" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="mu"><span class="header-section-number">2</span> Calculation of location parameters</h2>
+<p>We explain how we compute the intercept <span class="math inline">\(\mu\)</span> of the linear component of our models, given our target distribution parameters on the response scale. We emphasize that we have empirically validated the correctness of the equations presented here.</p>
+<p>We recall the linear predictor used to model nonlinear relationships (see the <a href="index.html#statistical-modeling">article</a>):</p>
+<p><span class="math display">\[
+\ell_{ijk} = \mu + s_k + a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}
+\]</span> where <span class="math inline">\(s_k \sim \mathcal{N}(0, \sigma_s^2)\)</span>. Our goal is to determine <span class="math inline">\(\mu\)</span> such as the expected value of the response equals a pre-specified target value <span class="math inline">\(E[Y_{ijk}] = M\)</span>.</p>
+<p>To simplify notation, we define the fixed-effects component <span class="math display">\[\phi_{ij} = a_1 x_{1i} + a_2 x_{2j} + a_{12} x_{1i} x_{2j}\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+\ell_{ijk} = \mu + s_k + \phi_{ij}
+\]</span></p>
+<p><strong>A useful identity.</strong> Let <span class="math inline">\(X\)</span> be a continuous random variable with probability density function <span class="math inline">\(f_X(x)\)</span>. For any function <span class="math inline">\(g\)</span>, its expectation is defined as</p>
+<p><span class="math display">\[
+E[g(X)] = \int\limits_{-\infty}^\infty g(x) f_X(x) dx
+\]</span></p>
+<p>If <span class="math inline">\(g(x) = e^x\)</span>, then</p>
+<p><span class="math display">\[
+E[e^X] = \int\limits_{-\infty}^\infty e^x f_X(x) dx
+\]</span></p>
+<p>When <span class="math inline">\(X \sim \mathcal{N}(0, \sigma^2)\)</span>, substituting the normal probability density function yields</p>
+<p><span id="eq-useful"><span class="math display">\[
+E[e^X] = \int\limits_{-\infty}^\infty e^x \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\frac{x^2}{2\sigma^2}} dx = e^{\frac{1}{2}\sigma^2}
+\tag{1}\]</span></span></p>
+<section id="log-normal-model" class="level3">
+<h3 class="anchored" data-anchor-id="log-normal-model">Log-normal model</h3>
+<p>When responses are log-normally distributed,</p>
+<p><span class="math display">\[
+\begin{aligned}
+log(Y_{ijk}) = \ell_{ijk} + \varepsilon_{ijk},
+\qquad \varepsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)
+\end{aligned}
+\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+Y_{ijk} = e^{\ell_{ijk} + \varepsilon_{ijk}} = e^{\mu + s_k + e_{ij} + \varepsilon_{ijk}} = e^{\mu} \cdot e^{\phi_{ij}} \cdot e^{s_k} \cdot e^{\varepsilon_{ijk}}
+\]</span></p>
+<p>Taking expectations and using independence of components,</p>
+<p><span class="math display">\[
+E[Y_{ijk}] = e^\mu \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}] \cdot E[e^{\varepsilon_{ijk}}] = M   
+\]</span></p>
+<p>Solving for <span class="math inline">\(\mu\)</span> gives</p>
+<p><span class="math display">\[
+\mu = log\ M - log\ E[e^{\phi_{ij}}] - log\ E[e^{s_k}] - log\ E[e^{\varepsilon_{ijk}}]
+\]</span></p>
+<p>Because <span class="math inline">\(s_k \sim \mathcal{N}(0, \sigma_s^2)\)</span> and <span class="math inline">\(\epsilon_{ijk} \sim \mathcal{N}(0, \sigma^2)\)</span>, <a href="#eq-useful">Equation&nbsp;1</a> implies</p>
+<p><span class="math display">\[
+\begin{aligned}
+E[e^{s_k}] = e^{\frac{1}{2}\sigma_s^2},
+\qquad E[e^{\varepsilon_{ijk}}] = e^{\frac{1}{2}\sigma^2}
+\end{aligned}
+\]</span></p>
+<p>Furthermore, since <span class="math inline">\(\phi_{ij}\)</span> is deterministic,</p>
+<p><span class="math display">\[E[e^{\phi_{ij}}] = \frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}\]</span> where <span class="math inline">\(m_1\)</span> and <span class="math inline">\(m_2\)</span> are the number of levels of <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>, respectively.</p>
+<p>Therefore,</p>
+<p><span id="eq-mu-lognornal"><span class="math display">\[
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2 - \frac{1}{2}\sigma^2
+\tag{2}\]</span></span></p>
+</section>
+<section id="exponential-model" class="level3">
+<h3 class="anchored" data-anchor-id="exponential-model">Exponential model</h3>
+<p>For exponential responses with a log link,</p>
+<p><span class="math display">\[
+Y_{ijk} \sim \text{Exp}(\lambda_{ijk} = e^{-\ell_{ijk}})
+\]</span></p>
+<p>The expected value is</p>
+<p><span class="math display">\[
+E[Y_{ijk}] = E[1/\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+\]</span></p>
+<p>which, as before, it leads to the solution</p>
+<p><span id="eq-mu-exp"><span class="math display">\[
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+\tag{3}\]</span></span></p>
+</section>
+<section id="poisson-model" class="level3">
+<h3 class="anchored" data-anchor-id="poisson-model">Poisson model</h3>
+<p>For Poisson responses with a log link, <span class="math display">\[
+Y_{ijk} \sim \mathcal{Pois}(\lambda_{ijk} = e^{\ell_{ijk}})
+\]</span></p>
+<p>The expected value is</p>
+<p><span class="math display">\[
+E[Y_{ijk}] = E[\lambda_{ijk}] = E[e^{\ell_{ijk}}]  =  e^{\mu} \cdot E[e^{\phi_{ij}}] \cdot E[e^{s_k}]
+\]</span> which leads to the same solution as for the exponential distribution: <span id="eq-mu-poisson"><span class="math display">\[
+\mu = log\ M - log(\frac{1}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} e^{\phi_{ij}}) - \frac{1}{2}\sigma_s^2
+\tag{4}\]</span></span></p>
+</section>
+<section id="binomial-model" class="level3">
+<h3 class="anchored" data-anchor-id="binomial-model">Binomial model</h3>
+<p>For binomial responses with a logit link,</p>
+<p><span class="math display">\[
+Y_{ijk} \sim \mathcal{B}(\kappa, p_{ijk} = \frac{1}{1 + e^{-\ell_{ijk}}})
+\]</span></p>
+<p>The expected value is now</p>
+<p><span id="eq-mu-binomial"><span class="math display">\[E[Y_{ijk}] = \kappa \cdot E[p_{ijk}] =
+\frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+= M
+\tag{5}\]</span></span> because we cannot separate the sums from the integral. As no close form exists to analytically derive <span class="math inline">\(\mu\)</span>, we create the function</p>
+<p><span class="math display">\[F(\mu) = \frac{\kappa}{m_1 m_2} \sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2}
+\int_{-\infty}^{\infty}
+\frac{1}{1 + e^{-(\mu + \phi_{ij} + s)}}
+\cdot
+\frac{1}{\sqrt{2\pi}\sigma_s}
+e^{-\frac{s^2}{2\sigma_s^2}}\, ds
+- M\]</span></p>
+<p>and numerically find its root using R’s <code>uniroot()</code> function.</p>
+</section>
+<section id="cauchy-model" class="level3">
+<h3 class="anchored" data-anchor-id="cauchy-model">Cauchy model</h3>
+<p>Since the Cauchy distribution has no finite mean, we target the median instead:</p>
+<p><span class="math display">\[\text{Median}(Y_{ijk}) = \ell_{ijk} = \mu + \phi_{ij} = M\]</span></p>
+<p>Because our coding is centered, <span class="math inline">\(\sum\limits_{i=1}^{m_1}\sum\limits_{j=1}^{m_2} \phi_{ij} = 0\)</span>. Therefore,</p>
+<p><span class="math display">\[
+\mu  = M
+\]</span></p>
+</section>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Ai:2003" class="csl-entry" role="listitem">
+Ai, Chunrong, and Edward C. Norton. 2003. <span>“Interaction Terms in Logit and Probit Models.”</span> <em>Economics Letters</em> 80 (1): 123–129. https://doi.org/<a href="https://doi.org/10.1016/S0165-1765(03)00032-6">https://doi.org/10.1016/S0165-1765(03)00032-6</a>.
+</div>
+<div id="ref-Greene:2010" class="csl-entry" role="listitem">
+Greene, William. 2010. <span>“<span class="nocase">Testing hypotheses about interaction terms in nonlinear models</span>.”</span> <em>Economics Letters</em> 107 (2): 291–296. <a href="https://ideas.repec.org/a/eee/ecolet/v107y2010i2p291-296.html">https://ideas.repec.org/a/eee/ecolet/v107y2010i2p291-296.html</a>.
+</div>
+<div id="ref-McCabe:2022" class="csl-entry" role="listitem">
+McCabe, Connor J, Max A Halvorson, Kevin M King, Xiaolin Cao, and Dale S Kim. 2022. <span>“Interpreting Interaction Effects in Generalized Linear Models of Nonlinear Probabilities and Counts.”</span> <em>Multivariate Behavioral Research</em> 57 (2-3): 243–263. <a href="https://doi.org/10.1080/00273171.2020.1868966">https://doi.org/10.1080/00273171.2020.1868966</a>.
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

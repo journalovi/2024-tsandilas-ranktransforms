@@ -1,30 +1,30 @@
 ### Statistical power {#power}
-Our sixth experiment compares the statistical power of the four methods on the three 2-factor designs. Because there is a tradeoff between Type I and Type II errors, high power can simply be the result of a high Type I error rate. Since parallel effects can inflate errors (see our previous results), we focus here on single effects, both main or interaction effects. We only report results for $n=20$ (see supplementary materials for additional results). 
+We evaluate the statistical power of the four methods on the three two-factor designs. Because there is a tradeoff between Type I and Type II errors, high power may simply reflect an inflated Type I error rate. Since a main effect on $X_1$ inflates ART's Type I error rates for $X_2$ and for their interaction (see previous sections), we therefore focus on single-effect scenarios.
 
-**Main effects**. We individually vary the magnitude of effect on $X_1$ and $X_2$ and observe the power of each method to detect this effect ($\alpha = .05$). Specifically, we manipulate the parameters $a_1$ or $a_2$ within the range of $0.4$ to $1.0$. Depending on the experimental design, this range allows us to simulate both low-power experiments (e.g., with less than $30\%$ power) and high-power experiments (e.g., with more than $80\%$ power).
+**Main effects**. We vary the magnitude of effect on $X_1$ and $X_2$ separately and assess each method's power to detect the corresponding effect at $\alpha = .05$. Specifically, we manipulate the parameters $a_1$ or $a_2$ over the range $0.2$ to $0.8$. Depending on the experimental design, this range allows us to simulate both low-power settings (e.g., power below $30\%$) and high-power settings (e.g., power above $80\%$).
 
-@fig-power-main-1 presents our results for $X_1$. In several configurations, the differences in power among the methods are marginal. To enhance clarity in our comparisons, we also present the method rankings. Readers are encouraged to interact with the graphs for precise power values. PAR exhibits the highest power under the normal distribution, closely followed by INT. INT is also consistently the winning method across all non-normal distributions. PAR's power is notably low under the log-normal and exponential distribution.
+@fig-power-main-1 presents the results for $X_1$. In many configurations, differences in power across methods are modest. To facilitate comparison, we also report method rankings; readers are encouraged to interact with the figures for precise power estimates. 
 
-ART initially appears advantageous under the three discrete distributions for small effects, likely due to inflated Type I errors even without an effect on $X_2$ (as observed in @fig-2x3-main). However, as effects grow larger, its relative power diminishes, and ART eventually becomes the least effective method.
+PAR achieves the highest power under the normal and exponential distributions, but its power is particularly low under the log-normal distribution. ART initially appears advantageous under the log-normal, binomial, and ordinal distributions for small effects, likely reflecting inflated Type I errors under these conditions. As $a_1$ grows larger, ART's relative advantage diminishes, and it ultimately becomes the least powerful method. Finally, INT consistently outperforms RNK and ranks highly across all conditions.
 
 ::: {#fig-power-main-1}
 <div id="plot-power-1.1">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-prefix <- "5_test-Power"
-distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert5B")
+prefix <- "Power"
+distributions = c("norm", "lnorm", "exp", "poisson", "binom", "likert")
 dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
-data <- readData(prefix, n = 20, alpha = .05, effectType = 3, distributions)
-df <- reshapeByDesign(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
+data <- read_data(prefix, alpha = .05, effectType = 3, distributions)
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
 ```
 </div>
 
 <div id="plot-power-1.2">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- data %>% arrange(design,distr,effectX1,rateX1)  %>% group_by(design,distr,effectX1) %>% mutate(rank = rank(rateX1))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking')
+df <- data %>% arrange(design,family,effectX1,rateX1)  %>% group_by(design,family,effectX1) %>% mutate(rank = rank(rateX1))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking')
 ```
 </div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-1.2").classList.add("hidden"); }); </script>
 
@@ -38,29 +38,28 @@ plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hoverva
   show ranking
 </button>
 
-Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of its magnitude $a_1$, where $n=20$.
+Power ($\alpha = .05$) for detecting the **main effect of $X_1$** as a function of its magnitude $a_1$, with $n=20$.
 :::
 
-@fig-power-main-2 presents our results for $X_2$. Given the different number of levels for this factor, we now assess a different range of power for each design. Nevertheless, we observe similar patterns. INT stands out as the most powerful method. Although ART surpasses PAR under the log-normal and exponential distributions, it does not demonstrate any other notable advantages compared to the other methods.  
-
+@fig-power-main-2 presents our results for $X_2$. Because this factor has a different number of levels across designs, we assess different ranges of power for each design. Nevertheless, the same overall patterns emerge.
 
 ::: {#fig-power-main-2}
 <div id="plot-power-2.1">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-data <- readData(prefix, n = 20, alpha, effectType = 4, distributions) # CHANGE n TO 20
+data <- read_data(prefix, alpha=.05, effectType = 4, distributions) # CHANGE n TO 20
 
-df <- reshapeByDesign(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)')
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)')
 ```
 </div>
 
 <div id="plot-power-2.2">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- data %>% arrange(design,distr,effectX2,rateX2)  %>% group_by(design,distr,effectX2) %>% mutate(rank = rank(rateX2))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- data %>% arrange(design,family,effectX2,rateX2)  %>% group_by(design,family,effectX2) %>% mutate(rank = rank(rateX2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking')
+#df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking')
 ```
 </div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-2.2").classList.add("hidden"); }); </script>
 
@@ -74,29 +73,28 @@ plotlyPowerByDesign(df, xlab = "magnitude of main effect", var = "rank", hoverva
   show ranking
 </button>
 
-Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, where $n=20$. 
+Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, with $n=20$. 
 :::
 
-
-**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ across the range of $0.5$ to $2.0$. We then measure the power to detect this interaction effect. Our results are summarized in @fig-power-interaction, aligning with findings for main effects. ART's relative advantage diminishes later under the binomial and ordinal distributions. Once again, the method's inflated Type I error rates could account for this observed trend.
+**Interaction effects**. We also vary the magnitude of the interaction effect $X_1 \times X_2$ by manipulating the parameter $a_{12}$ over the range $0.5$ to $2.0$, and then measure the power to detect this interaction. The results, summarized in @fig-power-interaction, are consistent with the patterns observed for main effects. 
 
 ::: {#fig-power-interaction}
 <div id="plot-power-3.1">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-data <- readData(prefix, n = 20, alpha, effectType = 5, distributions)
+data <- read_data(prefix, alpha=.05, effectType = 5, distributions)
 
-df <- reshapeByDesign(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyErrorByDesign2(df, xlab = "magnitude of interaction effect", var = "rateX1X2", xvar = "effectX1X2", max = 104,  ytitle = 'Power (%)')
+df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_error_by_design_2(df, xlab = "magnitude of interaction effect", var = "rateX1X2", xvar = "effectX1X2", max = 104,  ytitle = 'Power (%)')
 ```
 </div>
 
 <div id="plot-power-3.2">
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
-df <- data %>% arrange(design,distr,effectX1X2,rateX1X2)  %>% group_by(design,distr,effectX1X2) %>% mutate(rank = rank(rateX1X2))
-df <- as.data.frame(df) %>% reshapeByDesign(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+df <- data %>% arrange(design,family,effectX1X2,rateX1X2)  %>% group_by(design,family,effectX1X2) %>% mutate(rank = rank(rateX1X2))
+df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-#df <- reshapeByDesign(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotlyPowerByDesign(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power - ranking')
+#df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
+plotly_power_by_design(df, xlab = "magnitude of interaction effect", var = "rank", hovervar = "rateX1X2", xvar = "effectX1X2", max = 4.2, ytitle = 'Power - ranking')
 ```
 </div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-3.2").classList.add("hidden"); }); </script>
 
@@ -110,5 +108,7 @@ plotlyPowerByDesign(df, xlab = "magnitude of interaction effect", var = "rank", 
   show ranking
 </button>
 
-Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of its magnitude $a_{12}$, where $n=20$.
+Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** as a function of its magnitude $a_{12}$, with $n=20$.
 :::
+
+Overall, there is no clear winner, but we observe that PAR shows poor power performance for log-normal data, while INT consistently outperforms RNK. Furthermore, ART provides no substantial power advantage, despite its inflated Type I error rates.

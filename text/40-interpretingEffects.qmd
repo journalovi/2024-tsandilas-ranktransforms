@@ -6,7 +6,7 @@ The traditional ANOVA is used to test differences between two or more means. How
 
 Defining the null hypothesis of interest of a rank transformation is more challenging. @conover:1981 show that the simple rank transformation procedure (RNK) is equivalent to the Mann-Whitney U and Kruskal–Wallis tests for independent samples. For paired samples, however, it results in a new test, which is different from the Wilcoxon sign-rank test and the Friedman test. Defining the null hypothesis of interest of ART is even more challenging because of the hybrid nature of the method. In particular, while ART is a rank-based transformation procedure, it aligns data with respect to means, where alignment is performed independently for each group.
 
-**Dealing with interpretation issues.** To avoid such interpretation issues, we focus --- unless otherwise stated --- on effects that apply monotonic transformations to population distributions. This also ensures a monotonic relationship between different measures of central tendency such as medians and means (with the exception of the Cauchy distribution, where the mean is undefined). In other words, if a treatment increases the population mean, it will also increase the population median. We present an example in @fig-distributions. The figure shows two population distributions corresponding to the two intermediate levels of difficulty of our illustrative example (see @fig-example). We observe that the increased difficulty of the task translates both the population mean and the median to the right. In this case, we expect a statistical test to reject the null hypothesis, no matter whether it tests the population mean, the median, or the overall distribution shape.   
+**Dealing with interpretation issues.** To avoid such interpretation issues, we focus --- unless otherwise stated --- on effects that apply monotonic transformations to population distributions. This also ensures a monotonic relationship between different measures of central tendency, such as medians and means (with the exception of the Cauchy distribution, where the mean is undefined). In other words, if a treatment increases the population mean, it will also increase the population median. We present an example in @fig-distributions. The figure shows two population distributions corresponding to the two intermediate levels of difficulty of our illustrative example (see @fig-example). We observe that the increased difficulty of the task translates both the population mean and the median to the right. In this case, we expect a statistical test to reject the null hypothesis, no matter whether it tests the population mean, the median, or the overall distribution shape.   
 
 ::: {#fig-distributions}
 ```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
@@ -75,10 +75,7 @@ The ART procedure was proposed as an alternative to the rank transformation [@co
 
 ::: {#fig-interactions-rank}
 ```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 7, warning=FALSE}
-source("interactions_plot.R")
 library("ARTool")
-
-#library(plotly)
 
 INT <- function(x){
 	qnorm((rank(x) - 0.5)/length(x))
@@ -102,12 +99,12 @@ fig <- subplot(fig1, fig2, fig3, titleY = TRUE, titleX = TRUE, margin = 0.05, wi
 
 fig
 ```
-Visualization of interaction effect for a 3 $\times$ 2 experimental design before and after applying the rank transformation and the inverse normal transformation (INT) on an [example dataset](interactions_rank.csv) (within-participants design, $n = 20$). All data points represent means.
+Visualization of interaction effect for a 3 $\times$ 2 experimental design before and after applying the rank transformation and the inverse normal transformation (INT) on an [example dataset](interactions_rank.csv) (within-subject design, $n = 20$). All data points represent means.
 :::
 
 ART aims to correct this problem. However, non-linear transformations come into place in various ways in experimental designs [@Loftus:1978; @Wagenmakers:2012]. They can deform distributions, making the interpretation of observed effects especially challenging. Before presenting our experimental method, we discuss these problems and explain how our approach takes them into consideration. 
 
-**Removable interactions.** Let us take a different [dataset](removable_interactions.csv) from a fictional experiment (within-participants design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). The experiment, for example, could test a mobile typing task, where the levels of difficulty correspond to texts of different lengths (*short* vs. *long*) under two typing techniques (*with* vs. *without auto-completion*). We assume that the researchers measure two dependent variables: task-completion time and perceived performance, which is measured through a five-level ordinal scale (from "very quick" to "very slow"). In this example, the main effects of task difficulty and technique are large. It is less clear, however, whether there is also an interaction between the two factors. 
+**Removable interactions.** Let us take a different [dataset](removable_interactions.csv) from a fictional experiment (within-subject design with $n = 24$) that evaluates the performance of two techniques (*Tech A* and *Tech B*) under two task difficulty levels (*easy* vs. *hard*). The experiment, for example, could test a mobile typing task, where the levels of difficulty correspond to texts of different lengths (*short* vs. *long*) under two typing techniques (*with* vs. *without auto-completion*). We assume that the researchers measure two dependent variables: task-completion time and perceived performance, which is measured through a five-level ordinal scale (from "very quick" to "very slow"). In this example, the main effects of task difficulty and technique are large. It is less clear, however, whether there is also an interaction between the two factors. 
 
 @fig-interactions visualizes the means for each combination of the levels of the factors and highlights the possible interactions. Let us first concentrate on the first two plots that present results for the time measure. The trends in the left plot indicate an interaction effect, since the two lines seem to diverge as the task difficulty increases. 
 
@@ -161,12 +158,12 @@ We further discuss interpetation issues in the broader context of generalized li
 GLMs are defined by a link function $g$ that connects a variable --- linearly defined by the predictors --- to a response variable $Y$, which follows an arbitrary distribution. For an experimental design with two factors, $x_1$ and $x_2$, the expected value (or mean) of $Y$ conditional on $x_1$ and $x_2$ is expressed as follows:
 
 $$
-E(Y|x_1, x_2) = g^{-1}(a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2)
+E[Y|x_1, x_2] = g^{-1}(a_0 + a_1 x_1 + a_2 x_2 + a_{12}x_1 x_2)
 $${#eq-glm}
 
 where $g^{-1}$ is the inverse of the link function.
 
-Statistical procedures based on GLMs define interaction in terms of the interaction coefficient $a_{12}$ in the linear component of the model. That is, the null hypothesis should be rejected when the coefficient is non-zero. However, there is no consensus among researchers on this approach. We clarify the debate and explain how we address it.
+Statistical procedures based on GLMs define effects in terms of the coefficients $a_{1}$, $a_{2}$, and $a_{12}$ in the linear component of the model. That is, the null hypothesis should be rejected when the corresponding coefficient (e.g., the coefficient $a_{12}$ for the interaction) is non-zero. However, there is no consensus among researchers on this approach. We clarify the debate and explain how we address it.
 
 **Defining interactions on the scale of the response variable.** @Ai:2003 and, more recently, @McCabe:2022 show that the interaction coefficient alone is not sufficient to describe the actual interaction trend on the natural scale of the response variable. They argue that an interaction effect should instead be defined as the observed change in the marginal effect of $x_1$ as a function of $x_2$. Thus, the trends shown in @fig-interactions do represent interactions, since the difference between *Tech* A and *Tech B* changes as a function of *Difficulty* on the original reponse scale (time or perceived performance). 
 
@@ -181,67 +178,16 @@ For continuous predictors, this can be formalized as the second-order cross part
 
 Our position is fully aligned with Greene's argument. As our earlier example (see @fig-interactions) demonstrates, interactions assessed on the scale of the response variable can be misleading about the true underlying effects that generated the data. How meaningful is it to declare interaction effects that arise solely from parallel main effects and lack any theoretical interpretation? It is worth noting that @Ai:2003, as well as @McCabe:2022, overlook Loftus' [-@Loftus:1978] critique of uninterpretable interactions. 
 
-**When the interpretation of effects becomes ambiguous.** Issues with interpreting interaction effects arise only when there are parallel main effects --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, we may observe a change in the marginal effect of a factor (e.g., $x_1$), even if its associated model coefficient (e.g., $a_1$) is zero. We discuss such scenarios in more depth in the [appendix](appendix.html#removable-main).
+Nevertheless, in most of our experiments we select scenarios that avoid these interpretation problems, ensuring that the Type I error rates of the methods we compare do not depend on how one defines interactions. We clarify this point below. 
 
-By contrast, interpretation is unambiguous in these situations:
+**Clarifying when the interpretation of effects becomes ambiguous.** In nonlinear models, ambiguities in interpreting interaction effects arise when all relevant main effects are present --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, the marginal effect of a factor (e.g., $x_1$) may vary across levels of another factor even when its associated coefficient (e.g., $a_1$) is zero. 
 
-1. *Main effects*: when the interaction coefficient $a_{12}$ is zero.
+By contrast, interpretation is unambiguous in the following siutations:
 
-2. *Interaction effect*: when either $a_{1}$ or $a_{2}$ is zero.    
+1. *Main effects*, when the interaction coefficient $a_{12}$ is zero. In this case, if $a_1 = 0$, then the factor $x_1$ has no effect on the response scale. Likewise, if $a_2 = 0$, then the factor $x_2$ has no effect on the response scale.
 
-For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
+2. *Interaction effect*, when either $a_{1}$ or $a_{2}$ is zero. In this case, if $a_{12}=0$, then there is no interaction between $x_1$ and $x_2$ on the response scale.    
 
-Throughout the remainder of the article, we make every effort to clarify when the interpretation of an effect is ambiguous. Because different methods may rely on different assumptions about the null hypothesis, we analyze such situations separately. However, it is important to note that the existing literature offers no guidance on how ART is expected to interpret main and interaction effects under these conditions. Early evaluations of ART did not consider nonlinear models, and therefore this issue was not raised. While @elkin:2021 do examine such models, they do not address interpretation issues.
+Proofs of these statements are provided in [Appendix II](appendix_II.html#spurious-absence). In these scenarios, error rates are comparable across methods, regardless of whether the null hypothesis is defined in terms of the coefficients of the linear model or the observed effects on the response scale. For example, the divergence in ART's results in our illustrative example (see @fig-example) cannot be attributed to interpretation issues, since the sample was drawn from a population with no effect of *Technique* ($a_{1} = 0$) and no interaction ($a_{12}=0$). 
 
-### Our approach {#approach}
-Responses in a generalized linear model can follow arbitrary distributions. A key challenge is how to simulate such distributions while maintaining control over the parameters of the linear submodel. We address this by adopting a latent variable modeling approach, in which a normally distributed latent variable is transformed into the observed response variable.
-
-**Latent variables.** We assume there is a single latent variable $\mathcal{Y}$ that is distinct from the variable $Y$ we observe. For example, the latent variable may represent a population's performance potential, working memory capacity, the perceived utility of a new technology, or quality of life. For convenience, we assume that this latent variable is linear, continuous, and normally distributed. This is a common assumption in latent variable modeling, e.g., in diffusion-decision models that predict response time and error in two-choice decision tasks [@Ratcliff_diffusion:2008], and in ordinal models [@Liddell:2018]. This assumption allows us to define null hypotheses within a shared, normalized space, regardless of the scale of the observed data.
-
-**Observed variables.** Then, the response variable $Y$ is derived from this latent variable through a monotonic transformation, thus $Y = \mathcal{T}(\mathcal{Y})$, where $\mathcal{T}(y_1) \le \mathcal{T}(y_2)$ if and only if $y_1 \le y_2$. A transformation for example occurs when study participants perform a selection task or repond to a Likert-scale item through a questionnaire. @fig-conversions shows how we transform normal distributions to log-normal, binomial, and ordinal scales.
-
-::: {#fig-conversions}
-```{r, echo=FALSE, message=FALSE, fig.height=3, fig.width = 9, warning=FALSE}
-source("conversions_plot.R")
-
-n <- 2000
-
-xs <- c(rnorm(n, mean = 1.5, sd = 1), rnorm(n, mean = -1.5, sd = 1))
-
-ys1 <- norm2lnorm(xs, meanlog = 0, sdlog = 1, mu = 0, sd = sd(xs))
-plot1 <- plotConversion(xs, ys1, ylab = "Log-normal scale", ymax = 10)
-
-ys2 <- norm2binom(xs, size = 10, prob=.1)
-plot2 <- plotConversion(xs, ys2, ymin = - 0.3, ylab = "Binomial scale", as.density = F)
-
-ys3 <- toOrdinal(xs, thresholds = c(-2.5, -1, 0, 2.5))
-plot3 <- plotConversion(xs, ys3, ymin = 0.7, ymax = 5.3, ylab = "Ordinal scale", as.density = F)
-
-fig <- cowplot::plot_grid(plot1, plot2, plot3, ncol= 3) 
-
-fig
-```
-Transformation of normal latent variables to other continuous or discrete scales: log-normal (left), binomial (middle), and ordinal (right).  
-:::
-
-To transform the latent variable to a ratio scale (e.g., a log-normal and binomial scale), we adopt the distribution conversion approach of *faux* v1.2.1 [@faux], an R package for experimental simulations. We first derive the cumulative density distribution of the latent variable. We then use the inverse quantile function of the target distribution to derive the observed variable. For example, in @fig-conversions (left), where we transform the latent variable to a log-normal scale with parameters $\mu = 0$ and $\sigma = 1$, we use the following R function:  
-
-```{r}
-norm2lnorm <- function(x, meanlog = 0, sdlog = 1, mu = mean(x), sd = sd(x), ...) {
-	 p <- pnorm(x, mu, sd) 
- 	 qlnorm(p, meanlog, sdlog, ...) 
-}
-```
-For the binomial scale of @fig-conversions (left), we use instead the inverse quantile function of the binomial distribution ```qbinom(p,size,prob)``` with parameters ```size = 10``` and ```prob = .1```, which respectively represent the number of Bernoulli trials and their success probability.
-
-To transform the latent variable to an ordinal scale, we implement an ordered-probit model, as explained by @Liddell:2018. According to this model, we discretize the latent variable with thresholds that determine the ordinal levels of interest. For our example in @fig-conversions (right), we use as threshold the values $(-2.5, -1, 0, 2.5)$, defining an ordinal scale of five levels. Observe that these thresholds are not equidistant. 
-
-**Interpreting effects.** Our approach allows us to simulate main and interaction effects on the latent variable $\mathcal{Y}$ and observe how these effects manifest on the transformed variable $Y = \mathcal{T}(\mathcal{Y})$. 
-
-As discussed earlier, we make clear distinction between the following two scenarios: 
-
-1. The definition of the null hypothesis remains the same regardless of whether we evaluate effects on the latent variable $\mathcal{Y}$ or the response variable $Y$. 
-
-2. The definition of the null hypothesis changes with the scale: a null effect on the latent variable $\mathcal{Y}$ may not remain null when evaluated on the response variable $Y$. 
-
-Unless we explicitely mention interpretation issues, we focus on the first scenario. Note that in the case of discrete response variables, the function $\mathcal{T}$ is monotonic but not *strictly* monotonic, since it involves a loss of information. Consequently, an effect on the latent variable may not be observable in the responses, or the observed magnitude of the effect may appear reduced.
+Throughout the remainder of the article, we explicitly distinguish between situations in which effect interpretation is unambiguous and those in which it is not. Because different methods may rely on different assumptions about the null hypothesis, we analyze ambiguous cases separately. However, we emphasize that the existing literature offers no guidance on how ART should be expected to behave when the definition of a main or interaction effect is ambiguous. Early evaluations of ART focused on linear models. Although @elkin:2021 consider nonlinear models, they do not address how main and interaction effects should be interpreted when the definition of the null hypothesis depends on the scale of responses.
