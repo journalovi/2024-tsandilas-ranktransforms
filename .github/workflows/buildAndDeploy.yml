@@ -8,31 +8,37 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    container: 
-        image: casiez/joviart
-        options: --user root
 
     steps:
     - uses: actions/checkout@v3
-    - name: build the paper
+
+    # Install Quarto
+    - uses: quarto-dev/quarto-actions/setup@v2
+
+    # Build documents
+    - name: Build site
       run: |
-        quarto render index.qmd --to html
-    - name: build the appendix
-      run: |
-        quarto render appendix.qmd --to html        
-    - name: copy everything to dist
+        quarto render index.qmd
+        quarto render appendix_I.qmd
+        quarto render appendix_II.qmd
+
+    # Prepare deploy folder
+    - name: Copy files to dist
       run: |
         mkdir dist
         cp index.html dist
         cp -r index_files dist
-        cp appendix.html dist
-        cp -r appendix_files dist     
+        cp appendix_I.html dist
+        cp -r appendix_I_files dist
+        cp appendix_II.html dist
+        cp -r appendix_II_files dist
+
+    # Upload for GitHub Pages
     - name: Archive built files
       uses: actions/upload-pages-artifact@v3
       with:
-        name: 'github-pages'
+        name: github-pages
         path: dist
 
   # deploy:
