@@ -13,11 +13,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Copy site to dist
+    - name: Prepare dist folder
       run: |
         mkdir dist
-        cp -r ./* dist
-        rm -rf dist/.git dist/.github
+        shopt -s extglob
+        cp -r !(dist|.git|.github) dist/
 
     - name: Archive built files
       uses: actions/upload-pages-artifact@v3
