@@ -40,7 +40,7 @@ Boxplots summarizing the partial $\eta^2$ estimates obtained with each method fr
 
 We observe that ART is the only method for which the estimated effect sizes for $X_1$ are influenced by the magnitude of the effect on $X_2$. These results clearly demonstrate that ART's alignment mechanism fails in nonlinear models with skewed distributions and leads to confounding across effects. 
 
-@fig-eta-squared-2 presents partial $\eta^2$ estimates when the effect of $X_1$ is no longer null ($a_1 = 1$). PAR performs poorly for these data, consistently underestimating effect sizes. RNK also slightly underestimates effects. ART also tends to underestimate effects when $a_2 = 0$; however, as $a_2$ increases, its estimates become more variable and exhibit an overall tendency to increase. INT yields the most precise estimates and is only mildly affected when $a_2 = 8$.
+@fig-eta-squared-2 presents partial $\eta^2$ estimates when the effect of $X_1$ is no longer null ($a_1 = 1$). PAR performs poorly for these data, consistently underestimating effect sizes. ART also tends to underestimate effects when $a_2 = 0$; however, as $a_2$ increases, its estimates become more variable and exhibit an overall tendency to increase. RNK and INT yield the most precise estimates. INT is only mildly affected when $a_2 = 8$.
 
 ::: {#fig-eta-squared-2}
 ```{r, echo=FALSE, warning=FALSE, fig.height=3.5, fig.width=8}
