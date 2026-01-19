@@ -182,7 +182,7 @@ Nevertheless, in most of our experiments we select scenarios that avoid these in
 
 **Clarifying when the interpretation of effects becomes ambiguous.** In nonlinear models, ambiguities in interpreting interaction effects arise when all relevant main effects are present --- that is, when the coefficients of all interacting factors are non-zero. Interpretation issues may also extend to main effects when the interaction coefficient $a_{12}$ is non-zero. In such cases, the marginal effect of a factor (e.g., $x_1$) may vary across levels of another factor even when its associated coefficient (e.g., $a_1$) is zero. 
 
-By contrast, interpretation is unambiguous in the following siutations:
+By contrast, interpretation is unambiguous in the following situations:
 
 1. *Main effects*, when the interaction coefficient $a_{12}$ is zero. In this case, if $a_1 = 0$, then the factor $x_1$ has no effect on the response scale. Likewise, if $a_2 = 0$, then the factor $x_2$ has no effect on the response scale.
 
