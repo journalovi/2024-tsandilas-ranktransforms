@@ -16,7 +16,7 @@ params_binom  <- list(sigma_s = 0.3, size = 10, p_target = 0.1)
 nlevels = c(4, 3)
 within = c(1, 1)
 n = 20
-coeffs <- c("X1"=2, "X2"=0, "X1:X2"=0) # a1, a2, a12
+coeffs <- c("X1"=8, "X2"=0, "X1:X2"=0) # a1, a2, a12
 
 df_normal <- simulate_response(
   nlevels, within, n, coeffs,
