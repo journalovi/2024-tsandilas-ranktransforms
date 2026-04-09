@@ -1,5 +1,5 @@
 ---
-title: "Introduction - Illustrative example (analysis with repeated-measures ANOVA)"
+title: "Introduction - Illustrative example (analysis with LMER)"
 author: "Theophanis Tsandilas and Géry Casiez"
 output: html_document
 ---
@@ -23,6 +23,8 @@ Let us first import all required libraries.
 library(lmerTest) # Lmer functions
 library(ARTool) # ARTool library
 library(effectsize) # To estimate effect sizes 
+
+library(car)
 
 # Additional libraries for plotting and reporting
 library(kableExtra) 
@@ -58,20 +60,20 @@ cbPalette <- c("#999999", "#E69F00", "#F15854")
 
 # Plots for the time measure 
 p1 <- (df %>%  group_by(Participant,Technique) %>% 
-summarise(Time = mean(Time), .groups="drop") %>%   
+summarise(Time = median(Time), .groups="drop") %>%   
         ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
         geom_boxplot(outlier.shape = NA) +
-        ylab("Time (min) - dots are means") +
+        ylab("Median Time (min)") +
         ylim(0, 8) + 
         geom_jitter(shape=20, position=position_jitter(0.1)) +
         theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette)
 
 
 p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% 
-           summarise(Time = mean(Time), .groups="drop") %>%   
+           summarise(Time = median(Time), .groups="drop") %>%   
         ggplot(aes(x = Difficulty, y = Time, fill = Technique)) + 
         geom_boxplot(outlier.shape = NA) +
-        ylab("Time (min)") +
+        ylab("Median Time (min)") +
         ylim(0, 15) +
         geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
         theme_bw() + theme(legend.position = "none")) +
@@ -85,7 +87,7 @@ dd1 <- df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficienc
 p3 <- (dd1 %>%   
         ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
         geom_boxplot(outlier.shape = NA) +
-        ylab("Perceived Efficiency - means") +
+        ylab("Perceived Efficiency (means)") +
         scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
         geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
         theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
@@ -112,11 +114,11 @@ int = function(x){
    qnorm((rank(x) - 0.5)/length(x))
 }
 
-mpar <- aov(Time ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - no transformation
-mlog <- aov(log(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - Log-transformation
-mart <- art(Time ~ Difficulty*Technique + Error(Participant), data=df) # ARTool
-mrnk <- aov(rank(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Rank transformation 
-mint <- aov(int(Time) ~ Difficulty*Technique + Error(Participant), data=df) # Inverse Transform transformation
+mpar <- lmer(Time ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - no transformation
+mlog <- lmer(log(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - Log-transformation
+mart <- art(Time ~ Difficulty*Technique + (1|Participant), data=df) # ARTool
+mrnk <- lmer(rank(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Rank transformation 
+mint <- lmer(int(Time) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
 ``` 
 
 #### Main and interaction effects
@@ -126,8 +128,7 @@ We report the results of our analysis.
 printAnalysis <- function(num, method, model) {
   cat(num, ". Analysis using ", method, "\n\n", sep="")
 
-  if(method == "ART") print(anova(model))
-  else print(summary(model)) 
+  print(anova(model))
   print(eta_squared(model))
   print(cohens_f(model))
 }
@@ -141,15 +142,38 @@ printAnalysis(5, "No Transformation", mpar)
 
 We observe that only ART shows statistical evidence for a main effect of Technique, as well as an interaction effect.
 
+#### Contrasts
+Finally, we conduct an analysis of pairwise differences between the three techniques *A*, *B*, and *C*, using a Bonferroni correction. For ART, we use the ```art.con``` function.
+
+```{r, warning=FALSE}
+library("emmeans")
+
+# Function for printing the results for each method
+printContrasts <- function(num, method, expr, model) {
+  cat(num, ". Contrasts using ", method, "\n\n", sep="")
+
+  if(method == "ART") art.con(model, expr, adjust = "bonferroni")
+  else contrast(emmeans(model, expr), method="pairwise", adjust = "bonferroni")
+}
+
+printContrasts(1, "Logarithmic Transformation", ~Technique, mlog)
+printContrasts(2, "ART", ~Technique, mart)
+printContrasts(3, "Rank Transformation", ~Technique, mrnk)
+printContrasts(4, "Inverse Normal Transformation", ~Technique, mint)
+printContrasts(5, "No Transformation", ~Technique, mpar)
+``` 
+
+We observe again a significant divergence between the results of ART and the results of the other methods. 
+
 ### Statistical analysis of perceived efficiency
 We conduct an analysis with PAR, RNK, ART, and INT.
 ```{r, warning=FALSE}
 df$Perceived_Efficiency <- as.integer(df$Perceived_Efficiency)
 
-mpar <- aov(Perceived_Efficiency ~ Difficulty*Technique + Error(Participant), data=df) # Parametric - no transformation
-mart <- art(Perceived_Efficiency ~ Difficulty*Technique + Error(Participant), data=df) # ARTool
-mrnk <- aov(rank(Perceived_Efficiency) ~ Difficulty*Technique + Error(Participant), data=df) # Rank transformation 
-mint <- aov(int(Perceived_Efficiency) ~ Difficulty*Technique + Error(Participant), data=df) # Inverse Transform transformation
+mpar <- lmer(Perceived_Efficiency ~ Difficulty*Technique + (1|Participant), data=df) # Parametric - no transformation
+mart <- art(Perceived_Efficiency ~ Difficulty*Technique + (1|Participant), data=df) # ARTool
+mrnk <- lmer(rank(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df) # Rank transformation 
+mint <- lmer(int(Perceived_Efficiency) ~ Difficulty*Technique + (1|Participant), data=df) # Inverse Transform transformation
 ``` 
 
 We report the results of our analysis.

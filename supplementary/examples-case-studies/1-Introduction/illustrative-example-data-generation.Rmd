@@ -1,0 +1,159 @@
+---
+title: "Introduction - Generation of the dataset for the illustrative example"
+author: "Theophanis Tsandilas and Géry Casiez"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For transparency purposes, we present the simulation parameters used to generate the dataset of the introduction's illustrative example. 
+
+**We emphasize:** this example was chosen to demonstrate how the inflated Type I error rates of ART can manifest in practice. In this scenario, ART yields very low *p-*values, whereas other methods (including the ground-truth methods) show no evidence for the corresponding effects. However, in other scenarios (and with different random seeds), ART may produce correct conclusions or exhibit less pronounced problems.
+
+### Preliminary
+Let us first import all required libraries and code we use. 
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
+# This file includes functions for generating experimental datasets for target distributions 
+source("illustrative-example-utils.R")
+
+library(ggplot2) 
+library(kableExtra)
+library(gridExtra)
+library(tidyverse)
+
+```
+
+### Setting simulation parameters
+We first set the parameters of the experimental design: $4 \times 3$ within-subjects with 24 participants. The first factor (X1) represents the task *Difficulty*, while the second factor (X2) represents the *Technique*. 
+```{r, warning=FALSE}
+# We simulate a design with two factors. The first (X1: Difficulty) has 4 levels, and the second (X2: Technique) has 3 levels.
+nlevels = c(4, 3) 
+
+# Both factors are within-subject (repeated-measures)
+within = c(1, 1)
+
+# 24 participants
+n = 24 
+``` 
+
+We then set the distribution parameters for Time measure. We use a log-normal distribution with parameters $\sigma = 0.6$ (```sigma_e``` in our code) and a target mean for responses $m = 1.4$. We set the between-participant variability to $\sigma_s = 0.4$, and the magnitude of effects to $a_1 = 2$, $a_2=0$, and $a_{12}=0$. This means that there is only an effect of *Difficulty* (first factor). For an explanation of these parameters, see our article's [method section](https://www.journalovi.org/2024-tsandilas-ranktransforms/#methodology).
+
+```{r, warning=FALSE}
+# Distribution parameters for the Time measure (log-normal)
+params_lnorm  <- list(sigma_s = 0.4, sigma_e = 0.6, mean_target = 1.4)
+# Setting the magnitude of effects. There is only an effect on X1: Difficulty.
+coeffs_lnorm <- c("X1"=2, "X2"=0, "X1:X2"=0)
+
+# Set the random seed
+set.seed(415)
+# And simulate a log-normal distribution
+df_lnorm <- simulate_response(
+  nlevels, within, n, coeffs_lnorm,
+  family = "lnorm",
+  params = params_lnorm
+)
+
+# Let's only keep two decimal digits
+df_lnorm$Y = round(df_lnorm$Y, digits = 2)
+``` 
+
+Similarly, we set the distribution parameters of the *Perceived Efficiency* measure: ordinal with 5 levels. It is derived from a normal distribution with standard deviation $\sigma=1$ (```sigma_e``` in our code) and an overall mean of $m = 2.5$. We set the between-participant variability to $\sigma_s = 0.5$, while all effects are null. 
+
+```{r, warning=FALSE}
+# Distribution parameters for the measure Perceived Efficiency (ordinal with 5 levels)
+params_ordinal <- list(sigma_s = 0.5, sigma_e = 1, thresholds = c(0.1, 0.4, 1, 2), mean_target = 2.5)
+
+# Setting the magnitude of effects. All effects are null.
+coeffs_ordinal <- c("X1"=0, "X2"=0, "X1:X2"=0) 
+
+# Set the random seed
+set.seed(230)
+# And simulate an ordinal distribution (single Likert item)
+df_ordinal <- simulate_response(
+  nlevels, within, n, coeffs_ordinal,
+  family = "likert",
+  params = params_ordinal
+)
+``` 
+
+### Formatting the dataset
+
+Finally, we merge the two data frames into one and rename the corresponding data variables. 
+
+```{r, warning=FALSE}
+# Create the experimental data with the appropriate column names and values
+labels = c("inefficient", "somewhat inefficient", "neutral", "somewhat efficient", "efficient")
+df <- data.frame(
+  Participant = df_lnorm$subject, 
+  Difficulty = recode(df_lnorm$X1, "A1" = "Level1", "A2" = "Level2","A3" = "Level3", "A4" = "Level4"),
+  Technique = recode(df_lnorm$X2, "B1" = "A", "B2" = "B","B3" = "C"),
+  Time = df_lnorm$Y,
+  Perceived_Efficiency = factor(df_ordinal$Y, levels = 1:5, labels = labels, ordered = TRUE)
+)
+``` 
+
+We present our dataset with a table:
+
+```{r, warning=FALSE}
+kbl(df, booktabs = TRUE) %>% kable_styling(font_size=14) %>% kable_paper(position = "center") %>% scroll_box(height = "170px")
+``` 
+
+### Plotting
+
+We also plot our data to observe the main trends.
+
+```{r, warning=FALSE, fig.height=2.7, fig.width=8}
+# Display the data
+cbPalette <- c("#999999", "#E69F00", "#F15854")
+
+p1 <- (df %>%  group_by(Participant,Technique) %>% 
+summarise(Time = mean(Time), .groups="drop") %>%   
+        ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Time (minutes) - points are means") +
+        ylim(0, 8) + 
+        geom_jitter(shape=20, position=position_jitter(0.1)) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette)
+
+p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% 
+        summarise(Time = mean(Time), .groups="drop") %>%   
+        ggplot(aes(x = Difficulty, y = Time, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Time (minutes)") +
+        ylim(0, 15) +
+        geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
+        theme_bw() + theme(legend.position = "none")) +
+        scale_fill_manual(values=cbPalette)
+
+grid.arrange(p1, p2, nrow = 1, widths = c(1.5, 2.5))
+``` 
+
+
+```{r, warning=FALSE, fig.height=3.2, fig.width=8}
+dd1 <- df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop")
+
+p3 <- (dd1 %>%   
+        ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
+        geom_boxplot(outlier.shape = NA) +
+        ylab("Perceived Efficiency - circles are means") +
+        scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
+        theme(axis.text.y=element_text(angle=50, hjust=0.7))
+
+dd2 <- df %>%  group_by(Participant,Difficulty) %>% summarise(Perceived_Efficiency = mean(as.integer(Perceived_Efficiency)), .groups="drop")
+
+diffPalette <- c("#f9f9fd", "#e2e6fa", "#bacafb", "#99b9f9")
+p4 <- (dd2 %>%   
+        ggplot(aes(x = Difficulty, y = Perceived_Efficiency, fill = Difficulty)) + 
+        geom_boxplot(outlier.shape = NA) + ylim(1,5)+
+        geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
+        theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=diffPalette) +  
+        theme(axis.title.y=element_blank(), axis.text.y=element_blank())
+
+grid.arrange(p3, p4, nrow = 1, widths = c(2, 2))
+``` 
+

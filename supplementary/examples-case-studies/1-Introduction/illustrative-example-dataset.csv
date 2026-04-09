@@ -1,0 +1,289 @@
+Participant,Difficulty,Technique,Time,Perceived_Efficiency
+s1,Level1,A,0.18,somewhat efficient
+s1,Level2,A,0.52,efficient
+s1,Level3,A,2.05,efficient
+s1,Level4,A,1.48,somewhat efficient
+s1,Level1,B,0.27,efficient
+s1,Level2,B,0.85,efficient
+s1,Level3,B,1.8,efficient
+s1,Level4,B,1.93,efficient
+s1,Level1,C,0.19,efficient
+s1,Level2,C,0.38,efficient
+s1,Level3,C,1.17,efficient
+s1,Level4,C,1.7,somewhat efficient
+s2,Level1,A,0.23,efficient
+s2,Level2,A,0.64,efficient
+s2,Level3,A,1.12,efficient
+s2,Level4,A,3.51,efficient
+s2,Level1,B,0.17,efficient
+s2,Level2,B,0.47,efficient
+s2,Level3,B,1.08,efficient
+s2,Level4,B,4.19,efficient
+s2,Level1,C,0.09,efficient
+s2,Level2,C,0.52,somewhat efficient
+s2,Level3,C,0.96,efficient
+s2,Level4,C,0.93,efficient
+s3,Level1,A,0.86,somewhat efficient
+s3,Level2,A,4.3,somewhat efficient
+s3,Level3,A,3.63,efficient
+s3,Level4,A,6.7,somewhat efficient
+s3,Level1,B,2.63,efficient
+s3,Level2,B,4.52,somewhat efficient
+s3,Level3,B,9.39,efficient
+s3,Level4,B,13.68,somewhat inefficient
+s3,Level1,C,1.51,somewhat efficient
+s3,Level2,C,4.55,efficient
+s3,Level3,C,2.05,efficient
+s3,Level4,C,10.7,efficient
+s4,Level1,A,0.3,efficient
+s4,Level2,A,0.97,efficient
+s4,Level3,A,0.66,efficient
+s4,Level4,A,1.13,efficient
+s4,Level1,B,0.28,efficient
+s4,Level2,B,0.39,efficient
+s4,Level3,B,0.77,efficient
+s4,Level4,B,3.49,efficient
+s4,Level1,C,0.81,efficient
+s4,Level2,C,1.33,somewhat efficient
+s4,Level3,C,1.14,somewhat efficient
+s4,Level4,C,2.39,efficient
+s5,Level1,A,0.29,efficient
+s5,Level2,A,1.68,efficient
+s5,Level3,A,3.5,neutral
+s5,Level4,A,8.97,efficient
+s5,Level1,B,0.51,efficient
+s5,Level2,B,0.5,efficient
+s5,Level3,B,4.99,efficient
+s5,Level4,B,3.83,efficient
+s5,Level1,C,0.38,efficient
+s5,Level2,C,0.66,efficient
+s5,Level3,C,3.3,efficient
+s5,Level4,C,1.53,efficient
+s6,Level1,A,0.34,efficient
+s6,Level2,A,0.89,efficient
+s6,Level3,A,0.56,efficient
+s6,Level4,A,6.19,neutral
+s6,Level1,B,0.72,somewhat efficient
+s6,Level2,B,0.77,efficient
+s6,Level3,B,1.46,efficient
+s6,Level4,B,6.21,neutral
+s6,Level1,C,0.26,efficient
+s6,Level2,C,0.79,efficient
+s6,Level3,C,1.6,efficient
+s6,Level4,C,5.07,efficient
+s7,Level1,A,0.1,efficient
+s7,Level2,A,0.39,efficient
+s7,Level3,A,1.33,efficient
+s7,Level4,A,3.2,somewhat inefficient
+s7,Level1,B,0.1,efficient
+s7,Level2,B,0.18,efficient
+s7,Level3,B,0.23,efficient
+s7,Level4,B,4.47,efficient
+s7,Level1,C,0.19,efficient
+s7,Level2,C,0.32,efficient
+s7,Level3,C,1.21,efficient
+s7,Level4,C,2.66,efficient
+s8,Level1,A,0.39,efficient
+s8,Level2,A,0.97,efficient
+s8,Level3,A,0.8,efficient
+s8,Level4,A,5.75,efficient
+s8,Level1,B,0.43,efficient
+s8,Level2,B,0.71,somewhat efficient
+s8,Level3,B,1.04,efficient
+s8,Level4,B,10.59,efficient
+s8,Level1,C,0.61,efficient
+s8,Level2,C,1.39,efficient
+s8,Level3,C,3.14,somewhat efficient
+s8,Level4,C,2.34,neutral
+s9,Level1,A,0.16,efficient
+s9,Level2,A,0.84,efficient
+s9,Level3,A,0.41,efficient
+s9,Level4,A,2.54,efficient
+s9,Level1,B,0.2,somewhat efficient
+s9,Level2,B,0.56,efficient
+s9,Level3,B,2.06,efficient
+s9,Level4,B,0.28,efficient
+s9,Level1,C,0.25,efficient
+s9,Level2,C,0.82,efficient
+s9,Level3,C,1.37,somewhat efficient
+s9,Level4,C,2.36,efficient
+s10,Level1,A,0.18,efficient
+s10,Level2,A,0.56,efficient
+s10,Level3,A,1.28,efficient
+s10,Level4,A,5.31,efficient
+s10,Level1,B,0.62,somewhat efficient
+s10,Level2,B,2.36,somewhat efficient
+s10,Level3,B,0.94,somewhat efficient
+s10,Level4,B,4.38,efficient
+s10,Level1,C,0.24,efficient
+s10,Level2,C,0.98,efficient
+s10,Level3,C,0.48,somewhat efficient
+s10,Level4,C,3.25,efficient
+s11,Level1,A,0.2,efficient
+s11,Level2,A,0.34,efficient
+s11,Level3,A,0.55,efficient
+s11,Level4,A,0.76,efficient
+s11,Level1,B,0.11,efficient
+s11,Level2,B,0.14,efficient
+s11,Level3,B,0.31,efficient
+s11,Level4,B,0.98,efficient
+s11,Level1,C,0.08,efficient
+s11,Level2,C,0.1,efficient
+s11,Level3,C,0.71,efficient
+s11,Level4,C,0.85,efficient
+s12,Level1,A,0.16,neutral
+s12,Level2,A,0.61,somewhat efficient
+s12,Level3,A,0.85,neutral
+s12,Level4,A,8.64,somewhat efficient
+s12,Level1,B,0.34,somewhat efficient
+s12,Level2,B,0.62,somewhat efficient
+s12,Level3,B,1.21,somewhat efficient
+s12,Level4,B,4.78,efficient
+s12,Level1,C,0.19,somewhat efficient
+s12,Level2,C,0.29,efficient
+s12,Level3,C,0.38,somewhat efficient
+s12,Level4,C,1.21,efficient
+s13,Level1,A,0.18,efficient
+s13,Level2,A,0.22,efficient
+s13,Level3,A,1.03,efficient
+s13,Level4,A,1.65,efficient
+s13,Level1,B,0.08,efficient
+s13,Level2,B,0.29,efficient
+s13,Level3,B,0.34,efficient
+s13,Level4,B,2.01,efficient
+s13,Level1,C,0.3,efficient
+s13,Level2,C,0.59,efficient
+s13,Level3,C,1.12,efficient
+s13,Level4,C,1.38,somewhat efficient
+s14,Level1,A,0.14,somewhat efficient
+s14,Level2,A,0.63,inefficient
+s14,Level3,A,0.4,somewhat efficient
+s14,Level4,A,1.82,efficient
+s14,Level1,B,0.28,efficient
+s14,Level2,B,0.57,efficient
+s14,Level3,B,0.52,somewhat efficient
+s14,Level4,B,6.87,efficient
+s14,Level1,C,0.17,somewhat efficient
+s14,Level2,C,0.61,efficient
+s14,Level3,C,1.98,efficient
+s14,Level4,C,1.82,efficient
+s15,Level1,A,0.15,efficient
+s15,Level2,A,0.36,efficient
+s15,Level3,A,1.05,efficient
+s15,Level4,A,2.28,efficient
+s15,Level1,B,0.21,efficient
+s15,Level2,B,0.81,efficient
+s15,Level3,B,1.37,somewhat efficient
+s15,Level4,B,1.53,somewhat efficient
+s15,Level1,C,0.18,efficient
+s15,Level2,C,0.63,efficient
+s15,Level3,C,1.62,efficient
+s15,Level4,C,2.4,somewhat efficient
+s16,Level1,A,0.65,efficient
+s16,Level2,A,2.73,efficient
+s16,Level3,A,1.72,efficient
+s16,Level4,A,4.92,somewhat efficient
+s16,Level1,B,1.51,efficient
+s16,Level2,B,0.93,somewhat efficient
+s16,Level3,B,1.28,efficient
+s16,Level4,B,7.43,somewhat efficient
+s16,Level1,C,0.64,efficient
+s16,Level2,C,2.03,efficient
+s16,Level3,C,8.62,efficient
+s16,Level4,C,4.27,efficient
+s17,Level1,A,0.28,efficient
+s17,Level2,A,0.3,efficient
+s17,Level3,A,0.21,efficient
+s17,Level4,A,0.88,efficient
+s17,Level1,B,0.08,efficient
+s17,Level2,B,0.5,efficient
+s17,Level3,B,0.22,efficient
+s17,Level4,B,0.29,efficient
+s17,Level1,C,0.33,efficient
+s17,Level2,C,0.34,efficient
+s17,Level3,C,0.57,neutral
+s17,Level4,C,1.1,efficient
+s18,Level1,A,0.29,neutral
+s18,Level2,A,0.94,efficient
+s18,Level3,A,0.69,efficient
+s18,Level4,A,2.92,somewhat efficient
+s18,Level1,B,0.4,efficient
+s18,Level2,B,0.9,somewhat efficient
+s18,Level3,B,1.96,efficient
+s18,Level4,B,2.72,efficient
+s18,Level1,C,0.46,somewhat efficient
+s18,Level2,C,0.46,neutral
+s18,Level3,C,0.55,somewhat efficient
+s18,Level4,C,3.91,efficient
+s19,Level1,A,0.12,efficient
+s19,Level2,A,0.39,efficient
+s19,Level3,A,1.25,efficient
+s19,Level4,A,0.74,somewhat efficient
+s19,Level1,B,0.18,neutral
+s19,Level2,B,0.11,efficient
+s19,Level3,B,0.88,efficient
+s19,Level4,B,1.68,efficient
+s19,Level1,C,0.09,efficient
+s19,Level2,C,0.22,somewhat efficient
+s19,Level3,C,0.27,somewhat efficient
+s19,Level4,C,1.14,efficient
+s20,Level1,A,0.61,efficient
+s20,Level2,A,1.02,somewhat efficient
+s20,Level3,A,0.15,somewhat efficient
+s20,Level4,A,1,somewhat efficient
+s20,Level1,B,0.1,efficient
+s20,Level2,B,0.35,efficient
+s20,Level3,B,0.77,somewhat efficient
+s20,Level4,B,1.06,efficient
+s20,Level1,C,0.1,inefficient
+s20,Level2,C,0.27,somewhat efficient
+s20,Level3,C,0.6,efficient
+s20,Level4,C,2.49,efficient
+s21,Level1,A,0.3,neutral
+s21,Level2,A,0.65,efficient
+s21,Level3,A,0.56,somewhat efficient
+s21,Level4,A,3.35,efficient
+s21,Level1,B,0.15,efficient
+s21,Level2,B,1.5,efficient
+s21,Level3,B,1.97,efficient
+s21,Level4,B,14.17,efficient
+s21,Level1,C,0.75,neutral
+s21,Level2,C,1.61,efficient
+s21,Level3,C,1.68,somewhat efficient
+s21,Level4,C,12.74,efficient
+s22,Level1,A,0.14,efficient
+s22,Level2,A,0.54,efficient
+s22,Level3,A,0.36,somewhat efficient
+s22,Level4,A,0.56,neutral
+s22,Level1,B,0.16,neutral
+s22,Level2,B,0.38,somewhat efficient
+s22,Level3,B,1.45,neutral
+s22,Level4,B,1.03,somewhat efficient
+s22,Level1,C,0.58,efficient
+s22,Level2,C,1.39,efficient
+s22,Level3,C,0.59,somewhat efficient
+s22,Level4,C,0.5,efficient
+s23,Level1,A,0.05,efficient
+s23,Level2,A,0.43,somewhat efficient
+s23,Level3,A,1.08,somewhat efficient
+s23,Level4,A,0.41,inefficient
+s23,Level1,B,0.17,efficient
+s23,Level2,B,0.44,efficient
+s23,Level3,B,0.25,somewhat efficient
+s23,Level4,B,1.66,neutral
+s23,Level1,C,0.25,somewhat efficient
+s23,Level2,C,0.09,somewhat efficient
+s23,Level3,C,1.07,somewhat efficient
+s23,Level4,C,2.3,somewhat inefficient
+s24,Level1,A,0.82,somewhat efficient
+s24,Level2,A,0.3,neutral
+s24,Level3,A,0.61,efficient
+s24,Level4,A,1.01,neutral
+s24,Level1,B,0.16,somewhat efficient
+s24,Level2,B,0.97,inefficient
+s24,Level3,B,0.17,neutral
+s24,Level4,B,1.54,neutral
+s24,Level1,C,0.03,efficient
+s24,Level2,C,1.9,somewhat efficient
+s24,Level3,C,0.25,somewhat efficient
+s24,Level4,C,0.49,neutral

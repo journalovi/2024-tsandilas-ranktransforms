@@ -1,0 +1,1 @@
+Here, we present the analysis of the introduction's illustrative example of an earlier version of the article. As we had not kept trace of the simulation parameters and random seeds we had used, we replaced it for reproduction purposes. 

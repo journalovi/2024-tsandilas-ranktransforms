@@ -1,5 +1,5 @@
 ---
-title: "Introduction - Illustrative example (analysis with repeated-measures ANOVA)"
+title: "Introduction - Illustrative example"
 author: "Theophanis Tsandilas and Géry Casiez"
 output: html_document
 ---
@@ -10,16 +10,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 We detail our analysis for the illustrative example presented in the Introduction. 
 
-We use [data](illustrative-example-dataset.csv) from a hypothetical experiment that evaluates the time performance of three user interface techniques (*A*, *B*, and *C*) that help users complete image editing tasks of four different difficulty levels: *Level1*, *Level2*, *Level3*, and *Level4*. 
+We use [data](example-data.csv) from a hypothetical experiment that evaluates the time performance of three user interface techniques (*A*, *B*, and *C*) that help users complete image editing tasks of four different difficulty levels: *Level1*, *Level2*, *Level3*, and *Level4*. 
 
-The experiment follows a fully balanced repeated-measures factorial design, where each participant ($N = 24$) performs 12 tasks in a unique order. The researchers measure the time that it takes participants to complete each task, but participants also evaluate the perceived efficiency, using an ordinal scale with five levels.
-
-**Note:** We describe in detail the simulation process used to generate this dataset [here](illustrative-example-data-generation.html).
+The experiment follows a fully balanced repeated-measures factorial design, where each participant ($N = 12$) performs 12 tasks in a unique order. The researchers measure the time that it takes participants to complete each task, but participants also evaluate the perceived efficiency, using an ordinal scale with five levels.
 
 ### Preliminary
 Let us first import all required libraries.  
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE}
+```{r, echo = TRUE, message = FALSE}
 library(lmerTest) # Lmer functions
 library(ARTool) # ARTool library
 library(effectsize) # To estimate effect sizes 
@@ -35,7 +33,7 @@ library(tidyverse)
 
 We read our dataset and fix the type of the factors:
 ```{r, warning=FALSE}
-df <- read.csv("illustrative-example-dataset.csv", sep=",", header=TRUE, strip.white=TRUE)
+df <- read.csv("example-data.csv", sep=",", header=TRUE, strip.white=TRUE)
 
 df$Participant <- factor(df$Participant)
 df$Difficulty <- factor(df$Difficulty, ordered = TRUE) # We can consider it as ordinal
@@ -58,21 +56,21 @@ cbPalette <- c("#999999", "#E69F00", "#F15854")
 
 # Plots for the time measure 
 p1 <- (df %>%  group_by(Participant,Technique) %>% 
-summarise(Time = mean(Time), .groups="drop") %>%   
+summarise(Time = median(Time), .groups="drop") %>%   
         ggplot(aes(x = Technique, y = Time, fill = Technique)) + 
         geom_boxplot(outlier.shape = NA) +
-        ylab("Time (min) - dots are means") +
-        ylim(0, 8) + 
+        ylab("Median Time (min)") +
+        ylim(0, 3) + 
         geom_jitter(shape=20, position=position_jitter(0.1)) +
         theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette)
 
 
 p2 <- (df %>%  group_by(Participant,Difficulty,Technique) %>% 
-           summarise(Time = mean(Time), .groups="drop") %>%   
+           summarise(Time = median(Time), .groups="drop") %>%   
         ggplot(aes(x = Difficulty, y = Time, fill = Technique)) + 
         geom_boxplot(outlier.shape = NA) +
         ylab("Time (min)") +
-        ylim(0, 15) +
+        ylim(0, 6) +
         geom_point(size = 0.7, position=position_jitterdodge(0.1)) +
         theme_bw() + theme(legend.position = "none")) +
         scale_fill_manual(values=cbPalette)
@@ -85,7 +83,7 @@ dd1 <- df %>%  group_by(Participant,Technique) %>% summarise(Perceived_Efficienc
 p3 <- (dd1 %>%   
         ggplot(aes(x = Technique, y = Perceived_Efficiency, fill = Technique)) + 
         geom_boxplot(outlier.shape = NA) +
-        ylab("Perceived Efficiency - means") +
+        ylab("Perceived Efficiency (means)") +
         scale_y_continuous(breaks = 1:5, limits = c(1,5), labels=levels(df$Perceived_Efficiency)) +
         geom_jitter(shape=1, position=position_jitter(0.2,0), size = 2) +
         theme_bw() + theme(legend.position = "none")) + scale_fill_manual(values=cbPalette) +  
@@ -160,18 +158,5 @@ printAnalysis(4, "Inverse Normal Transformation", mint)
 printAnalysis(5, "No Transformation", mpar)
 ``` 
 
-We also report an analysis with the Friedman test, after aggregating the dataset, either by *Difficulty* or by *Technique*.
-```{r, warning=FALSE}
-df_diff <- df %>% 
-  group_by(Participant, Difficulty) %>% 
-  summarise(Perceived_Efficiency = mean(Perceived_Efficiency), .groups = "drop")
-friedman.test(Perceived_Efficiency ~ Difficulty | Participant, data = df_diff)
-
-df_tech <- df %>% 
-  group_by(Participant, Technique) %>% 
-  summarise(Perceived_Efficiency = mean(Perceived_Efficiency), .groups = "drop")
-friedman.test(Perceived_Efficiency ~ Technique | Participant, data = df_tech)
-``` 
-
-Again, ART is the only method to detect an main effect for both Difficulty and Technique, as well as an interaction effect. Its *p-*values are orders of magnitude lower than the *p-*values returned by the other methods.
+ART is the only method to detect an main effect for both Difficulty ($p=.0011$, partial $\eta^2 = .12$, $95\%$ CI $[.03, 1.0]$) and Technique ($p=.00016$, partial $\eta^2 = .13$, $95\%$ CI $[.05, 1.0]$). Its *p-*values are substantially lower than the *p-*values of the other methods, and its effect size estimates are surprisingly large.
 
