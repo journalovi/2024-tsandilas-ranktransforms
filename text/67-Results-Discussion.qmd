@@ -1,0 +1,18 @@
+
+### Discussion {#discussion}
+Our results clearly show that ART fails across a wide range of experimental configurations and distributional settings. They confirm the warnings of Lüpsen [-@luepsen:2017; -@luepsen:2018], while providing a clearer picture that ART’s shortcomings are not attributable to issues related to the interpretation of main or interaction effects under nonlinear models.
+
+A natural question arises: several other studies have evaluated ART, yet none has reported such problems. In particular, the studies by @Mansouri:1995 and @elkin:2021 were extensive and concluded that, aside from the problematic Cauchy distribution, ART maintains correct Type I error rates. Why, then, do our results differ so markedly?
+
+A careful examination of these studies reveals that they considered a relatively limited set of conditions under which ART happens to perform well. Specifically:
+
+1. @Mansouri:1995 and @elkin:2021 did not evaluate discrete distributions, which explains why they did not observe ART's failures with ordinal, binomial, or Poisson data, even when all effects are null.
+
+2. @Mansouri:1995 focused on data generated from the naive model shown in @fig-higgins-model, which assumes linear relationships, equal variances, and continuous responses. Under these restrictive conditions, ART appears to behave correctly.
+
+3. @elkin:2021 evaluated generalized linear models with continuous responses but only considered scenarios in which all effects were null when assessing Type I error rates. This prevented them from detecting ART's confounding of effects.
+
+Thus, there is no real contradiction between our findings and this previous work. We note, however, that for within-participants designs with log-normal data, we also observed that ART still exhibits mild inflation of Type I error rates even when all effects are null, with this effect being more pronounced in smaller samples. @elkin:2021 did not detect this problem. 
+
+
+ 

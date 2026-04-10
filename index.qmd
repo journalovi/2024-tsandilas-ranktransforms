@@ -88,6 +88,8 @@ Each experiment concentrated on a unique combination of distributions, experimen
 
 {{< include text/65-Results-EffectSize.qmd >}}
 
+{{< include text/67-Results-Discussion.qmd >}}
+
 {{< include text/70-CaseStudies.qmd >}}
 
 {{< include text/80-Recommandations.qmd >}}

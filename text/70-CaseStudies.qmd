@@ -9,7 +9,7 @@ Their design has two particularities. First, the response variable is binary (De
 
 > *"Since we are dealing with **nonparametric, unbalanced data** and multiple factors, we apply the Aligned Rank Transform (ART) for nonparametric factorial ANOVA"* [@Martin:2023]. 
 
-In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis to replicate the results presented in Table 1 [@Martin:2023]. However, we extended the analysis by fitting a linear mixed-effects model (LMER function) without any transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. 
+In their ART model, the authors treated the participant identifier and the task identifier as random effects. We could re-run their analysis to replicate the results presented in Table 1 [@Martin:2023]. We extended the analysis by fitting a linear mixed-effects model (LMER function) without any transformation (PAR). When responses are binary, RNK and INT do not alter the data, leading to results that coincide with those of PAR. 
 
 Below, we present the *p*-values obtained from each method:
 
@@ -64,7 +64,7 @@ We observe that ART exhibits significant challenges with such binary data, as it
 
 Clearly, ART is completely inappropriate when responses are binary. In contrast, parametric ANOVA demonstrates an excellent behavior even when the success (or error) rate is as low as $6\%$. 
 
-A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. We expect such models to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, their use requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not include them in our evaluation here.
+A more adapted approach for this type of data would be to use a generalized linear model (GLMER) with a *binomial link function*, which essentially performs a logistic regression. We expect such models to exhibit stronger predictive power than regular linear models and support a more appropriate interpretation of interaction effects. However, their use requires additional steps, such as comparing alternative models using various criteria [@Bolker2009glm], so we do not include them in our evaluation here but present an analysis scenario in our [supplementary materials](https://www.journalovi.org/2024-tsandilas-ranktransforms/supplementary/examples-case-studies/7-Case-studies/Martin-et-al-23/Martin-et-al-23.html).
 
 ### Likert items 
 
