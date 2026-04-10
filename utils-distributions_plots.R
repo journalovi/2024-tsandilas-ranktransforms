@@ -77,12 +77,14 @@ plot_effects_normal <- function(){
 	centered <- theme(plot.title = element_text(hjust = 0.5, size = 12))
 
 	ggarrange(
-	  plot1 + ggtitle(TeX("$\\alpha_1 = 0.5$")) + centered,
-	  plot2 + ggtitle(TeX("$\\alpha_1 = 1$")) + centered,
-	  plot3 + ggtitle(TeX("$\\alpha_1 = 2$")) + centered,
-	  plot4 + ggtitle(TeX("$\\alpha_1 = 4$")) + centered,
-	  plot5 + ggtitle(TeX("$\\alpha_1 = 8$")) + centered,
-		 ncol= 5) 
+#	  plot1 + ggtitle(TeX("$a_1 = 0.5$")) + centered,
+
+	  plot1 + ggtitle(expression(italic(a)[1] == 0.5)) + theme(text = element_text(family = "Times New Roman")) + centered,
+	  plot2 + ggtitle(expression(italic(a)[1] == 1)) + theme(text = element_text(family = "Times New Roman")) + centered,
+	  plot3 + ggtitle(expression(italic(a)[1] == 2)) + theme(text = element_text(family = "Times New Roman")) + centered,
+	  plot4 + ggtitle(expression(italic(a)[1] == 4)) + theme(text = element_text(family = "Times New Roman")) + centered,
+	  plot5 + ggtitle(expression(italic(a)[1] == 8)) + theme(text = element_text(family = "Times New Roman")) + centered,
+		 ncol= 5)
 } 
 
 
@@ -191,8 +193,8 @@ set.seed(6020)
 	centered <- theme(plot.title = element_text(hjust = 0.5, size = 12))
 
 	ggarrange(
-	  plot1 + ggtitle(TeX("$\\alpha_1 = 2$")) + centered + annotate("text", x=-10, y=middleY(plot1), label="Equidistant", family = "Arial", size = 4, hjust = 0),
-	  plot2 + ggtitle(TeX("$\\alpha_1 = 8$")) + centered,
+	  plot1 + ggtitle(expression(italic(a)[1] == 2)) + theme(text = element_text(family = "Times New Roman")) + centered + annotate("text", x=-10, y=middleY(plot1), label="Equidistant", family = "Arial", size = 4, hjust = 0),
+	  plot2 + ggtitle(expression(italic(a)[1] == 8)) + theme(text = element_text(family = "Times New Roman")) + centered,
 	  plot3 + annotate("text", x=-10, y=middleY(plot3), label="Flexible", family = "Arial", size = 4, hjust = 0),
 	  plot4,
 		ncol= 2) 

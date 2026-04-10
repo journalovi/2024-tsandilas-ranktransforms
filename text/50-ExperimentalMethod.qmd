@@ -12,7 +12,7 @@ We can now detail our experimental method. We evaluate the standard parametric a
 6. *Binomial distribution* $\mathcal{B}(\kappa, p)$, where $\kappa$ defines the number of independent Bernoulli trials and $p$ is the probability of error or success of each trial. It frequently appears in HCI research, as it can model the number of successes and failures in a series of experimental tasks. We set $\kappa = 10$ in our main experiments but evaluate a wider range of parameters in [Appendix I](appendix_I.html#binomial).
 7. Distributions of *Likert-item* responses with 5, 7, and 11 discrete levels.
 
-**Experimental designs.** We present results for five experimental designs. To simplify our presentation, we start with (i) a 4 $\times$ 3 within-subject factorial design. We then show how our conclusions generalize to four additional designs: (ii) a 2 $\times$ 3 between-subject design; (iii) a 2 $\times$ 4 mixed design, with a between-subject factor and a within-subject factor; (iv) a 2 $\times$ 2 $\times$ 2 within-subject design; and (v) a 3 $\times$ 3 $\times$ 3 within-subject design.
+**Experimental designs.** We present results for five experimental designs. To simplify our presentation, we start with (i) a 4 $\times$ 3 within-subject factorial design. We then show how our conclusions generalize to four additional designs: (ii) a 2 $\times$ 3 between-subject design; (iii) a 2 $\times$ 4 mixed design, with a between-subject factor and a within-subject factor; (iv) a 2 $\times$ 2 $\times$ 2 within-subject design; and (v) a 3 $\times$ 3 $\times$ 3 within-subject design. For each combination of factor levels, we assume a single observation per subject. 
 
 **Sample sizes.** We focus on three sample sizes, $n=10$, $n=20$, and $n=30$, where $n$ represents the cell size in an experimental design. However, for certain scenarios, we also report results for larger sample sizes, up to $n = 512$. In within-subject designs, where all factors are treated as repeated measures, $n$ corresponds to the number of subjects $N$ (commonly human participants in HCI research). In contrast, in a 2 $\times$ 3 between-subject design, a cell size of $n = 20$, implies a total of $N = 120$ subjects. 
 
@@ -50,9 +50,9 @@ $${#eq-linear-model}
  - $\varepsilon_{ijk}$ is the experimental error effect
  -->
 
- While random slope effects can have an impact on real experimental data [@barr:2013], we do not consider them here for two main reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; and (2) because mixed-effects procedures with random slope effects are computationally demanding, adding strain to simulation resources. However, there is no good reason to believe that adding random slope effects would impact our findings and conclusions.
+ While random slope effects can have an impact on real experimental data [@barr:2013], we do not consider them here for two main reasons: (1) to be consistent with previous evaluations of the ART procedure [@elkin:2021]; and (2) because mixed-effects procedures with random slope effects are computationally demanding, adding strain to simulation resources. Consequently, investigating random slopes is beyond the scope of our work, as the simulation procedure is already extensive.
 
-**Encoding the levels of factors.** To encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we proceed as follows: 
+**Encoding the levels of factors.** All factors are treated as categorical, and their levels appear as strings in our simulated data, e.g., "A1", "A2", ... for $X_1$, and "B1", "B2", ... for $X_2$. However, each factor level must be assigned a numerical effect. To this end, we use a sum-to-zero contrast coding scheme, which allows us to calibrate effects across levels. Specifically, to encode the levels of the two factors $x_{1i} \in X_1$ and $x_{2j} \in X_2$ we proceed as follows: 
 
 1. We normalize the distance between their first and their second levels, such that $x_{12} - x_{11} = 1$ and $x_{22} - x_{21} = 1$. This approach enables us to conveniently control for the main and interaction effects by simply varying the parameters $a_1$, $a_2$, and $a_{12}$.
 
@@ -123,7 +123,7 @@ plot_effects_distr()
 Different ratio distributions generated with $a_1 = 2$ when $X_1$ has three categorical levels (here, $\sigma_s = 0$).
 :::
 
-In practice, we randomly choose the standard deviation $\sigma_s$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution.
+In practice, we randomly select the standard deviation $\sigma_s$ --- which determines between-subject variability --- from the interval $[0.1, 0.5]$, drawing each value from a uniform distribution. Because a different value is sampled at each simulation iteration, our results reflect a distribution of standard deviations, rather than a single fixed value. Note that @elkin:2021 also varied the standard deviation, but only across three fixed values. We believe that sampling from a continuous range is more appropriate.
 
 **Thresholds for ordinal scales.** For ordinal data, we evaluate $D =$ 5, 7, or 11 discrete levels. To derive the discretization thresholds $\tau_d$, we first consider the range $[-2SD, 2SD]$ , where $SD$ is the overall standard deviation of the latent variable $Y^{*}_{ijk}$. We then divide this range into 5, 7, or 11 intervals, following two different strategies: (i) setting thresholds to be *equidistant*; or (ii) considering *flexible* thresholds, randomly drawing their position in the above range.
 

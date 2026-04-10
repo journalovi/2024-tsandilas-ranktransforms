@@ -77,7 +77,7 @@ fig <- plotly_scatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "grtX
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-2, 2]$. 
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-2, 2]$. **Note:** The legend items at the top of the plots are interactive and can be used to filter points and compare the results across methods.
 :::
 
 Under log-normal distributions, PAR tends to severely underestimate effect sizes, whereas ART produces estimates that are widely dispersed on both sides of the ground-truth values. INT yields the most precise estimates, followed by RNK. However, neither method provides accurate estimates for ordinal data. This limitation largely reflects the restricted resolution of the ordinal scale itself: with only five discrete levels, it cannot adequately represent the full range of variation in the latent variable, leading all methods to underestimate effect sizes. The flexible nature of the thresholds in the distributions we tested makes effect size estimation even more challenging. 
@@ -93,7 +93,7 @@ fig <- plotly_scatter(df, xlab = "Ground truth", ylab= "Cohen's f", xvar = "grtX
 
 fig
 ```
-Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-8, 8]$. 
+Scatterplots showing the relationship between effect size estimates (Cohen's $f$) obtained with each method and those from the ground-truth analysis for the main effect of $X_1$, when $a_1$ and $a_2$ vary independently within the range $[-8, 8]$. **Note:** The legend items at the top of the plots are interactive and can be used to filter points and compare the results across methods.
 :::
 
 In this broader range, all three rank-based methods --- although RNK to a lesser extent --- struggle to recover large effects, even when the underlying distribution is normal. However, we acknowledge that accurately estimating effects of such magnitudes (e.g., when Cohen's $f > 2$ or partial $\eta^2 > 0.8$) is of limited practical importance.
