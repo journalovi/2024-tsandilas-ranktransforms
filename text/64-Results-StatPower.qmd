@@ -1,11 +1,11 @@
 ### Statistical power {#power}
-We evaluate the statistical power of the four methods across the three two-factor designs for $n = 20$ and $\alpha = 0.05$. We emphasize that, because there is a trade-off between Type I and Type II errors, high power may simply reflect an inflated Type I error rate. We therefore expect ART to exhibit higher power in scenarios where it inflates Type I error rates.
+We evaluate the statistical power of the four methods across the three two-factor designs for $n = 20$ and $\alpha = .05$. We emphasize that, because there is a trade-off between Type I and Type II errors, high power may simply reflect an inflated Type I error rate. We therefore expect ART to exhibit higher power in scenarios where it inflates Type I error rates.
 
 <!--
 Since a main effect on $X_1$ inflates ART's Type I error rates for $X_2$ and for their interaction (see previous sections), we focus on single-effect scenarios.
 -->
 
-**Main effects**. We begin by varying the magnitude of the effect on $X_2$ from $a_2 = 0$ to $a_2 = 8$, while measuring the power to detect the main effect of $X_1$, with $a_1 = 0.5$. We also set $a_{12}=0$. This configuration allows us to observe clear power patterns across methods. @fig-power-main-X1-confounding presents the results.
+**Main effects**. We begin by varying the magnitude of the effect on $X_1$ from $a_1 = 0$ to $a_1 = 8$, while measuring the power to detect the main effect of $X_2$, with $a_2 = 0.5$. We also set $a_{12}=0$. This configuration allows us to observe clear power patterns across methods. @fig-power-main-X1-confounding presents the results.
 
 ::: {#fig-power-main-X1-confounding}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -16,17 +16,17 @@ dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordina
 
 df <- read_data(prefix, alpha = .05, effectType = -1, distributions)
 
-df <- df[df$effectX1 == 0.5,]
+df <- df[df$effectX2 == 0.5,]
 df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6)
+plotly_error_by_design_2(df, xlab = "magnitude of main effect (other factor)", var = "rateX2", xvar = "effectX1", ytitle ="Power (%)", max = 104, nticks=6)
 ```
-Power ($\alpha = .05$) for detecting the **main effect of $X_1$** ($a_1 = 0.5$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
+Power ($\alpha = .05$) for detecting the **main effect of $X_2$** ($a_2 = 0.5$) as a function of the magnitude of effect $a_1$ of the main effect of $X_1$ ($n=20$).
 :::
 
-The results are consistent across designs. We observe that ART’s power increases markedly as the effect of $X_2$ grows. As discussed earlier, however, this apparent advantage is accompanied by an increase in Type I error rates, indicating a confounding of effects. A higher Type I error rate does not necessarily translate into greater power. For example, under the log-normal distribution in the $4 \times 3$ within-subjects design, ART exhibits lower power than INT when $a_2 = 0$ ($66\%$ vs. $71\%$), despite still moderately inflating Type I error rates (see @fig-ratio-main). Similarly, under the $2 \times 4$ mixed design, the two methods appear equally powerful when $a_2 = 1$ (around $74\%$), even though ART exhibits substantial inflation of Type I error rates in this condition, approximately $18$-$19\%$ (see @fig-designs-main).
+The results are consistent across designs. We observe that ART’s power increases markedly as the effect of $X_1$ grows. As discussed earlier, however, this apparent advantage is accompanied by an increase in Type I error rates, indicating a confounding of effects. A higher Type I error rate does not necessarily translate into greater power. For example, under the log-normal distribution in the $4 \times 3$ within-subjects design, ART shows lower power than INT when $a_1 \leq 1$, despite its Type I error rates reaching up to $20\%$ in these scenarios (see @fig-ratio-main).
 
-The power of PAR, RNK, and INT is also affected by increases in $a_2$, but in the opposite direction. PAR, in particular, shows substantially lower power under the log-normal distribution, with performance deteriorating further as $a_2$ increases. Its power also declines under the exponential distribution. RNK, in turn, exhibits a significant loss of power as $a_2$ increases under the Poisson and binomial distributions, while this effect is less pronounced for INT. Finally, PAR, RNK, and INT all exhibit a comparable loss of power under the ordinal scale. However, this pattern appears to stem less from the methods themselves than from how the ordinal thresholds are defined, based on the overall standard deviation of the latent variable. As larger values of $a_2$ increase the variance, the fixed number of discrete levels in the ordinal scale becomes insufficient to capture finer variation in $X_1$, leading to an apparent loss of power. This also helps explain why the gain in ART's power is more limited here than what is observed under other non-normal distributions.
+The power of PAR, RNK, and INT is also affected by increases in $a_1$, but in the opposite direction. PAR, in particular, shows substantially lower power under the log-normal distribution, with performance deteriorating further as $a_1$ increases. Its power also declines under the exponential distribution. RNK, in turn, exhibits a significant loss of power as $a_1$ increases under the Poisson and binomial distributions, while this effect is less pronounced for INT. Finally, PAR, RNK, and INT all exhibit a comparable loss of power under the ordinal scale. However, this pattern appears to stem less from the methods themselves than from how the ordinal thresholds are defined, based on the overall standard deviation of the latent variable. As larger values of $a_1$ increase the variance, the fixed number of discrete levels in the ordinal scale becomes insufficient to capture finer variation in $X_2$, leading to an apparent loss of power. This also helps explain why the gain in ART's power is more limited here than what is observed under other non-normal distributions.
 
 We next evaluate the methods' power to detect an effect on $X_1$, while keeping all other effects at zero to avoid confounding. Specifically, we vary the parameter $a_1$ over the range $0.2$ to $0.8$. Depending on the experimental design, this range allows us to simulate both low-power settings (e.g., power below $30\%$) and high-power settings (e.g., power above $80\%$). @fig-power-main-1 presents the results. In many configurations, differences in power across methods are relatively modest. To facilitate comparison, we therefore also report method rankings; readers are encouraged to interact with the figures for precise power estimates. 
 
@@ -36,7 +36,7 @@ We next evaluate the methods' power to detect an effect on $X_1$, while keeping 
 prefix <- "Power"
 data <- read_data(prefix, alpha = .05, effectType = 3, distributions)
 df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
+plotly_error_by_design_2(df, xlab = "magnitude of main effect (same factor)", var = "rateX1", xvar = "effectX1", max = 104,  ytitle = 'Power (%)')
 ```
 </div>
 
@@ -44,7 +44,7 @@ plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1", 
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
 df <- data %>% arrange(design,family,effectX1,rateX1)  %>% group_by(design,family,effectX1) %>% mutate(rank = rank(rateX1))
 df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking')
+plotly_power_by_design(df, xlab = "magnitude of main effect (same factor)", var = "rank", hovervar = "rateX1", xvar = "effectX1", max = 4.2, ytitle = 'Power - ranking')
 ```
 </div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-1.2").classList.add("hidden"); }); </script>
 
@@ -71,7 +71,7 @@ PAR achieves the highest power under the normal and exponential distributions, b
 data <- read_data(prefix, alpha=.05, effectType = 4, distributions) # CHANGE n TO 20
 
 df <- reshape_by_design(data, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)')
+plotly_error_by_design_2(df, xlab = "magnitude of main effect (same factor)", var = "rateX2", xvar = "effectX2", max = 104,  ytitle = 'Power (%)')
 ```
 </div>
 
@@ -81,7 +81,7 @@ df <- data %>% arrange(design,family,effectX2,rateX2)  %>% group_by(design,famil
 df <- as.data.frame(df) %>% reshape_by_design(dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
 #df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
-plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking')
+plotly_power_by_design(df, xlab = "magnitude of main effect (same factor)", var = "rank", hovervar = "rateX2", xvar = "effectX2", max = 4.2, ytitle = 'Power - ranking')
 ```
 </div> <style> .hidden { display: none; } </style> <script> document.addEventListener("DOMContentLoaded", function() { document.getElementById("plot-power-2.2").classList.add("hidden"); }); </script>
 
@@ -98,7 +98,7 @@ plotly_power_by_design(df, xlab = "magnitude of main effect", var = "rank", hove
 Power ($\alpha = .05$) for detecting the **main effect of $X_2$** as a function of its magnitude $a_2$, with $n=20$. 
 :::
 
-**Interaction effects**. We conduct a similar analysis of interaction effects. We begin by varying the magnitude of the effect on $X_2$ from $a_2 = 0$ to $a_2 = 8$, while measuring the power to detect the interaction effect $X_1 \times X_2$, with $a_{12} = 1.25$. We set $a_1 =0$. @fig-power-interaction-confounding presents our results.
+**Interaction effects**. We conduct a similar analysis of interaction effects. We begin by varying the magnitude of the effect on $X_1$ from $a_1 = 0$ to $a_1 = 8$, while measuring the power to detect the interaction effect $X_1 \times X_2$, with $a_{12} = 1.25$. We set $a_2 =0$. @fig-power-interaction-confounding presents our results.
 
 ::: {#fig-power-interaction-confounding}
 ```{r, echo=FALSE, fig.height=3.3, fig.width = 9, warning=FALSE}
@@ -108,15 +108,15 @@ prefix <- "Power-Extra"
 #dnames = c("Normal", "Log-normal", "Exponential", "Poisson", "Binomial", "Ordinal (5 levels)")
 
 df <- read_data(prefix, alpha = .05, effectType = -1, distributions)
-df <- df[df$effectX1 == 0,]
+df <- df[df$effectX2 == 0,]
 df <- reshape_by_design(df, dnames, effectvars = c("effectX1","effectX2","effectX1X2"))
 
-plotly_error_by_design_2(df, xlab = "magnitude of main effect", var = "rateX1X2", xvar = "effectX2", ytitle ="Power (%)", max = 104, nticks=6)
+plotly_error_by_design_2(df, xlab = "magnitude of main effect (first factor only)", var = "rateX1X2", xvar = "effectX1", ytitle ="Power (%)", max = 104, nticks=6)
 ```
-Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** ($a_{12} = 1.25$) as a function of the magnitude of effect $a_2$ of the main effect of $X_2$ ($n=20$).
+Power ($\alpha = .05$) for detecting the **interaction effect $X_1 \times X_2$** ($a_{12} = 1.25$) as a function of the magnitude of effect $a_1$ of the main effect of $X_1$ ($n=20$).
 :::
 
-The observed patterns are similar to those for the main effects (see @fig-power-main-X1-confounding), although we now observe a more pronounced deterioration in RNK's performance across all distributions. Once again, ART's apparent advantage should be interpreted with caution, as it coincides with substantial inflation of Type I error rates under these conditions. PAR's performance for certain distributions should also be interpreted carefully, given its unstable Type I error rates (e.g., see @fig-ratio-interaction-1).
+The observed patterns are similar to those for the main effects (see @fig-power-main-X1-confounding). We now observe a more pronounced deterioration in RNK's performance across all distributions under the within-subjects design. Once again, ART's apparent advantage should be interpreted with caution, as it coincides with substantial inflation of Type I error rates under these conditions. PAR's performance for certain distributions should also be interpreted carefully, given its unstable Type I error rates (e.g., see @fig-ratio-interaction-1).
 
 Finally, we examine the methods' power for detecting interactions when both main effects are null. We vary the magnitude of the interaction effect $X_1 \times X_2$ by adjusting the parameter $a_{12}$ over the range $0.5$ to $2.0$, and measure the corresponding power. The results, summarized in @fig-power-interaction, are consistent with the patterns observed for main effects. 
 
