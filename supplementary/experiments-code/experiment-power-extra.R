@@ -3,7 +3,7 @@
 
 # Additional experiment evaluating the Power of PAR, ART, RNK, and INT for a range of experimental designs:
 # 4x3 within-subjects, 2x3 between-subjects, 2x4 mixed-subjects
-# This experiment shows the behavior of the methods as the effect on the second factor grows. 
+# This experiment shows the behavior of the methods as the effect on the first factor grows. 
 # Since ART singificantly inflates Type I error rates in this case, we expect its power to also appear as higher
 
 
@@ -56,16 +56,18 @@ distributions <- c("norm", "lnorm", "exp", "binom", "poisson", "likert")
 
 # Various combinations of effects
 effects <- matrix(c(
-          0.5, 0, 0,
-          0.5, 1, 0,
-          0.5, 2, 0,
-          0.5, 4, 0,
-          0.5, 8, 0,
+          0, 0.5, 0,
+          0.5, 0.5, 0,
+          1, 0.5, 0,
+          2, 0.5, 0,
+          4, 0.5, 0,
+          8, 0.5, 0,
           0, 0, 1.25,
-          0, 1, 1.25,
-          0, 2, 1.25,
-          0, 4, 1.25,
-          0, 8, 1.25), 
+          0.5, 0, 1.25,
+          1, 0, 1.25,
+          2, 0, 1.25,
+          4, 0, 1.25,
+          8, 0, 1.25), 
           ncol = 3, byrow = TRUE)
 
 colnames(effects) <- vars[1:ncol(effects)]
@@ -76,7 +78,7 @@ Ns <- c(20)
 # 5000 iterations
 R <- 5000
 
-filename = "Power-Extra"
+filename = "Power-Extra-2"
 
 # Set the seed for reproducibility
 set.seed(7003)
