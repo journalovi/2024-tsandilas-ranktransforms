@@ -68,6 +68,7 @@ compare_p_values <- function(df,
 
 # Contrasts ###########################################################
 # P-values for contrasts, where expr can be ~ X2 if we are interested in contrasts for the second factor 
+# For simple effects, the parameter interaction=TRUE simply ensures that adjust="none"
 get_p_values_contrasts <- function(model, expr) {
   if(is.null(names(model)) || is.null(model$formula)) {
       as.data.frame(suppressMessages(contrast(emmeans(model, expr), method="pairwise", interaction=TRUE)))$p.value
