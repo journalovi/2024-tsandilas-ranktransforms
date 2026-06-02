@@ -68,7 +68,7 @@ A more adapted approach for this type of data would be to use a generalized line
 
 ### Likert items 
 
-@Rosso:2023 conducted a body-swap experiment, where pairs participants ("dyads") performed a joint-finger tapping task under four different conditions, structured under two different factors:
+@Rosso:2023 conducted a body-swap experiment, where pairs of participants ("dyads") performed a joint-finger tapping task under four different conditions, structured under two different factors:
 
 - *Coupling*. Participants saw either their own hand (*Coupled*) or their partner's hand (*Uncoupled*).
 
@@ -78,7 +78,7 @@ Overall, the experiment was structured as a $2 \times 2$ within-subjects design 
 
 > *Aligned rank transform (ART) ANOVA revealed significant main effects of Coupling (Df residual = 147, F = 104.353, p < 0.001) and Perspective (Df residual = 147, F = 8.983, p < 0.01) on the self-reported ownership ratings. The former indicates that participants were capable of telling apart their own hand from the partner’s regardless of the visual perspective, whilst the latter indicates that perceiving a hand in 1st person generally resulted in a stronger sense of ownership. Crucially, the interaction effect between Coupling and Perspective (Df residual = 147, F = 5.232, p < 0.05) revealed that the increase in ownership relative to the 2nd person perspective was significantly stronger when participants were coupled.* [@Rosso:2023]
 
-Thus, the authors found supportive statistical evidence for both main effects and the interaction of the two factors. We replicated their analysis and found that the author did not conduct a repeated-measures ANOVA, i.e., they did not treat ratings from the same participant as independent. We re-analyzed the data with a mixed-effects *lmer* model, treating the participant identifier as a random effect nested under the identifier of participant pairs (dyads). Conclusions do not change since our analysis is more powerful, so $p$-values are now even smaller for all three effects. However, we also conducted the analysis using the three other methods (PAR, RNK, INT), and unfortunately, conclusions are very different:
+Thus, the authors found supportive statistical evidence for both main effects and the interaction of the two factors. We replicated their analysis and found that the author did not conduct a repeated-measures ANOVA, i.e., they treated ratings from the same participant as independent. We re-analyzed the data with a mixed-effects *lmer* model, treating the participant identifier as a random effect nested under the identifier of participant pairs (dyads). Conclusions do not change since our analysis is more powerful, so $p$-values are now even smaller for all three effects. However, we also conducted the analysis using the three other methods (PAR, RNK, INT), and unfortunately, conclusions are very different:
 
 |  | ART | PAR | RNK | INT |
 |------|-----|-----|-----|-----|
